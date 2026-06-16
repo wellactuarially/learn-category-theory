@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Lesson 2 · Functors</title>
+<script src="../config.local.js"></script>
+<style>
+  :root {
+    --ink: #1a1a1a;
+    --paper: #fdfcf9;
+    --rule: #d9d4c7;
+    --accent: #7a1f1f;
+    --accent-soft: #f3e9e9;
+    --muted: #6b6557;
+    --code-bg: #f4f1ea;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: et-book, Palatino, "Palatino Linotype", "Book Antiqua", Georgia, serif;
+    line-height: 1.62;
+    max-width: 46rem;
+    margin: 0 auto;
+    padding: 4rem 1.6rem 6rem;
+    font-size: 1.16rem;
+  }
+  h1, h2, h3 { font-weight: 600; line-height: 1.2; }
+  h1 { font-size: 2.1rem; margin: 0 0 .2rem; letter-spacing: -0.01em; }
+  .eyebrow { color: var(--accent); text-transform: uppercase; letter-spacing: .14em;
+             font-size: .74rem; font-weight: 700; }
+  h2 { font-size: 1.4rem; margin: 2.8rem 0 .6rem; padding-top: 1rem; border-top: 1px solid var(--rule); }
+  h3 { font-size: 1.1rem; margin: 1.6rem 0 .3rem; color: var(--accent); }
+  p { margin: .7rem 0; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(122,31,31,.3); }
+  a:hover { border-bottom-color: var(--accent); }
+  .subtitle { color: var(--muted); font-style: italic; margin-top: .1rem; font-size: 1.05rem; }
+  .lede { font-size: 1.05rem; }
+
+  details.cite { display: inline; }
+  details.cite > summary {
+    display: inline; cursor: pointer; color: var(--accent);
+    border-bottom: 1px dotted var(--accent); font-size: .82em;
+    vertical-align: super; line-height: 0; list-style: none; padding: 0 .1em;
+  }
+  details.cite > summary::-webkit-details-marker { display: none; }
+  details.cite[open] > summary { background: var(--accent-soft); border-radius: 3px; }
+  details.cite > .cite-body {
+    display: block; margin: .6rem 0; padding: .7rem .9rem;
+    background: var(--accent-soft); border-left: 3px solid var(--accent);
+    border-radius: 0 4px 4px 0; font-size: .92rem; line-height: 1.5; color: #2a2a2a;
+  }
+
+  .axioms { background: #fff; border: 1px solid var(--rule); border-radius: 6px;
+            padding: 1rem 1.4rem; margin: 1.2rem 0; }
+  .axioms ol { margin: .4rem 0; padding-left: 1.3rem; }
+  .axioms li { margin: .55rem 0; }
+  code { font-family: "SF Mono", "Cascadia Mono", Menlo, Consolas, monospace;
+         font-size: .9em; background: var(--code-bg); padding: .08em .35em; border-radius: 3px; }
+  math { font-size: 1.06em; white-space: nowrap; }
+  math.display { display: block; margin: .3rem 0; font-size: 1.12em; white-space: nowrap; }
+
+  .callout { background: #f0f4f0; border-left: 3px solid #4a6b4a; border-radius: 0 4px 4px 0;
+             padding: .8rem 1.1rem; margin: 1.3rem 0; font-size: .98rem; }
+  .callout .label { font-weight: 700; color: #3a5a3a; font-size: .78rem;
+                    text-transform: uppercase; letter-spacing: .08em; }
+
+  ul.examples { list-style: none; padding-left: 0; }
+  ul.examples li { padding: .55rem 0; border-bottom: 1px dashed var(--rule); }
+  ul.examples li:last-child { border-bottom: none; }
+  ul.examples b { color: var(--accent); }
+
+  .assess { background: #fff; border: 2px solid var(--accent); border-radius: 8px;
+            padding: 1.4rem 1.6rem; margin: 2.4rem 0; }
+  .assess h2 { border: none; margin-top: 0; padding-top: 0; color: var(--accent); }
+  textarea { width: 100%; min-height: 8rem; font-family: inherit; font-size: 1rem;
+             padding: .7rem; border: 1px solid var(--rule); border-radius: 5px;
+             background: var(--paper); resize: vertical; }
+  .conf { margin: .8rem 0; }
+  .conf label { font-size: .92rem; margin-right: .8rem; cursor: pointer; }
+  button { background: var(--accent); color: #fff; border: none; border-radius: 5px;
+           padding: .6rem 1.3rem; font-size: 1rem; font-family: inherit; cursor: pointer; margin-top: .6rem; }
+  button:hover { background: #5e1818; }
+  button:disabled { opacity: .5; cursor: wait; }
+  .result { margin-top: 1.2rem; padding: 1rem 1.2rem; border-radius: 6px; display: none; }
+  .result.show { display: block; }
+  .result.model { background: var(--code-bg); border: 1px solid var(--rule); }
+  .result.feedback { background: var(--accent-soft); border: 1px solid var(--accent); }
+  .result h3 { margin-top: 0; }
+  .status { font-size: .88rem; color: var(--muted); font-style: italic; margin-top: .5rem; }
+  .rubric { font-size: .95rem; }
+  .rubric li { margin: .35rem 0; }
+
+  footer { margin-top: 3.5rem; border-top: 1px solid var(--rule); padding-top: 1rem;
+           font-size: .9rem; color: var(--muted); }
+  footer a { color: var(--muted); }
+  .nav { font-size: .9rem; margin-top: 1.5rem; }
+
+  @media print {
+    body { font-size: 11pt; max-width: none; }
+    .assess, button { break-inside: avoid; }
+    details.cite > .cite-body { display: block !important; }
+    details.cite > summary { vertical-align: baseline; }
+    button { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<p class="eyebrow">Category Theory · Lesson 2</p>
+<h1>Functors</h1>
+<p class="subtitle">The structure-preserving maps between categories.</p>
+
+<p class="lede">A category packages objects and their arrows; a <strong>functor</strong> is the right notion of map <em>between</em> two such packages. It is what lets category theory compare one mathematical world with another and carry constructions across — and historically it is the reason categories were defined at all, as the domain and codomain of these maps.<details class="cite"><summary>hist</summary><span class="cite-body">Recall from Lesson 1: Eilenberg &amp; Mac Lane (1945) defined categories <em>in order to</em> define functors (and functors in order to define natural transformations). The motivating functors came from algebraic topology — homology and the fundamental group, both met below. <a href="https://www.ams.org/journals/tran/1945-058-00/S0002-9947-1945-0013131-6/S0002-9947-1945-0013131-6.pdf">Eilenberg–Mac Lane (1945)</a>.</span></details></p>
+
+<h2>1 · The definition</h2>
+
+<p>Let <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi></math> and <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">D</mi></math> be categories. A <strong>functor</strong> <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi><mover><mo>&#x27F6;</mo><mi>F</mi></mover><mi mathvariant="script">D</mi></math> consists of two assignments,<details class="cite"><summary>def</summary><span class="cite-body">Riehl, <em>Category Theory in Context</em>, Def. 1.3.1; Leinster, <em>Basic Category Theory</em>, §1.2; Mac Lane, <em>CWM</em>, §I.3. <a href="https://emilyriehl.github.io/files/context.pdf">Riehl PDF</a> · <a href="https://arxiv.org/abs/1612.09375">Leinster</a> · <a href="https://ncatlab.org/nlab/show/functor">nLab: functor</a>.</span></details> subject to two laws.</p>
+
+<p>The data:</p>
+<ul class="examples">
+  <li><b>On objects</b> — to each object <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>A</mi></math> of <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi></math>, an object <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>F</mi><mo>(</mo><mi>A</mi><mo>)</mo></math> of <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">D</mi></math>.</li>
+  <li><b>On morphisms</b> — to each arrow <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>A</mi><mover><mo>&#x27F6;</mo><mi>f</mi></mover><mi>B</mi></math> of <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi></math>, an arrow <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>F</mi><mo>(</mo><mi>A</mi><mo>)</mo><mover><mo>&#x27F6;</mo><mrow><mi>F</mi><mo>(</mo><mi>f</mi><mo>)</mo></mrow></mover><mi>F</mi><mo>(</mo><mi>B</mi><mo>)</mo></math> of <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">D</mi></math>. (So <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>F</mi></math> sends domain to domain and codomain to codomain.)</li>
+</ul>
+
+<p>The laws (<strong>functoriality</strong>):</p>
+<div class="axioms">
+<ol>
+  <li><strong>Preserves composition.</strong> For composable <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>A</mi><mover><mo>&#x27F6;</mo><mi>f</mi></mover><mi>B</mi></math>, <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>B</mi><mover><mo>&#x27F6;</mo><mi>g</mi></mover><mi>C</mi></math>,
+    <math xmlns="http://www.w3.org/1998/Math/MathML" class="display">
+      <mrow><mi>F</mi><mo>(</mo><mi>f</mi><mi>g</mi><mo>)</mo></mrow><mo>=</mo><mrow><mi>F</mi><mo>(</mo><mi>f</mi><mo>)</mo><mspace width="0.2em"/><mi>F</mi><mo>(</mo><mi>g</mi><mo>)</mo></mrow>
+    </math></li>
+  <li><strong>Preserves identities.</strong> For each object <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>A</mi></math>,
+    <math xmlns="http://www.w3.org/1998/Math/MathML" class="display">
+      <mrow><mi>F</mi><mo>(</mo><msub><mi>id</mi><mi>A</mi></msub><mo>)</mo></mrow><mo>=</mo><msub><mi>id</mi><mrow><mi>F</mi><mo>(</mo><mi>A</mi><mo>)</mo></mrow></msub>
+    </math></li>
+</ol>
+</div>
+
+<p>A functor as just defined is <strong>covariant</strong>: it keeps the direction of every arrow. (A functor that systematically <em>reverses</em> arrows is <strong>contravariant</strong> — equivalently a covariant functor out of the opposite category; we take that up next lesson.)<details class="cite"><summary>co/contra</summary><span class="cite-body">"Covariant" is the default; "functor" unqualified means covariant. Contravariance and the opposite category <math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mi mathvariant="script">C</mi><mi>op</mi></msup></math> are treated in Riehl §1.2–1.3 and Leinster §1.2.</span></details></p>
+
+<div class="callout">
+<span class="label">Convention reminder</span>
+<p style="margin:.4rem 0 0">In our left-to-right notation the composition law reads <math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>F</mi><mo>(</mo><mi>f</mi><mi>g</mi><mo>)</mo></mrow><mo>=</mo><mrow><mi>F</mi><mo>(</mo><mi>f</mi><mo>)</mo><mspace width="0.2em"/><mi>F</mi><mo>(</mo><mi>g</mi><mo>)</mo></mrow></math> — order preserved. Most sources, composing right-to-left, write the same law as <math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>F</mi><mo>(</mo><mi>g</mi><mo>∘</mo><mi>f</mi><mo>)</mo></mrow><mo>=</mo><mrow><mi>F</mi><mo>(</mo><mi>g</mi><mo>)</mo><mo>∘</mo><mi>F</mi><mo>(</mo><mi>f</mi><mo>)</mo></mrow></math>. Reverse to translate.</p>
+</div>
+
+<h3>The induced map on hom-sets</h3>
+<p>Packaging the morphism assignment by source and target: for each pair <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>A</mi><mo>,</mo><mi>B</mi></math>, a functor gives a function</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" class="display">
+  <mrow><msub><mi>F</mi><mrow><mi>A</mi><mo>,</mo><mi>B</mi></mrow></msub><mo>:</mo><mi mathvariant="script">C</mi><mo>(</mo><mi>A</mi><mo>,</mo><mi>B</mi><mo>)</mo><mo>&#x27F6;</mo><mi mathvariant="script">D</mi><mo>(</mo><mi>F</mi><mo>(</mo><mi>A</mi><mo>)</mo><mo>,</mo><mi>F</mi><mo>(</mo><mi>B</mi><mo>)</mo><mo>)</mo></mrow><mo>,</mo><mspace width="0.6em"/><mrow><mi>f</mi><mo>&#x21A6;</mo><mi>F</mi><mo>(</mo><mi>f</mi><mo>)</mo></mrow>
+</math>
+<p>These hom-set maps are where the future lives: when each is injective the functor is <em>faithful</em>, when surjective <em>full</em> — the vocabulary in which the Yoneda lemma is eventually stated. We only name them here.<details class="cite"><summary>fwd</summary><span class="cite-body">Full and faithful functors: Riehl §1.5; they are central to the Yoneda lemma (Riehl §2.2). Flagged now, developed later.</span></details></p>
+
+<h2>2 · Functors in the wild</h2>
+<p>The definition earns its keep through how much it already covers. Each example below names the object action and the morphism action — that pair is the whole content.</p>
+
+<ul class="examples">
+  <li><b>Forgetful functors.</b> <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="bold">Grp</mi><mover><mo>&#x27F6;</mo><mi>U</mi></mover><mi mathvariant="bold">Set</mi></math> sends a group to its underlying set and a homomorphism to itself-as-a-function — it <em>forgets</em> structure. Likewise <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="bold">Top</mi><mo>&#x27F6;</mo><mi mathvariant="bold">Set</mi></math>, <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="bold">Vect</mi><mo>&#x27F6;</mo><mi mathvariant="bold">Set</mi></math>. Its partner, the <b>free</b> functor <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="bold">Set</mi><mover><mo>&#x27F6;</mo><mi>F</mi></mover><mi mathvariant="bold">Grp</mi></math> (free group on a set), points ahead to adjunctions.<details class="cite"><summary>ex</summary><span class="cite-body">Forgetful and free functors: Leinster §1.2 and Riehl §1.3. The free ⊣ forgetful pairing is the prototypical adjunction (Leinster Ch. 2).</span></details></li>
+
+  <li><b>The fundamental group.</b> <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi mathvariant="bold">Top</mi><mo>&#x2217;</mo></msub><mover><mo>&#x27F6;</mo><msub><mi>&#x03C0;</mi><mn>1</mn></msub></mover><mi mathvariant="bold">Grp</mi></math> sends a pointed space to its fundamental group and a based continuous map to the induced homomorphism. Functoriality (<math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msub><mi>&#x03C0;</mi><mn>1</mn></msub><mo>(</mo><mi>f</mi><mi>g</mi><mo>)</mo></mrow><mo>=</mo><mrow><msub><mi>&#x03C0;</mi><mn>1</mn></msub><mo>(</mo><mi>f</mi><mo>)</mo><mspace width="0.2em"/><msub><mi>&#x03C0;</mi><mn>1</mn></msub><mo>(</mo><mi>g</mi><mo>)</mo></mrow></math>) is exactly what makes it a tool: homeomorphic spaces get isomorphic groups, so a group difference proves a topological difference. This is the kind of example category theory was invented for.</li>
+
+  <li><b>A homomorphism <em>is</em> a functor.</b> Recall a monoid (or group) <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>M</mi></math> is a one-object category <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="bold">B</mi><mi>M</mi></math>: its arrows are the elements, composition is the operation, the identity is the unit. A functor <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="bold">B</mi><mi>M</mi><mo>&#x27F6;</mo><mi mathvariant="bold">B</mi><mi>N</mi></math> sends the one object to the one object and each element <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>m</mi></math> to <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>F</mi><mo>(</mo><mi>m</mi><mo>)</mo></math> with <math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>F</mi><mo>(</mo><mi>m</mi><mi>n</mi><mo>)</mo></mrow><mo>=</mo><mrow><mi>F</mi><mo>(</mo><mi>m</mi><mo>)</mo><mspace width="0.2em"/><mi>F</mi><mo>(</mo><mi>n</mi><mo>)</mo></mrow></math> — precisely a monoid homomorphism. The two functor laws collapse to the two homomorphism laws.<details class="cite"><summary>delooping</summary><span class="cite-body">The one-object category of a monoid is its <em>delooping</em> <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="bold">B</mi><mi>M</mi></math>; functors <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="bold">B</mi><mi>M</mi><mo>&#x2192;</mo><mi mathvariant="bold">B</mi><mi>N</mi></math> = monoid homomorphisms. Riehl Ex. 1.3.x; <a href="https://ncatlab.org/nlab/show/delooping">nLab: delooping</a>. (Functors <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="bold">B</mi><mi>G</mi><mo>&#x2192;</mo><mi mathvariant="bold">Set</mi></math> are exactly <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>G</mi></math>-sets — a preview of representable functors.)</span></details></li>
+
+  <li><b>The hom-functor <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi><mo>(</mo><mi>A</mi><mo>,</mo><mo>&#x2212;</mo><mo>)</mo></math>.</b> Fix an object <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>A</mi></math> in a locally small <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi></math>. Then <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi><mo>(</mo><mi>A</mi><mo>,</mo><mo>&#x2212;</mo><mo>)</mo><mo>:</mo><mi mathvariant="script">C</mi><mo>&#x27F6;</mo><mi mathvariant="bold">Set</mi></math> sends an object <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>X</mi></math> to the set <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi><mo>(</mo><mi>A</mi><mo>,</mo><mi>X</mi><mo>)</mo></math>, and an arrow <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>X</mi><mover><mo>&#x27F6;</mo><mi>f</mi></mover><mi>Y</mi></math> to the function "post-compose with <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>f</mi></math>", <math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>h</mi><mo>&#x21A6;</mo><mi>h</mi><mi>f</mi></mrow></math>. This single family of functors is the engine of the <strong>Yoneda lemma</strong> — your stated destination — so it is worth recognizing now.<details class="cite"><summary>yoneda</summary><span class="cite-body">Representable functors <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi><mo>(</mo><mi>A</mi><mo>,</mo><mo>−</mo><mo>)</mo></math> and the Yoneda lemma: Riehl §2; Leinster Ch. 4. We will build to this deliberately.</span></details></li>
+</ul>
+
+<h2>3 · Functors compose</h2>
+<p>Functors are themselves arrows, and they behave like it. Given <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi><mover><mo>&#x27F6;</mo><mi>F</mi></mover><mi mathvariant="script">D</mi></math> and <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">D</mi><mover><mo>&#x27F6;</mo><mi>G</mi></mover><mi mathvariant="script">E</mi></math>, the composite <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>F</mi><mi>G</mi></math> (do <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>F</mi></math>, then <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>G</mi></math>) is again a functor, and each category has an <strong>identity functor</strong> <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>id</mi><mi mathvariant="script">C</mi></msub></math> fixing every object and arrow. Composition of functors is associative with these as units — so <strong>small categories and functors themselves form a category</strong>, <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="bold">Cat</mi></math>.<details class="cite"><summary>cat</summary><span class="cite-body"><math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="bold">Cat</mi></math>, the category of small categories and functors: Riehl §1.3, Leinster §1.2. Restricting to <em>small</em> categories keeps it a legitimate (large) category — the size bookkeeping from Lesson 1 at work.</span></details></p>
+
+<h2 id="assess">4 · State the definition</h2>
+<div class="assess">
+  <p><strong>Without scrolling up</strong>, write the complete definition of a functor <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi><mover><mo>&#x27F6;</mo><mi>F</mi></mover><mi mathvariant="script">D</mi></math> — both pieces of data and both laws. Then, if you like, name one functor from a field you know and state what it does on objects and on morphisms.</p>
+
+  <div class="conf">
+    <span style="font-size:.92rem;font-weight:600">How confident are you this is complete and correct?</span><br>
+    <label><input type="radio" name="conf" value="low"> Shaky</label>
+    <label><input type="radio" name="conf" value="med"> Fairly sure</label>
+    <label><input type="radio" name="conf" value="high"> Certain</label>
+  </div>
+
+  <textarea id="answer" placeholder="A functor F : 𝒞 → 𝒟 consists of…"></textarea>
+  <button id="grade">Submit for grading</button>
+  <div class="status" id="status"></div>
+
+  <div class="result feedback" id="feedback">
+    <h3>Tutor feedback</h3>
+    <div id="feedbackBody"></div>
+  </div>
+
+  <div class="result model" id="model">
+    <h3>Model answer &amp; self-scoring rubric</h3>
+    <p>A <strong>functor</strong> <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi><mover><mo>&#x27F6;</mo><mi>F</mi></mover><mi mathvariant="script">D</mi></math> consists of:</p>
+    <ul class="rubric">
+      <li>① an <strong>object assignment</strong>: each object <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>A</mi></math> of <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi></math> gives an object <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>F</mi><mo>(</mo><mi>A</mi><mo>)</mo></math> of <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">D</mi></math>;</li>
+      <li>② a <strong>morphism assignment</strong>: each <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>A</mi><mover><mo>&#x27F6;</mo><mi>f</mi></mover><mi>B</mi></math> gives <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>F</mi><mo>(</mo><mi>A</mi><mo>)</mo><mover><mo>&#x27F6;</mo><mrow><mi>F</mi><mo>(</mo><mi>f</mi><mo>)</mo></mrow></mover><mi>F</mi><mo>(</mo><mi>B</mi><mo>)</mo></math> (respecting domain/codomain);</li>
+      <li>③ <strong>preserving composition</strong>: <math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>F</mi><mo>(</mo><mi>f</mi><mi>g</mi><mo>)</mo></mrow><mo>=</mo><mrow><mi>F</mi><mo>(</mo><mi>f</mi><mo>)</mo><mspace width="0.2em"/><mi>F</mi><mo>(</mo><mi>g</mi><mo>)</mo></mrow></math>;</li>
+      <li>④ <strong>preserving identities</strong>: <math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>F</mi><mo>(</mo><msub><mi>id</mi><mi>A</mi></msub><mo>)</mo></mrow><mo>=</mo><msub><mi>id</mi><mrow><mi>F</mi><mo>(</mo><mi>A</mi><mo>)</mo></mrow></msub></math>.</li>
+    </ul>
+    <p style="font-size:.95rem"><strong>Score:</strong> one point each for ①–④. Naming a standard notion counts in full — "preserves composition and identities" earns ③ and ④; you needn't write the equations. A vague "it preserves structure" that names neither earns nothing. <strong>4:</strong> a pass. <strong>2–3:</strong> something's missing — re-read §1 and retry. <strong>0–1:</strong> re-read §1.</p>
+  </div>
+</div>
+
+<p>Ask me about anything here that's unclear — or bring me the example functor you came up with and we'll check it together. Next lesson: <em>the opposite category and contravariant functors</em>, then on to natural transformations.</p>
+
+<div class="nav">← <a href="0001-what-is-a-category.html">Lesson 1: What is a Category?</a> &nbsp;·&nbsp; Reference: <a href="../reference/GLOSSARY.html">Glossary</a></div>
+
+<footer>
+  <p><strong>Primary source to read:</strong> Tom Leinster, <em>Basic Category Theory</em>, §1.2 (functors). <a href="https://arxiv.org/abs/1612.09375">arxiv.org/abs/1612.09375</a>. Canonical: Mac Lane §I.3; friendly second pass: Riehl §1.3 (<a href="https://emilyriehl.github.io/files/context.pdf">free PDF</a>).</p>
+  <p>Lesson 2 · grading by embedded tutor (Claude) when your API key is configured; self-grading otherwise.</p>
+</footer>
+
+<script>
+async function gradeWithClaude(systemPrompt, userContent) {
+  if (!window.ANTHROPIC_API_KEY || window.ANTHROPIC_API_KEY === "PASTE-YOUR-KEY-HERE") return null;
+  try {
+    const res = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        "x-api-key": window.ANTHROPIC_API_KEY,
+        "anthropic-version": "2023-06-01",
+        "anthropic-dangerous-direct-browser-access": "true",
+      },
+      body: JSON.stringify({
+        model: "claude-opus-4-8",
+        max_tokens: 1024,
+        system: systemPrompt,
+        messages: [{ role: "user", content: userContent }],
+      }),
+    });
+    if (!res.ok) return null;
+    const data = await res.json();
+    return data.content.map((b) => (b.type === "text" ? b.text : "")).join("");
+  } catch (e) {
+    return null;
+  }
+}
+
+const SYSTEM = `You are a strict but fair category-theory tutor grading a learner's from-memory definition of a FUNCTOR F : C -> D. Grade against THIS rubric only, awarding one point each (max 4):
+1. OBJECT assignment: F sends each object of C to an object of D.
+2. MORPHISM assignment: F sends each arrow f:A->B to an arrow F(A)->F(B), respecting domain and codomain.
+3. PRESERVES COMPOSITION: F(fg) = F(f) F(g) (i.e. F of a composite is the composite of the images).
+4. PRESERVES IDENTITIES: F(id_A) = id_{F(A)}.
+
+CONVENTION: this workspace composes LEFT-TO-RIGHT by juxtaposition ("fg" = f then g) and declares morphisms in labeled-arrow style "A --f--> B". Do NOT penalize that. Right-to-left "F(g∘f)=F(g)∘F(f)" is equally acceptable for item 3 — same content.
+
+FLUENCY CREDIT: the learner is a fluent mathematician. Award FULL credit for correctly NAMING a standard notion; they need NOT restate or expand its definition. "F preserves composition" earns item 3 in full; "F preserves identities" earns item 4 in full; the equations are OPTIONAL. "F is structure-preserving: it respects composition and identities" earns BOTH 3 and 4.
+ANTI-VAGUENESS (the limit): a gesture that names nothing specific earns nothing. "It preserves the structure" / "respects everything" WITHOUT naming composition and identities earns NO credit for 3 or 4. Naming the wrong thing earns no credit. The learner must name (or state) each required item.
+
+OPTIONAL EXAMPLE: the learner may add a functor from another field. If present, sanity-check it in one line (correct object action + morphism action + roughly functorial?); do not count it in the /4 score, but note if it is wrong.
+
+Be strict, not sycophantic; name every missing item plainly. The learner gave a pre-answer confidence — if confidence is high but score < 4, flag the miscalibration.
+
+Respond EXACTLY in this format:
+SCORE: X/4
+VERDICT: PASS (4) or NEEDS WORK (<=3)
+MISSING: <items 1-4 not adequately covered, or "none">
+EXAMPLE: <one line on their example, or "none given">
+CALIBRATION: <one sentence: stated confidence vs score>
+NEXT: <one sentence on the single most useful thing to firm up>`;
+
+const btn = document.getElementById("grade");
+const statusEl = document.getElementById("status");
+const fb = document.getElementById("feedback");
+const fbBody = document.getElementById("feedbackBody");
+const modelEl = document.getElementById("model");
+
+function selectedConf() {
+  const r = document.querySelector('input[name="conf"]:checked');
+  return r ? r.value : "(not stated)";
+}
+
+btn.addEventListener("click", async () => {
+  const ans = document.getElementById("answer").value.trim();
+  if (ans.length < 10) { statusEl.textContent = "Write your definition first — from memory."; return; }
+  btn.disabled = true;
+  statusEl.textContent = "Grading…";
+
+  const userContent = `Learner's stated confidence: ${selectedConf()}\n\nLearner's answer:\n"""${ans}"""`;
+  const out = await gradeWithClaude(SYSTEM, userContent);
+
+  if (out) {
+    fbBody.innerHTML = out.replace(/\n/g, "<br>");
+    fb.classList.add("show");
+    modelEl.classList.add("show");
+    statusEl.textContent = "Graded by your embedded tutor. Compare against the model answer below.";
+  } else {
+    modelEl.classList.add("show");
+    statusEl.textContent = "No API key detected (or the call failed) — grade yourself against the rubric below.";
+  }
+  btn.disabled = false;
+});
+</script>
+</body>
+</html>

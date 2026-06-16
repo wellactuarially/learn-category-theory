@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Category Theory · Glossary</title>
+<style>
+  :root { --ink:#1a1a1a; --paper:#fdfcf9; --rule:#d9d4c7; --accent:#7a1f1f; --muted:#6b6557; --code:#f4f1ea; }
+  * { box-sizing:border-box; }
+  body { background:var(--paper); color:var(--ink);
+         font-family: Palatino, "Palatino Linotype", "Book Antiqua", Georgia, serif;
+         line-height:1.55; max-width:44rem; margin:0 auto; padding:3rem 1.6rem 5rem; font-size:1.1rem; }
+  h1 { font-size:1.9rem; margin:0 0 .2rem; }
+  .sub { color:var(--muted); font-style:italic; margin-top:0; }
+  h2 { font-size:1.2rem; color:var(--accent); margin:2.2rem 0 .4rem; border-bottom:1px solid var(--rule); padding-bottom:.3rem; }
+  dl { margin:0; }
+  dt { font-weight:700; margin-top:1.1rem; }
+  dd { margin:.15rem 0 0; }
+  .avoid { color:var(--muted); font-size:.86rem; font-style:italic; }
+  .mono, code { font-family:"SF Mono", Menlo, Consolas, monospace; font-size:.88em; background:var(--code); padding:.05em .3em; border-radius:3px; }
+  math { font-size:1.05em; white-space:nowrap; }
+  a { color:var(--accent); }
+  footer { margin-top:3rem; border-top:1px solid var(--rule); padding-top:.8rem; font-size:.85rem; color:var(--muted); }
+  @media print { body { font-size:10.5pt; max-width:none; } }
+</style>
+</head>
+<body>
+<h1>Category Theory — Glossary</h1>
+<p class="sub">The canonical language of this workspace. Once a term is defined here, every lesson uses it this way.</p>
+
+<p style="background:#f0f4f0;border-left:3px solid #4a6b4a;border-radius:0 4px 4px 0;padding:.7rem 1rem;font-size:.95rem;">
+<strong>Composition convention:</strong> this workspace composes <strong>left-to-right by juxtaposition</strong>, written <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>f</mi><mi>g</mi></math> and read "f then g" — for <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>A</mi><mover><mo>&#x27F6;</mo><mi>f</mi></mover><mi>B</mi></math>, <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>B</mi><mover><mo>&#x27F6;</mo><mi>g</mi></mover><mi>C</mi></math> the composite is <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>A</mi><mover><mo>&#x27F6;</mo><mrow><mi>f</mi><mi>g</mi></mrow></mover><mi>C</mi></math>. Morphisms are declared in labeled-arrow style <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>A</mi><mover><mo>&#x27F6;</mo><mi>f</mi></mover><mi>B</mi></math>, not <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>f</mi><mo>:</mo><mi>A</mi><mo>→</mo><mi>B</mi></math>. Most sources use right-to-left <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>g</mi><mo>∘</mo><mi>f</mi></math>; when carrying a statement over from one, <strong>reverse the order</strong>.
+</p>
+
+<h2>Core definition</h2>
+<dl>
+  <dt>Category</dt>
+  <dd>A collection of <strong>objects</strong> and, between each ordered pair of them, a collection of <strong>morphisms</strong>, equipped with an associative <strong>composition</strong> and an <strong>identity</strong> morphism on each object satisfying the unit law. Knows only arrows and how they compose — no internal structure of objects is assumed.
+  <div class="avoid">Avoid: "a kind of set", "a structure" (too vague).</div></dd>
+
+  <dt>Object</dt>
+  <dd>A member of a category's collection <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>ob</mi><mo>(</mo><mi mathvariant="script">C</mi><mo>)</mo></math>. Treated as a featureless point; all its meaning comes from the morphisms into and out of it.</dd>
+
+  <dt>Morphism (arrow)</dt>
+  <dd>A directed arrow <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>A</mi><mover><mo>&#x27F6;</mo><mi>f</mi></mover><mi>B</mi></math> with a definite <strong>domain</strong> (<math xmlns="http://www.w3.org/1998/Math/MathML"><mi>A</mi></math>) and <strong>codomain</strong> (<math xmlns="http://www.w3.org/1998/Math/MathML"><mi>B</mi></math>). The collection of all such is the <em>hom-collection</em> <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi><mo>(</mo><mi>A</mi><mo>,</mo><mi>B</mi><mo>)</mo></math>.
+  <div class="avoid">Avoid: "function" (a morphism need not be a function; that's only the special case of <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="bold">Set</mi></math>), "map" used loosely.</div></dd>
+
+  <dt>Composition</dt>
+  <dd>The operation sending composable morphisms <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>A</mi><mover><mo>&#x27F6;</mo><mi>f</mi></mover><mi>B</mi></math>, <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>B</mi><mover><mo>&#x27F6;</mo><mi>g</mi></mover><mi>C</mi></math> to a single <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>A</mi><mover><mo>&#x27F6;</mo><mrow><mi>f</mi><mi>g</mi></mrow></mover><mi>C</mi></math>. Defined exactly when codomain meets domain.
+  <div class="avoid">Avoid: <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>g</mi><mo>∘</mo><mi>f</mi></math> (right-to-left order — this workspace composes left-to-right by juxtaposition; see convention note above).</div></dd>
+
+  <dt>Identity morphism</dt>
+  <dd>The distinguished morphism <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>A</mi><mover><mo>&#x27F6;</mo><msub><mi>id</mi><mi>A</mi></msub></mover><mi>A</mi></math> on each object that leaves any composable morphism unchanged: <math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msub><mi>id</mi><mi>A</mi></msub><mi>f</mi></mrow><mo>=</mo><mi>f</mi><mo>=</mo><mrow><mi>f</mi><msub><mi>id</mi><mi>B</mi></msub></mrow></math>.</dd>
+
+  <dt>Associativity</dt>
+  <dd>The law <math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo>(</mo><mi>f</mi><mi>g</mi><mo>)</mo><mi>h</mi></mrow><mo>=</mo><mrow><mi>f</mi><mo>(</mo><mi>g</mi><mi>h</mi><mo>)</mo></mrow></math> whenever the composites are defined — parenthesization of an arrow-path never matters.</dd>
+
+  <dt>Unit (identity) law</dt>
+  <dd>The law that identities are two-sided units for composition: <math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msub><mi>id</mi><mi>A</mi></msub><mi>f</mi></mrow><mo>=</mo><mi>f</mi><mo>=</mo><mrow><mi>f</mi><msub><mi>id</mi><mi>B</mi></msub></mrow></math>. The most commonly forgotten axiom.</dd>
+</dl>
+
+<h2>Foundations &amp; size</h2>
+<dl>
+  <dt>Collection</dt>
+  <dd>A neutral term for an aggregate of objects, broad enough to include aggregates too large to be sets. Made precise by a foundation: it is either a <strong>set</strong> or a <strong>proper class</strong> (NBG), or graded by smallness relative to a fixed <strong>Grothendieck universe</strong>.</dd>
+
+  <dt>Set</dt>
+  <dd>A collection that is a legitimate object of the chosen set theory. Under the universe approach, a "small" collection — a member of the fixed Grothendieck universe <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">U</mi></math>.</dd>
+
+  <dt>Proper class</dt>
+  <dd>A collection that is <em>not</em> a set, because it is too large — e.g. the class of all sets. Self-membership of such a thing is what Russell's paradox exploits.
+  <div class="avoid">Avoid: "big set", "infinite set".</div></dd>
+
+  <dt>Grothendieck universe (<math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">U</mi></math>)</dt>
+  <dd>A set closed under every everyday set-forming operation (its existence is equivalent to an inaccessible cardinal). Its members are the <strong>small</strong> collections; fixing one is Mac Lane's route to making "set vs collection" precise.</dd>
+
+  <dt>Locally small</dt>
+  <dd>A category in which every hom-collection <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi><mo>(</mo><mi>A</mi><mo>,</mo><mi>B</mi><mo>)</mo></math> is a genuine <em>set</em> (not a proper class).</dd>
+
+  <dt>Small</dt>
+  <dd>A category that is locally small <em>and</em> whose objects also form a set. Distinguished from large categories to avoid size paradoxes (e.g. "the category of all categories").</dd>
+</dl>
+
+<h2>Functors</h2>
+<dl>
+  <dt>Functor</dt>
+  <dd>A structure-preserving map between categories, <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi><mover><mo>&#x27F6;</mo><mi>F</mi></mover><mi mathvariant="script">D</mi></math>: an assignment of objects to objects and morphisms to morphisms (respecting domain and codomain) that satisfies <strong>functoriality</strong>.
+  <div class="avoid">Avoid: "map of categories" (use functor), "transformation" (reserved for natural transformations).</div></dd>
+
+  <dt>Functoriality</dt>
+  <dd>The two laws a functor obeys: it preserves composition, <math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>F</mi><mo>(</mo><mi>f</mi><mi>g</mi><mo>)</mo></mrow><mo>=</mo><mrow><mi>F</mi><mo>(</mo><mi>f</mi><mo>)</mo><mspace width="0.2em"/><mi>F</mi><mo>(</mo><mi>g</mi><mo>)</mo></mrow></math>, and preserves identities, <math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>F</mi><mo>(</mo><msub><mi>id</mi><mi>A</mi></msub><mo>)</mo></mrow><mo>=</mo><msub><mi>id</mi><mrow><mi>F</mi><mo>(</mo><mi>A</mi><mo>)</mo></mrow></msub></math>.</dd>
+
+  <dt>Covariant functor</dt>
+  <dd>A functor that keeps the direction of every arrow. The default: an unqualified "functor" means covariant. Its dual — a functor that <em>reverses</em> arrows, equivalently a covariant functor out of the opposite category <math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mi mathvariant="script">C</mi><mi>op</mi></msup></math> — is <strong>contravariant</strong> (developed next lesson).</dd>
+
+  <dt><math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="bold">Cat</mi></math></dt>
+  <dd>The category whose objects are <em>small</em> categories and whose morphisms are functors, with composition of functors and identity functors. (Restricting to small categories keeps it a legitimate large category.)</dd>
+</dl>
+
+<footer>
+Terms are added here only once understood, and revised as understanding deepens. Sources in <a href="../RESOURCES.md">RESOURCES.md</a>. Seeded from <a href="../lessons/0001-what-is-a-category.html">Lesson 1</a> and <a href="../lessons/0002-functors.html">Lesson 2</a>.
+</footer>
+</body>
+</html>

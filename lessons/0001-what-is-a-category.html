@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Lesson 1 · What is a Category?</title>
+<script src="../config.local.js"></script>
+<style>
+  :root {
+    --ink: #1a1a1a;
+    --paper: #fdfcf9;
+    --rule: #d9d4c7;
+    --accent: #7a1f1f;
+    --accent-soft: #f3e9e9;
+    --muted: #6b6557;
+    --code-bg: #f4f1ea;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: et-book, Palatino, "Palatino Linotype", "Book Antiqua", Georgia, serif;
+    line-height: 1.62;
+    max-width: 46rem;
+    margin: 0 auto;
+    padding: 4rem 1.6rem 6rem;
+    font-size: 1.16rem;
+  }
+  h1, h2, h3 { font-weight: 600; line-height: 1.2; }
+  h1 { font-size: 2.1rem; margin: 0 0 .2rem; letter-spacing: -0.01em; }
+  .eyebrow { color: var(--accent); text-transform: uppercase; letter-spacing: .14em;
+             font-size: .74rem; font-weight: 700; }
+  h2 { font-size: 1.4rem; margin: 2.8rem 0 .6rem; padding-top: 1rem; border-top: 1px solid var(--rule); }
+  h3 { font-size: 1.1rem; margin: 1.6rem 0 .3rem; color: var(--accent); }
+  p { margin: .7rem 0; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(122,31,31,.3); }
+  a:hover { border-bottom-color: var(--accent); }
+  .subtitle { color: var(--muted); font-style: italic; margin-top: .1rem; font-size: 1.05rem; }
+  .lede { font-size: 1.05rem; }
+
+  /* Citations: inline expandable */
+  details.cite {
+    display: inline;
+  }
+  details.cite > summary {
+    display: inline;
+    cursor: pointer;
+    color: var(--accent);
+    border-bottom: 1px dotted var(--accent);
+    font-size: .82em;
+    vertical-align: super;
+    line-height: 0;
+    list-style: none;
+    padding: 0 .1em;
+  }
+  details.cite > summary::-webkit-details-marker { display: none; }
+  details.cite[open] > summary { background: var(--accent-soft); border-radius: 3px; }
+  details.cite > .cite-body {
+    display: block;
+    margin: .6rem 0;
+    padding: .7rem .9rem;
+    background: var(--accent-soft);
+    border-left: 3px solid var(--accent);
+    border-radius: 0 4px 4px 0;
+    font-size: .92rem;
+    line-height: 1.5;
+    color: #2a2a2a;
+  }
+
+  .axioms { background: #fff; border: 1px solid var(--rule); border-radius: 6px;
+            padding: 1rem 1.4rem; margin: 1.2rem 0; }
+  .axioms ol { margin: .4rem 0; padding-left: 1.3rem; }
+  .axioms li { margin: .55rem 0; }
+  code, .mono { font-family: "SF Mono", "Cascadia Mono", Menlo, Consolas, monospace;
+                font-size: .9em; background: var(--code-bg); padding: .08em .35em; border-radius: 3px; }
+  .arrow { font-family: "SF Mono", Menlo, monospace; }
+  math { font-size: 1.06em; white-space: nowrap; }
+  math.display { display: block; margin: .2rem 0; font-size: 1.12em; white-space: nowrap; }
+
+  .callout { background: #f0f4f0; border-left: 3px solid #4a6b4a; border-radius: 0 4px 4px 0;
+             padding: .8rem 1.1rem; margin: 1.3rem 0; font-size: .98rem; }
+  .callout .label { font-weight: 700; color: #3a5a3a; font-size: .78rem;
+                    text-transform: uppercase; letter-spacing: .08em; }
+  .illusion { background: #fbf3e8; border-left: 3px solid #b5791f; }
+  .illusion .label { color: #8a5a12; }
+
+  ul.examples { list-style: none; padding-left: 0; }
+  ul.examples li { padding: .5rem 0; border-bottom: 1px dashed var(--rule); }
+  ul.examples li:last-child { border-bottom: none; }
+  ul.examples b { color: var(--accent); }
+
+  /* Assessment */
+  .assess { background: #fff; border: 2px solid var(--accent); border-radius: 8px;
+            padding: 1.4rem 1.6rem; margin: 2.4rem 0; }
+  .assess h2 { border: none; margin-top: 0; padding-top: 0; color: var(--accent); }
+  textarea { width: 100%; min-height: 7rem; font-family: inherit; font-size: 1rem;
+             padding: .7rem; border: 1px solid var(--rule); border-radius: 5px;
+             background: var(--paper); resize: vertical; }
+  .conf { margin: .8rem 0; }
+  .conf label { font-size: .92rem; margin-right: .8rem; cursor: pointer; }
+  button { background: var(--accent); color: #fff; border: none; border-radius: 5px;
+           padding: .6rem 1.3rem; font-size: 1rem; font-family: inherit; cursor: pointer;
+           margin-top: .6rem; }
+  button:hover { background: #5e1818; }
+  button:disabled { opacity: .5; cursor: wait; }
+  .result { margin-top: 1.2rem; padding: 1rem 1.2rem; border-radius: 6px; display: none; }
+  .result.show { display: block; }
+  .result.model { background: var(--code-bg); border: 1px solid var(--rule); }
+  .result.feedback { background: var(--accent-soft); border: 1px solid var(--accent); }
+  .result h3 { margin-top: 0; }
+  .status { font-size: .88rem; color: var(--muted); font-style: italic; margin-top: .5rem; }
+  .rubric { font-size: .95rem; }
+  .rubric li { margin: .35rem 0; }
+
+  footer { margin-top: 3.5rem; border-top: 1px solid var(--rule); padding-top: 1rem;
+           font-size: .9rem; color: var(--muted); }
+  footer a { color: var(--muted); }
+  .nav { font-size: .9rem; margin-top: 1.5rem; }
+
+  @media print {
+    body { font-size: 11pt; max-width: none; }
+    .assess, button { break-inside: avoid; }
+    details.cite > .cite-body { display: block !important; }
+    details.cite > summary { vertical-align: baseline; }
+    button { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<p class="eyebrow">Category Theory · Lesson 1</p>
+<h1>What is a Category?</h1>
+<p class="subtitle">The definition, where it came from, and why it conquered modern mathematics.</p>
+
+<p class="lede">A category is among the simplest definitions in mathematics and among the most far-reaching. This lesson states it precisely, traces it to the 1945 paper that introduced it, and sets out why it became a common language across the mathematical sciences.</p>
+
+<h2>1 · The definition</h2>
+
+<p>A <strong>category</strong> <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi></math> consists of two kinds of data and three laws they must obey.<details class="cite"><summary>def</summary><span class="cite-body">The formulation here follows Riehl, <em>Category Theory in Context</em>, §1.1, Def. 1.1.1, and agrees with Mac Lane, <em>Categories for the Working Mathematician</em>, §I.2. <a href="https://emilyriehl.github.io/files/context.pdf">Riehl PDF</a> · <a href="https://ncatlab.org/nlab/show/category">nLab: category</a>.</span></details> The data:</p>
+
+<ul class="examples">
+  <li><b>Objects</b> — a collection <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>ob</mi><mo>(</mo><mi mathvariant="script">C</mi><mo>)</mo></math>. Write <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>A</mi><mo>,</mo><mi>B</mi><mo>,</mo><mi>C</mi><mo>,</mo><mo>…</mo></math></li>
+  <li><b>Morphisms</b> (arrows) — for each ordered pair of objects <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>A</mi><mo>,</mo><mi>B</mi></math>, a collection <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi><mo>(</mo><mi>A</mi><mo>,</mo><mi>B</mi><mo>)</mo></math> of arrows <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>A</mi><mover><mo>&#x27F6;</mo><mi>f</mi></mover><mi>B</mi></math>. Every arrow has a definite <em>domain</em> and <em>codomain</em>.</li>
+</ul>
+
+<div class="callout">
+<span class="label">The word "collection"</span>
+<p style="margin:.4rem 0 0">We say <strong>collection</strong> rather than "set" because the aggregates above can be too large to be sets. In a foundation like ZFC every object is a <strong>set</strong>, yet not every property carves out a set: the property "is a set" specifies the <em>class of all sets</em>, which is a <strong>proper class</strong> — a collection too large to be a set, the very thing Russell's paradox exploits. <strong>Collection</strong> is the neutral term covering both sets and proper classes.</p>
+<p style="margin:.5rem 0 0">Two standard ways make this precise: <strong>(i)</strong> NBG set theory, which admits classes as objects beside sets — a <em>proper class</em> being a class that is a member of nothing; or <strong>(ii)</strong> fix a <strong>Grothendieck universe</strong> <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">U</mi></math> — a set so large it is closed under every everyday set-forming operation (its existence is equivalent to an inaccessible cardinal) — and call a collection <strong>small</strong> exactly when it is a member of <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">U</mi></math>. Mac Lane takes route (ii).<details class="cite"><summary>found</summary><span class="cite-body">On set-theoretic foundations for category theory — sets vs proper classes, NBG, and Grothendieck universes — see <a href="https://ncatlab.org/nlab/show/category+theory+and+foundations">nLab: category theory and foundations</a>; Mac Lane, <em>Categories for the Working Mathematician</em>, §I.6 (Foundations), which fixes one universe; and Riehl §1.1. Background: <a href="https://en.wikipedia.org/wiki/Small_set_(category_theory)">Small set (category theory)</a>.</span></details></p>
+</div>
+
+<p>The laws:</p>
+
+<div class="axioms">
+<ol>
+  <li><strong>Composition.</strong> Given <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>A</mi><mover><mo>&#x27F6;</mo><mi>f</mi></mover><mi>B</mi></math> and <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>B</mi><mover><mo>&#x27F6;</mo><mi>g</mi></mover><mi>C</mi></math> — i.e. whenever the codomain of one matches the domain of the next — there is a composite <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>A</mi><mover><mo>&#x27F6;</mo><mrow><mi>f</mi><mi>g</mi></mrow></mover><mi>C</mi></math>, read "<em>f then g</em>".</li>
+  <li><strong>Identity.</strong> Every object <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>A</mi></math> carries an identity arrow <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>A</mi><mover><mo>&#x27F6;</mo><msub><mi>id</mi><mi>A</mi></msub></mover><mi>A</mi></math>.</li>
+  <li><strong>The two axioms these must satisfy:</strong>
+    <ul>
+      <li><em>Associativity:</em>
+        <math xmlns="http://www.w3.org/1998/Math/MathML" class="display">
+          <mrow><mo>(</mo><mi>f</mi><mi>g</mi><mo>)</mo><mi>h</mi></mrow>
+          <mo>=</mo>
+          <mrow><mi>f</mi><mo>(</mo><mi>g</mi><mi>h</mi><mo>)</mo></mrow>
+        </math>
+        whenever the composites are defined.</li>
+      <li><em>Unit (identity) law:</em>
+        <math xmlns="http://www.w3.org/1998/Math/MathML" class="display">
+          <mrow><msub><mi>id</mi><mi>A</mi></msub><mi>f</mi></mrow>
+          <mo>=</mo>
+          <mi>f</mi>
+          <mo>=</mo>
+          <mrow><mi>f</mi><msub><mi>id</mi><mi>B</mi></msub></mrow>
+        </math>
+        for every <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>A</mi><mover><mo>&#x27F6;</mo><mi>f</mi></mover><mi>B</mi></math>.</li>
+    </ul>
+  </li>
+</ol>
+</div>
+
+<div class="callout">
+<span class="label">House convention — read this once</span>
+<p style="margin:.4rem 0 0">We compose <strong>left-to-right</strong> (the "diagrammatic" order) and write composition by <strong>juxtaposition</strong>: <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>f</mi><mi>g</mi></math> means "do <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>f</mi></math>, <em>then</em> <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>g</mi></math>", so the types line up the way you read — <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>A</mi><mover><mo>&#x27F6;</mo><mi>f</mi></mover><mi>B</mi><mover><mo>&#x27F6;</mo><mi>g</mi></mover><mi>C</mi></math>. <strong>Most sources do the opposite</strong>, writing <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>g</mi><mo>∘</mo><mi>f</mi></math> for the same arrow (function-application order). The content is identical; only the order differs. When you carry a statement over from Mac Lane, Riehl, Leinster, or nLab, <strong>reverse the order</strong>: their <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>g</mi><mo>∘</mo><mi>f</mi></math> is our <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>f</mi><mi>g</mi></math>. This is the single most common place to slip, so it's worth burning in now.</p>
+</div>
+
+<p>That's all. No elements, no equations between objects, no internal structure assumed — a category knows only its arrows and how they compose. The discipline of saying everything in terms of arrows is exactly what gives category theory its reach.</p>
+
+<div class="callout">
+<span class="label">A point of precision</span>
+<p style="margin:.4rem 0 0">Because each <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi><mo>(</mo><mi>A</mi><mo>,</mo><mi>B</mi><mo>)</mo></math> is a collection, it may be a proper class rather than a set. When every <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi><mo>(</mo><mi>A</mi><mo>,</mo><mi>B</mi><mo>)</mo></math> is a set, <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi></math> is <strong>locally small</strong>; when <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>ob</mi><mo>(</mo><mi mathvariant="script">C</mi><mo>)</mo></math> is a set as well, <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi></math> is <strong>small</strong>. This bookkeeping is what blocks forming "the category of all categories" naively.<details class="cite"><summary>size</summary><span class="cite-body">On smallness / local smallness and the size issues that motivate it, see Leinster, <em>Basic Category Theory</em>, §1.1, and Riehl §1.1. <a href="https://arxiv.org/abs/1612.09375">Leinster (arXiv)</a>.</span></details></p>
+</div>
+
+<h3>The picture worth keeping</h3>
+<p>Think of a directed graph whose edges you're allowed to follow in sequence (compose), where every vertex has a "stay put" loop (identity), and where it never matters how you parenthesize a path. A category is a graph with a <em>compositional</em> structure laid over it.</p>
+
+<h2>2 · A little history</h2>
+
+<p>Category theory was born in a single 1945 paper: Samuel Eilenberg and Saunders Mac Lane's <em>General Theory of Natural Equivalences</em>.<details class="cite"><summary>1945</summary><span class="cite-body">Eilenberg, S. &amp; Mac Lane, S. (1945). "General Theory of Natural Equivalences." <em>Transactions of the AMS</em> <strong>58</strong>(2), 231–294. Presented to the Society Sept. 8, 1942; received May 15, 1945. <a href="https://www.ams.org/journals/tran/1945-058-00/S0002-9947-1945-0013131-6/S0002-9947-1945-0013131-6.pdf">Original PDF (AMS)</a>.</span></details> Strikingly, the concept they actually <em>wanted</em> was the last of the three they had to define.</p>
+
+<p>Their real target was the word <strong>natural</strong>. In algebraic topology, certain isomorphisms — like that between a finite-dimensional vector space and its double dual — felt "canonical" in a way others did not, and mathematicians used the word "natural" informally without being able to say what it meant. To make "natural transformation" precise, Eilenberg and Mac Lane first needed <strong>functors</strong> (maps between the structures being compared); and to define a functor, they first needed <strong>categories</strong> (the structures themselves).<details class="cite"><summary>order</summary><span class="cite-body">The often-quoted remark is Mac Lane's: categories were defined in order to define functors, and functors in order to define natural transformations. See Mac Lane, <em>Categories for the Working Mathematician</em>, Ch. I preface; and the historical note in Riehl §1.1. <a href="https://ncatlab.org/nlab/show/Eilenberg-Mac+Lane">nLab on Eilenberg–Mac Lane</a>.</span></details> So the definition you just reviewed was, historically, scaffolding — built to support a notion of "naturality" that we'll reach in a later lesson, and which sits directly on the road to your mission's destination, the Yoneda lemma.</p>
+
+<p>For its first decades category theory was sometimes dismissed as "general abstract nonsense" — a half-affectionate, half-skeptical label for arguments so general they seemed to be about nothing in particular. The phrase stuck even as the subject proved indispensable.<details class="cite"><summary>nonsense</summary><span class="cite-body">"General abstract nonsense" is attributed in usage to Steenrod; today it's used affectionately for diagram-chasing/categorical arguments. <a href="https://ncatlab.org/nlab/show/abstract+nonsense">nLab: abstract nonsense</a>.</span></details></p>
+
+<h2>3 · Why it took over</h2>
+
+<p>The definition is almost insultingly simple, yet category theory became a lingua franca across mathematics and beyond. Three reasons, building on each other:</p>
+
+<ul class="examples">
+  <li><b>It is everywhere at once.</b> Sets and functions, groups and homomorphisms, vector spaces and linear maps, topological spaces and continuous maps, posets and order-preserving maps, even a single monoid (one object, its elements as arrows) — all are categories. A theorem proved about categories in general is a theorem about <em>all</em> of these simultaneously.<details class="cite"><summary>ex</summary><span class="cite-body">These standard examples are catalogued in Riehl §1.1 (Examples 1.1.3–1.1.4) and Leinster §1.1. The one-object-monoid and poset-as-category examples are the ones that most reliably stretch a beginner's mental model.</span></details></li>
+  <li><b>It defines things by their relationships, not their guts.</b> The categorical style specifies an object by how it maps to and from everything else — a <em>universal property</em>. This is why "the" product, quotient, or free object is characterized up to unique isomorphism without ever opening it up. Spotting these universal properties in the wild is precisely what you set out to do.<details class="cite"><summary>univ</summary><span class="cite-body">Universal properties are the organizing theme of Leinster's book ("At its heart is the concept of a universal property") and the bridge to adjunctions, representables, and limits. <a href="https://arxiv.org/abs/1612.09375">Leinster (arXiv)</a>.</span></details></li>
+  <li><b>It translates between fields.</b> Because a functor carries one category's structure into another's, category theory became the machinery for moving knowledge across domains — algebraic topology was its first home, and it has since become standard language in programming-language semantics (Lambek's types-as-objects, Moggi's monads), quantum theory, databases, probability, and the broad program now called <em>applied category theory</em>.<details class="cite"><summary>apply</summary><span class="cite-body">On categories in CS: Lambek (1980) showed typed programs form a cartesian closed category; Moggi imported monads into semantics. The cross-disciplinary program is surveyed under "applied category theory." <a href="https://en.wikipedia.org/wiki/Applied_category_theory">Applied category theory (overview)</a> · <a href="https://golem.ph.utexas.edu/category/">the n-Category Café</a>.</span></details></li>
+</ul>
+
+<h2 id="assess">4 · State the definition</h2>
+
+<div class="assess">
+  <p><strong>Without scrolling up</strong>, write the complete definition of a category — all the data and all the laws.</p>
+
+  <p style="font-size:.95rem;color:var(--muted)">Prompt: <em>"A category 𝒞 consists of…"</em> — give the objects, the morphisms (with domain/codomain), composition, identities, and the axioms those must satisfy.</p>
+
+  <textarea id="answer" placeholder="A category 𝒞 consists of…"></textarea>
+
+  <div class="conf">
+    <span style="font-size:.92rem;font-weight:600">Before you submit — how confident are you this is complete and correct?</span><br>
+    <label><input type="radio" name="conf" value="low"> Shaky</label>
+    <label><input type="radio" name="conf" value="med"> Fairly sure</label>
+    <label><input type="radio" name="conf" value="high"> Certain</label>
+  </div>
+
+  <button id="grade">Submit for grading</button>
+  <div class="status" id="status"></div>
+
+  <div class="result feedback" id="feedback">
+    <h3>Tutor feedback</h3>
+    <div id="feedbackBody"></div>
+  </div>
+
+  <div class="result model" id="model">
+    <h3>Model answer &amp; self-scoring rubric</h3>
+    <p>A <strong>category 𝒞</strong> consists of:</p>
+    <ul class="rubric">
+      <li>① a collection of <strong>objects</strong>;</li>
+      <li>② for each ordered pair of objects <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>A</mi><mo>,</mo><mi>B</mi></math>, a collection of <strong>morphisms</strong> <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>A</mi><mover><mo>&#x27F6;</mo><mi>f</mi></mover><mi>B</mi></math>, each with a domain and codomain;</li>
+      <li>③ a <strong>composition</strong> operation: composable <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>A</mi><mover><mo>&#x27F6;</mo><mi>f</mi></mover><mi>B</mi></math>, <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>B</mi><mover><mo>&#x27F6;</mo><mi>g</mi></mover><mi>C</mi></math> yield <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>A</mi><mover><mo>&#x27F6;</mo><mrow><mi>f</mi><mi>g</mi></mrow></mover><mi>C</mi></math> (left-to-right, "f then g");</li>
+      <li>④ an <strong>identity</strong> morphism <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>id</mi><mi>A</mi></msub></math> on each object;</li>
+      <li>⑤ satisfying <strong>associativity</strong> of composition, <math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo>(</mo><mi>f</mi><mi>g</mi><mo>)</mo><mi>h</mi></mrow><mo>=</mo><mrow><mi>f</mi><mo>(</mo><mi>g</mi><mi>h</mi><mo>)</mo></mrow></math>;</li>
+      <li>⑥ satisfying the <strong>unit/identity law</strong> <math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msub><mi>id</mi><mi>A</mi></msub><mi>f</mi></mrow><mo>=</mo><mi>f</mi><mo>=</mo><mrow><mi>f</mi><msub><mi>id</mi><mi>B</mi></msub></mrow></math>.</li>
+    </ul>
+    <p style="font-size:.95rem"><strong>Score:</strong> one point each for ①–⑥. Correctly <em>naming</em> a standard concept counts in full — "associative", "unit law" — you needn't write out the equation; but a vague "the usual axioms hold" that names nothing earns nothing. The unit law (⑥) and explicitly naming domain/codomain (②) are the two most commonly dropped. <strong>5–6:</strong> a pass. <strong>3–4:</strong> a law is missing — re-read §1 and try again. <strong>0–2:</strong> re-read §1.</p>
+  </div>
+</div>
+
+<p>Ask me about anything here that's unclear. Next lesson: <em>functors</em> — structure-preserving maps between categories.</p>
+
+<div class="nav">→ Next up: <em>Functors — structure-preserving maps between categories.</em></div>
+
+<footer>
+  <p><strong>Primary source to read:</strong> Tom Leinster, <em>Basic Category Theory</em>, §1.1 — the gentlest rigorous take, free and CC-licensed. <a href="https://arxiv.org/abs/1612.09375">arxiv.org/abs/1612.09375</a>. For the canonical phrasing, Mac Lane §I.2; for a friendly second pass, Riehl §1.1 (<a href="https://emilyriehl.github.io/files/context.pdf">free PDF</a>).</p>
+  <p>Lesson 1 · grading by embedded tutor (Claude) when your API key is configured; self-grading otherwise.</p>
+</footer>
+
+<script>
+async function gradeWithClaude(systemPrompt, userContent) {
+  if (!window.ANTHROPIC_API_KEY || window.ANTHROPIC_API_KEY === "PASTE-YOUR-KEY-HERE") return null;
+  try {
+    const res = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        "x-api-key": window.ANTHROPIC_API_KEY,
+        "anthropic-version": "2023-06-01",
+        "anthropic-dangerous-direct-browser-access": "true",
+      },
+      body: JSON.stringify({
+        model: "claude-opus-4-8",
+        max_tokens: 1024,
+        system: systemPrompt,
+        messages: [{ role: "user", content: userContent }],
+      }),
+    });
+    if (!res.ok) return null;
+    const data = await res.json();
+    return data.content.map((b) => (b.type === "text" ? b.text : "")).join("");
+  } catch (e) {
+    return null;
+  }
+}
+
+const SYSTEM = `You are a strict but fair category-theory tutor grading a learner's from-memory definition of a category. Grade against THIS rubric only, awarding one point each (max 6):
+1. mentions a collection of OBJECTS.
+2. mentions MORPHISMS/arrows between objects, with domain and codomain (an arrow f: A->B).
+3. states COMPOSITION: composable f:A->B and g:B->C give a composite A->C.
+4. states IDENTITY morphism on each object.
+5. states ASSOCIATIVITY of composition.
+6. states the UNIT / IDENTITY LAW (identities are two-sided units for composition).
+
+IMPORTANT CONVENTION: this workspace composes LEFT-TO-RIGHT by juxtaposition, writing "fg" (read "f then g") for A->f->B, B->g->C giving A->C, and declares morphisms in labeled-arrow style "A --f--> B" (LaTeX \\xrightarrow). Do NOT penalize the learner for left-to-right order, juxtaposition, or labeled-arrow notation — these are correct and required here. Right-to-left "g ∘ f" is ALSO acceptable (same content). Judge the mathematical meaning, not the symbol order or notation style.
+
+Rules:
+- Judge meaning, not exact notation. Reasonable paraphrases count.
+- FLUENCY CREDIT: the learner is a fluent mathematician. Award FULL credit for correctly NAMING a standard concept — they need NOT restate or expand its formal definition. "Composition is associative" earns item 5 in full; "identities satisfy the unit law" (or "identities are two-sided units") earns item 6 in full. The equations (fg)h=f(gh) and id_A·f=f=f·id_B are OPTIONAL, not required. This applies to every item (e.g. "morphisms have domains and codomains" fully earns item 2).
+- ANTI-VAGUENESS (the limit on fluency credit): a vague gesture that names nothing specific does NOT earn credit. "The usual axioms hold", "satisfies the obvious coherence conditions", "it's a category-like structure" earn NOTHING for items 5/6 — the learner must NAME (or state) each required item individually. Naming the WRONG concept earns no credit.
+- Do NOT be sycophantic or encouraging for its own sake. Name every missing or vague item plainly.
+- The unit law (6) and explicit domain/codomain (2) are the most commonly dropped — check them especially.
+- The learner stated a pre-answer confidence. If confidence is high but the score is not 6, explicitly flag the miscalibration (a confident gap is the most important thing to fix).
+
+Respond in this exact format:
+SCORE: X/6
+VERDICT: PASS (if 5-6) or NEEDS WORK (if <=4)
+MISSING: <bulleted list of any items 1-6 not adequately covered, or "none">
+CALIBRATION: <one sentence comparing their stated confidence to their score>
+NEXT: <one sentence on the single most useful thing to drill>`;
+
+const btn = document.getElementById("grade");
+const statusEl = document.getElementById("status");
+const fb = document.getElementById("feedback");
+const fbBody = document.getElementById("feedbackBody");
+const modelEl = document.getElementById("model");
+
+function selectedConf() {
+  const r = document.querySelector('input[name="conf"]:checked');
+  return r ? r.value : "(not stated)";
+}
+
+btn.addEventListener("click", async () => {
+  const ans = document.getElementById("answer").value.trim();
+  if (ans.length < 10) { statusEl.textContent = "Write your definition first — from memory."; return; }
+  btn.disabled = true;
+  statusEl.textContent = "Grading…";
+
+  const userContent = `Learner's stated confidence: ${selectedConf()}\n\nLearner's answer:\n"""${ans}"""`;
+  const out = await gradeWithClaude(SYSTEM, userContent);
+
+  if (out) {
+    fbBody.innerHTML = out.replace(/\n/g, "<br>");
+    fb.classList.add("show");
+    modelEl.classList.add("show"); // always show the reference too, for comparison
+    statusEl.textContent = "Graded by your embedded tutor. Compare against the model answer below.";
+  } else {
+    // graceful degradation — retrieval already happened; reveal model answer + self-rubric
+    modelEl.classList.add("show");
+    statusEl.textContent = "No API key detected (or the call failed) — grade yourself against the rubric below. The retrieval still counts.";
+  }
+  btn.disabled = false;
+});
+</script>
+</body>
+</html>

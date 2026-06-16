@@ -1,0 +1,5 @@
+# Local secrets — never commit. Holds the Anthropic API key for embedded-tutor lessons.
+config.local.js
+
+# Personal, machine-specific Claude Code settings (permission allowlist with local paths).
+.claude/settings.local.json
