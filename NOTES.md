@@ -9,7 +9,6 @@ embedded-tutor: on
 - **Functor-image composites get a thin space:** keep parens on application; separate composed image factors with `<mspace width="0.2em"/>`, e.g. `F(f) F(g)`, `π₁(f) π₁(g)`. Single applications unchanged. No semicolon / no explicit operator — composition is still juxtaposition; the space is only for legibility.
 - **All math rendered as native MathML** (`<math>…</math>`) — zero-dependency, offline, accessible, prints well. No Unicode-only math, no MathJax/KaTeX, **no code/monospace styling for math**. **Commutative diagrams use inline SVG** (MathML can't do them).
 - **No mid-expression line breaks:** `math { white-space: nowrap; }` so a morphism expression never wraps (no orphaned codomain).
-- **Lessons contain ONLY subject content** — never discuss pedagogical tools/motivations (fluency vs storage, testing effect, spacing, calibration) inside a lesson. Keep the exercise; cut the narration about why it's there. Method-talk happens in chat.
 - **Fully define every load-bearing term at introduction** — no informal/hand-wavy glosses. (Caught: "collection" used undefined.) Watch the deceptively simple words CT leans on: collection, class, universe, family.
 
 ## Learner preferences
@@ -21,3 +20,9 @@ embedded-tutor: on
 - API mode is ON. Key lives in `config.local.js` at workspace root (gitignored). Lessons load it via `<script src="../config.local.js"></script>` and call the Messages API directly with `claude-opus-4-8` for proof/concept grading.
 - Every embedded-grader lesson must keep the self-graded fallback path.
 - **Grading credits named concepts:** the learner is fluent — correctly naming a standard concept earns full marks (no need to restate its definition, e.g. "associative" suffices for the associativity axiom). But vague non-naming ("the usual axioms hold") earns nothing. Build both halves into every grader prompt and mirror in the self-grade rubric.
+- **MathJax in the tutor UI:** lessons load MathJax (`startup.typeset=false`) ONLY for the live LaTeX answer-preview and for rendering the tutor's MathML feedback. Authored content stays native MathML. Grader is told to emit MathML.
+- **Pedagogy: go slower, motivate, use history.** Make each definition feel inevitable (motivate it, give significance beyond one theorem, appeal to history). NOT a relaxation of "no teaching-method talk in lessons" — this is subject motivation.
+- **Practice from Riehl, cited.** Draw exercises from Riehl's _Category Theory in Context_; verify exact numbers via the PDF (`pypdf` installed); cite precisely. Riehl §1.2 = Duality/opposite, §1.3 = Functoriality.
+- **Theorem toolkit:** `reference/THEOREMS.html` is a growing, cited catalogue (established / to-prove / target=Yoneda). Add results as lessons establish/rely on them.
+- **Assessment layout (every lesson):** (1) dropdown quick-recall (no API, per-option misconception feedback); (2) separate recall boxes — one per distinct concept — with **table rubrics** (partial credit) and AI + self grading; (3) Riehl practice as graded blocks too. One generalized class-based script (`.grader` + `PROMPTS` map, `.quiz-q`). See memory `lesson-assessment-architecture`.
+- **NOTE:** the "two grading buttons" and "lessons are subject-only" rules now live in the `/teach` SKILL.md itself (moved there), not in this file.

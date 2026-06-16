@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Lesson 3 · The Opposite Category &amp; Contravariance</title>
+<script src="../config.local.js"></script>
+<!-- MathJax: interactive tutor UI only (live LaTeX preview + rendering tutor feedback).
+     startup.typeset=false keeps it from touching the page's authored native MathML. -->
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+    startup: { typeset: false },
+    options: { enableMenu: false }
+  };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+<style>
+  :root {
+    --ink: #1a1a1a; --paper: #fdfcf9; --rule: #d9d4c7; --accent: #7a1f1f;
+    --accent-soft: #f3e9e9; --muted: #6b6557; --code-bg: #f4f1ea;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    background: var(--paper); color: var(--ink);
+    font-family: et-book, Palatino, "Palatino Linotype", "Book Antiqua", Georgia, serif;
+    line-height: 1.62; max-width: 46rem; margin: 0 auto; padding: 4rem 1.6rem 6rem; font-size: 1.16rem;
+  }
+  h1, h2, h3 { font-weight: 600; line-height: 1.2; }
+  h1 { font-size: 2.1rem; margin: 0 0 .2rem; letter-spacing: -0.01em; }
+  .eyebrow { color: var(--accent); text-transform: uppercase; letter-spacing: .14em; font-size: .74rem; font-weight: 700; }
+  h2 { font-size: 1.4rem; margin: 2.8rem 0 .6rem; padding-top: 1rem; border-top: 1px solid var(--rule); }
+  h3 { font-size: 1.1rem; margin: 1.6rem 0 .3rem; color: var(--accent); }
+  p { margin: .7rem 0; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(122,31,31,.3); }
+  a:hover { border-bottom-color: var(--accent); }
+  .subtitle { color: var(--muted); font-style: italic; margin-top: .1rem; font-size: 1.05rem; }
+  .lede { font-size: 1.05rem; }
+
+  details.cite { display: inline; }
+  details.cite > summary {
+    display: inline; cursor: pointer; color: var(--accent);
+    border-bottom: 1px dotted var(--accent); font-size: .82em;
+    vertical-align: super; line-height: 0; list-style: none; padding: 0 .1em;
+  }
+  details.cite > summary::-webkit-details-marker { display: none; }
+  details.cite[open] > summary { background: var(--accent-soft); border-radius: 3px; }
+  details.cite > .cite-body {
+    display: block; margin: .6rem 0; padding: .7rem .9rem; background: var(--accent-soft);
+    border-left: 3px solid var(--accent); border-radius: 0 4px 4px 0; font-size: .92rem; line-height: 1.5; color: #2a2a2a;
+  }
+
+  .axioms { background: #fff; border: 1px solid var(--rule); border-radius: 6px; padding: 1rem 1.4rem; margin: 1.2rem 0; }
+  .axioms ol { margin: .4rem 0; padding-left: 1.3rem; }
+  .axioms li { margin: .55rem 0; }
+  code { font-family: "SF Mono", "Cascadia Mono", Menlo, Consolas, monospace; font-size: .9em; background: var(--code-bg); padding: .08em .35em; border-radius: 3px; }
+  math { font-size: 1.06em; white-space: nowrap; }
+  math.display { display: block; margin: .3rem 0; font-size: 1.12em; white-space: nowrap; }
+
+  .callout { background: #f0f4f0; border-left: 3px solid #4a6b4a; border-radius: 0 4px 4px 0; padding: .8rem 1.1rem; margin: 1.3rem 0; font-size: .98rem; }
+  .callout .label { font-weight: 700; color: #3a5a3a; font-size: .78rem; text-transform: uppercase; letter-spacing: .08em; }
+
+  ul.examples { list-style: none; padding-left: 0; }
+  ul.examples li { padding: .55rem 0; border-bottom: 1px dashed var(--rule); }
+  ul.examples li:last-child { border-bottom: none; }
+  ul.examples b { color: var(--accent); }
+
+  .assess { background: #fff; border: 2px solid var(--accent); border-radius: 8px; padding: 1.4rem 1.6rem; margin: 2.4rem 0; }
+  .assess h2 { border: none; margin-top: 0; padding-top: 0; color: var(--accent); }
+  textarea { width: 100%; min-height: 8rem; font-family: inherit; font-size: 1rem; padding: .7rem; border: 1px solid var(--rule); border-radius: 5px; background: var(--paper); resize: vertical; }
+  .answer { width: 100%; min-height: 7rem; font-family: inherit; font-size: 1rem; line-height: 1.55; padding: .7rem; border: 1px solid var(--rule); border-radius: 5px; background: var(--paper); white-space: pre-wrap; overflow-wrap: break-word; overflow-y: auto; }
+  .answer:focus { outline: none; border-color: var(--accent); }
+  .answer:empty::before { content: attr(data-placeholder); color: var(--muted); pointer-events: none; }
+  .conf { margin: .8rem 0; }
+  .conf label { font-size: .92rem; margin-right: .8rem; cursor: pointer; }
+  button { background: var(--accent); color: #fff; border: none; border-radius: 5px; padding: .6rem 1.3rem; font-size: 1rem; font-family: inherit; cursor: pointer; margin-top: .6rem; }
+  button:hover { background: #5e1818; }
+  button:disabled { opacity: .5; cursor: wait; }
+  button.secondary { background: transparent; color: var(--accent); border: 1px solid var(--accent); margin-left: .5rem; }
+  button.secondary:hover { background: var(--accent-soft); }
+  /* Quick-recall dropdown quiz (no API) */
+  .quiz-q { padding: .6rem 0; border-bottom: 1px dashed var(--rule); }
+  .quiz-q:last-child { border-bottom: none; }
+  .quiz-q p { margin: .2rem 0 .4rem; }
+  .quiz-q select { font-family: inherit; font-size: .98rem; padding: .35rem .5rem; border: 1px solid var(--rule); border-radius: 5px; background: var(--paper); max-width: 100%; }
+  .quiz-mark { margin-left: .5rem; font-weight: 700; }
+  .quiz-mark.ok { color: #3a5a3a; }
+  .quiz-mark.no { color: var(--accent); }
+  .quiz-fb { display: none; margin-top: .45rem; font-size: .92rem; padding: .5rem .7rem; border-radius: 5px; }
+  .quiz-fb.show { display: block; }
+  .quiz-fb.ok { background: #eaf2ea; border-left: 3px solid #3a5a3a; }
+  .quiz-fb.no { background: var(--accent-soft); border-left: 3px solid var(--accent); }
+  /* Rubric tables (partial credit) */
+  table.rubric { width: 100%; border-collapse: collapse; font-size: .92rem; margin: .4rem 0 .6rem; white-space: normal; }
+  table.rubric th, table.rubric td { border: 1px solid var(--rule); padding: .35rem .55rem; text-align: left; vertical-align: top; }
+  table.rubric th { background: var(--code-bg); font-size: .76rem; text-transform: uppercase; letter-spacing: .04em; }
+  table.rubric td.pts, table.rubric th.pts { text-align: center; width: 3.2rem; white-space: nowrap; }
+  table.rubric tr.total td { font-weight: 700; background: #faf7f0; }
+  .grader + .grader { margin-top: 1.2rem; }
+  .credit-note { font-size: .88rem; color: var(--muted); margin: .2rem 0 0; }
+  .result { margin-top: 1.2rem; padding: 1rem 1.2rem; border-radius: 6px; display: none; }
+  .result.show { display: block; }
+  .result.model { background: var(--code-bg); border: 1px solid var(--rule); }
+  .result.feedback { background: var(--accent-soft); border: 1px solid var(--accent); }
+  .result h3 { margin-top: 0; }
+  .status { font-size: .88rem; color: var(--muted); font-style: italic; margin-top: .5rem; }
+  .rubric { font-size: .95rem; }
+  .rubric li { margin: .35rem 0; }
+
+  footer { margin-top: 3.5rem; border-top: 1px solid var(--rule); padding-top: 1rem; font-size: .9rem; color: var(--muted); }
+  footer a { color: var(--muted); }
+  .nav { font-size: .9rem; margin-top: 1.5rem; }
+
+  @media print {
+    body { font-size: 11pt; max-width: none; }
+    .assess, button { break-inside: avoid; }
+    details.cite > .cite-body { display: block !important; }
+    details.cite > summary { vertical-align: baseline; }
+    button { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<p class="eyebrow">Category Theory · Lesson 3</p>
+<h1>The Opposite Category &amp; Contravariance</h1>
+<p class="subtitle">Reversing every arrow — and the functors that go backwards.</p>
+
+<p class="lede">Some constructions naturally run <em>against</em> the arrows: the dual of a vector space, the preimage of a subset, the functions <em>into</em> a fixed object. Category theory captures all of them with one move — reverse every arrow — packaged as the <strong>opposite category</strong>. The functors that respect this reversal are <strong>contravariant</strong>, and one of them, the contravariant hom-functor, is the object the Yoneda lemma is about.</p>
+
+<h2>1 · The opposite category</h2>
+<p>Given a category <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi></math>, its <strong>opposite</strong> <math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mi mathvariant="script">C</mi><mi>op</mi></msup></math> is the category with:<details class="cite"><summary>def</summary><span class="cite-body">Riehl, <em>Category Theory in Context</em>, §1.2 (the opposite category and duality); Leinster, <em>Basic Category Theory</em>, §1.2; <a href="https://ncatlab.org/nlab/show/opposite+category">nLab: opposite category</a>.</span></details></p>
+<ul class="examples">
+  <li><b>The same objects</b> as <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi></math>.</li>
+  <li><b>Reversed morphisms</b>: <math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mi mathvariant="script">C</mi><mi>op</mi></msup><mo>(</mo><mi>A</mi><mo>,</mo><mi>B</mi><mo>)</mo><mo>=</mo><mi mathvariant="script">C</mi><mo>(</mo><mi>B</mi><mo>,</mo><mi>A</mi><mo>)</mo></math>. An arrow <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>A</mi><mover><mo>&#x27F6;</mo><mi>f</mi></mover><mi>B</mi></math> in <math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mi mathvariant="script">C</mi><mi>op</mi></msup></math> is exactly an arrow <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>B</mi><mover><mo>&#x27F6;</mo><mi>f</mi></mover><mi>A</mi></math> in <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi></math>.</li>
+  <li><b>The same identities</b>, and <b>reversed composition</b> (next).</li>
+</ul>
+
+<div class="callout">
+<span class="label">The one subtle point — composition reverses</span>
+<p style="margin:.4rem 0 0">Take arrows <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>A</mi><mover><mo>&#x27F6;</mo><mi>f</mi></mover><mi>B</mi></math> and <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>B</mi><mover><mo>&#x27F6;</mo><mi>g</mi></mover><mi>C</mi></math> in <math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mi mathvariant="script">C</mi><mi>op</mi></msup></math> — i.e. <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>B</mi><mover><mo>&#x27F6;</mo><mi>f</mi></mover><mi>A</mi></math> and <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>C</mi><mover><mo>&#x27F6;</mo><mi>g</mi></mover><mi>B</mi></math> in <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi></math>. Their <math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mi mathvariant="script">C</mi><mi>op</mi></msup></math>-composite "<math xmlns="http://www.w3.org/1998/Math/MathML"><mi>f</mi></math> then <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>g</mi></math>" is an arrow <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>A</mi><mo>&#x27F6;</mo><mi>C</mi></math> in <math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mi mathvariant="script">C</mi><mi>op</mi></msup></math>, i.e. an arrow <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>C</mi><mo>&#x27F6;</mo><mi>A</mi></math> in <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi></math> — and the only such arrow at hand is the <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi></math>-composite <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>g</mi><mi>f</mi></math> (in <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi></math>: <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>C</mi><mover><mo>&#x27F6;</mo><mi>g</mi></mover><mi>B</mi><mover><mo>&#x27F6;</mo><mi>f</mi></mover><mi>A</mi></math>). So the composite of <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>f</mi></math> then <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>g</mi></math> in <math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mi mathvariant="script">C</mi><mi>op</mi></msup></math> is the composite of <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>g</mi></math> then <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>f</mi></math> in <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi></math>: order flips.</p>
+</div>
+
+<p>Reversing twice does nothing: <math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mrow><mo>(</mo><msup><mi mathvariant="script">C</mi><mi>op</mi></msup><mo>)</mo></mrow><mi>op</mi></msup><mo>=</mo><mi mathvariant="script">C</mi></math>. A clean concrete case: a poset is a category with at most one arrow <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>x</mi><mo>&#x27F6;</mo><mi>y</mi></math> whenever <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>x</mi><mo>&#x2264;</mo><mi>y</mi></math>; its opposite is the same set with the order reversed, <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>x</mi><mo>&#x2265;</mo><mi>y</mi></math>.<details class="cite"><summary>poset</summary><span class="cite-body">Posets as categories and their opposites: Riehl §1.1–1.2; Leinster §1.1. A useful sanity-check that "reverse all arrows" is a real, familiar operation.</span></details></p>
+
+<h2>2 · Contravariant functors</h2>
+<p>A <strong>contravariant functor</strong> <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>F</mi></math> from <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi></math> to <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">D</mi></math> assigns objects to objects and <em>reverses</em> arrows:<details class="cite"><summary>def</summary><span class="cite-body">Riehl §1.3 (functoriality, covariant vs contravariant); Leinster §1.2; <a href="https://ncatlab.org/nlab/show/contravariant+functor">nLab: contravariant functor</a>. The standard move is to <em>define</em> contravariance as covariance on the opposite category.</span></details></p>
+<div class="axioms">
+<ol>
+  <li><b>On morphisms</b> it flips direction: an arrow <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>A</mi><mover><mo>&#x27F6;</mo><mi>f</mi></mover><mi>B</mi></math> is sent to <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>F</mi><mo>(</mo><mi>B</mi><mo>)</mo><mover><mo>&#x27F6;</mo><mrow><mi>F</mi><mo>(</mo><mi>f</mi><mo>)</mo></mrow></mover><mi>F</mi><mo>(</mo><mi>A</mi><mo>)</mo></math>.</li>
+  <li><b>Reverses composition</b>:
+    <math xmlns="http://www.w3.org/1998/Math/MathML" class="display">
+      <mrow><mi>F</mi><mo>(</mo><mi>f</mi><mi>g</mi><mo>)</mo></mrow><mo>=</mo><mrow><mi>F</mi><mo>(</mo><mi>g</mi><mo>)</mo><mspace width="0.2em"/><mi>F</mi><mo>(</mo><mi>f</mi><mo>)</mo></mrow>
+    </math></li>
+  <li><b>Preserves identities</b>: <math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>F</mi><mo>(</mo><msub><mi>id</mi><mi>A</mi></msub><mo>)</mo></mrow><mo>=</mo><msub><mi>id</mi><mrow><mi>F</mi><mo>(</mo><mi>A</mi><mo>)</mo></mrow></msub></math>.</li>
+</ol>
+</div>
+
+<div class="callout">
+<span class="label">The definition that earns its keep</span>
+<p style="margin:.4rem 0 0">A contravariant functor <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi><mo>&#x27F6;</mo><mi mathvariant="script">D</mi></math> is <em>exactly the same data</em> as a covariant functor <math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mi mathvariant="script">C</mi><mi>op</mi></msup><mo>&#x27F6;</mo><mi mathvariant="script">D</mi></math>. So "contravariant" introduces no new axioms — it is the Lesson 2 definition applied to <math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mi mathvariant="script">C</mi><mi>op</mi></msup></math>, where the order-reversal of composition does the work automatically. This is why <math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mi mathvariant="script">C</mi><mi>op</mi></msup></math> is worth the bookkeeping. (Unqualified, "functor" still means covariant.)</p>
+</div>
+
+<h2>3 · Contravariance in the wild</h2>
+<ul class="examples">
+  <li><b>The dual vector space.</b> <math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mrow><mo>(</mo><mo>&#x2212;</mo><mo>)</mo></mrow><mo>&#x2217;</mo></msup><mo>:</mo><mi mathvariant="bold">Vect</mi><mo>&#x27F6;</mo><mi mathvariant="bold">Vect</mi></math> sends <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>V</mi></math> to its dual <math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mi>V</mi><mo>&#x2217;</mo></msup></math> and a linear map <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>V</mi><mover><mo>&#x27F6;</mo><mi>f</mi></mover><mi>W</mi></math> to its transpose <math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mi>W</mi><mo>&#x2217;</mo></msup><mover><mo>&#x27F6;</mo><msup><mi>f</mi><mo>&#x2217;</mo></msup></mover><msup><mi>V</mi><mo>&#x2217;</mo></msup></math> (precompose a functional with <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>f</mi></math>). Direction flips. Doing it twice, the double dual <math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mrow><mo>(</mo><mo>&#x2212;</mo><mo>)</mo></mrow><mrow><mo>&#x2217;</mo><mo>&#x2217;</mo></mrow></msup></math>, is covariant — and the map <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>V</mi><mo>&#x27F6;</mo><msup><mi>V</mi><mrow><mo>&#x2217;</mo><mo>&#x2217;</mo></mrow></msup></math> is the canonical example of a <em>natural transformation</em> (next lesson).<details class="cite"><summary>dual</summary><span class="cite-body">The dual-space functor and the natural map to the double dual are the motivating example of naturality in Eilenberg–Mac Lane (1945) and in Riehl §1.4–1.5. We return to it when we define natural transformations.</span></details></li>
+
+  <li><b>The contravariant powerset.</b> <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>P</mi><mo>:</mo><msup><mi mathvariant="bold">Set</mi><mi>op</mi></msup><mo>&#x27F6;</mo><mi mathvariant="bold">Set</mi></math> sends a set to its powerset and a function <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>X</mi><mover><mo>&#x27F6;</mo><mi>f</mi></mover><mi>Y</mi></math> to the <em>preimage</em> map <math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mi>f</mi><mrow><mo>&#x2212;</mo><mn>1</mn></mrow></msup><mo>:</mo><mi>P</mi><mo>(</mo><mi>Y</mi><mo>)</mo><mo>&#x27F6;</mo><mi>P</mi><mo>(</mo><mi>X</mi><mo>)</mo></math>. Preimage runs backwards — contravariance again.<details class="cite"><summary>pow</summary><span class="cite-body">Covariant (image/direct) and contravariant (preimage) powerset functors: Riehl Example 1.3.x. A clean pair showing the same objects can carry both a covariant and a contravariant functor.</span></details></li>
+
+  <li><b>The contravariant hom-functor.</b> Fix <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>A</mi></math> in a locally small <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi></math>. Then <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi><mo>(</mo><mo>&#x2212;</mo><mo>,</mo><mi>A</mi><mo>)</mo><mo>:</mo><msup><mi mathvariant="script">C</mi><mi>op</mi></msup><mo>&#x27F6;</mo><mi mathvariant="bold">Set</mi></math> sends an object <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>X</mi></math> to the set <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi><mo>(</mo><mi>X</mi><mo>,</mo><mi>A</mi><mo>)</mo></math> and an arrow <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>X</mi><mover><mo>&#x27F6;</mo><mi>f</mi></mover><mi>Y</mi></math> to "<strong>pre</strong>-compose with <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>f</mi></math>", <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>h</mi><mo>&#x21A6;</mo><mi>f</mi><mi>h</mi></math> — a function <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi><mo>(</mo><mi>Y</mi><mo>,</mo><mi>A</mi><mo>)</mo><mo>&#x27F6;</mo><mi mathvariant="script">C</mi><mo>(</mo><mi>X</mi><mo>,</mo><mi>A</mi><mo>)</mo></math>. Compare the <em>co</em>variant <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi><mo>(</mo><mi>A</mi><mo>,</mo><mo>&#x2212;</mo><mo>)</mo></math> of Lesson 2 (post-compose). A functor <math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mi mathvariant="script">C</mi><mi>op</mi></msup><mo>&#x27F6;</mo><mi mathvariant="bold">Set</mi></math> is called a <strong>presheaf</strong>, and the Yoneda lemma is the statement that controls these.<details class="cite"><summary>yoneda</summary><span class="cite-body">Presheaves <math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mi mathvariant="script">C</mi><mi>op</mi></msup><mo>→</mo><mi mathvariant="bold">Set</mi></math>, the representable <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi><mo>(</mo><mo>−</mo><mo>,</mo><mi>A</mi><mo>)</mo></math>, and the Yoneda lemma: Riehl Ch. 2; Leinster Ch. 4. This functor is the protagonist of your mission's destination.</span></details></li>
+</ul>
+
+<h3>Why presheaves? — a set varying over a category</h3>
+<p>That last functor deserves more than its billing as "the thing in the lemma," and its idea is older than category theory's interest in it. In the 1940s <strong>Jean Leray</strong>, working as a prisoner of war, introduced <strong>sheaves</strong> to organize locally-defined data on a space. The <em>pre</em>sheaf part is the bookkeeping of <em>restriction</em>: to each open set <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>U</mi></math> of a space <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>X</mi></math> assign a set — say the continuous functions on <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>U</mi></math> — and to an inclusion <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>U</mi><mo>&#x2286;</mo><mi>V</mi></math> assign the <em>restriction</em> <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>F</mi><mo>(</mo><mi>V</mi><mo>)</mo><mo>&#x27F6;</mo><mi>F</mi><mo>(</mo><mi>U</mi><mo>)</mo></math>. The data runs <em>backwards</em> along inclusions. Since the opens form a poset category <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>O</mi><mo>(</mo><mi>X</mi><mo>)</mo></math>, this is exactly a functor <math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mrow><mi>O</mi><mo>(</mo><mi>X</mi><mo>)</mo></mrow><mi>op</mi></msup><mo>&#x27F6;</mo><mi mathvariant="bold">Set</mi></math> — a presheaf, contravariance built in.<details class="cite"><summary>hist</summary><span class="cite-body">Sheaves/presheaves originate with Jean Leray (1940s); the categorical formulation and the presheaf category are developed by Grothendieck and others. <a href="https://ncatlab.org/nlab/show/presheaf">nLab: presheaf</a>; history at <a href="https://ncatlab.org/nlab/show/sheaf">nLab: sheaf</a>.</span></details></p>
+<p>Grothendieck made the move that matters for us: replace <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>O</mi><mo>(</mo><mi>X</mi><mo>)</mo></math> by <em>any</em> category. A presheaf <math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mi mathvariant="script">C</mi><mi>op</mi></msup><mo>&#x27F6;</mo><mi mathvariant="bold">Set</mi></math> is then a <em>generalized, "variable" set indexed by</em> <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi></math> — and an object <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>A</mi></math> of <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi></math> appears as one of them, via the representable <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi><mo>(</mo><mo>&#x2212;</mo><mo>,</mo><mi>A</mi><mo>)</mo></math>, whose elements over <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>X</mi></math> are the ways of <em>probing</em> <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>A</mi></math> by maps <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>X</mi><mo>&#x27F6;</mo><mi>A</mi></math>. (This is the "functor of points" that organizes modern algebraic geometry.)</p>
+<p>The payoff is structural: the presheaf category <math xmlns="http://www.w3.org/1998/Math/MathML"><mo>[</mo><msup><mi mathvariant="script">C</mi><mi>op</mi></msup><mo>,</mo><mi mathvariant="bold">Set</mi><mo>]</mo></math> is a rich completion of <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi></math> — it has all colimits — into which <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi></math> embeds by <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>A</mi><mo>&#x21A6;</mo><mi mathvariant="script">C</mi><mo>(</mo><mo>&#x2212;</mo><mo>,</mo><mi>A</mi><mo>)</mo></math>. The Yoneda lemma is the precise statement that this embedding loses nothing — an object is faithfully described by the maps into it. That is the reason to meet presheaves now, not only at the lemma.</p>
+
+<div class="callout">
+<span class="label">Why it matters — duality</span>
+<p style="margin:.4rem 0 0">Reversing every arrow sends each categorical notion to its <strong>dual</strong>: a construction in <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi></math> is the dual construction in <math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mi mathvariant="script">C</mi><mi>op</mi></msup></math>. Because every category has an opposite and <math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mrow><mo>(</mo><msup><mi mathvariant="script">C</mi><mi>op</mi></msup><mo>)</mo></mrow><mi>op</mi></msup><mo>=</mo><mi mathvariant="script">C</mi></math>, any theorem proved for <em>all</em> categories instantly yields a second, dual theorem for free. We cash this in later: limits dualize to colimits, terminal objects to initial ones.<details class="cite"><summary>dual</summary><span class="cite-body">The duality principle: Riehl §1.2; Mac Lane §II.1. One proof, two theorems — a recurring economy in the subject.</span></details></p>
+</div>
+
+<h2>4 · Quick recall</h2>
+<div class="assess">
+  <div class="quiz-q" data-answer="b">
+    <p>1. In <math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mi mathvariant="script">C</mi><mi>op</mi></msup></math>, an arrow <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>A</mi><mo>&#x27F6;</mo><mi>B</mi></math> is literally the same data as which arrow of <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi></math>?</p>
+    <select>
+      <option value="">— choose —</option>
+      <option value="a" data-fb="That keeps the direction; the opposite category reverses every arrow.">the same arrow, from A to B</option>
+      <option value="b" data-fb="Correct — the opposite reverses arrows, so it is the arrow from B to A.">the reversed arrow, from B to A</option>
+      <option value="c" data-fb="No isomorphism is involved; the arrow simply reverses.">an isomorphism between A and B</option>
+    </select>
+    <span class="quiz-mark"></span><div class="quiz-fb"></div>
+  </div>
+  <div class="quiz-q" data-answer="b">
+    <p>2. For composable arrows <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>f</mi></math>, <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>g</mi></math> in <math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mi mathvariant="script">C</mi><mi>op</mi></msup></math>, the opposite-composite “<math xmlns="http://www.w3.org/1998/Math/MathML"><mi>f</mi></math> then <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>g</mi></math>” equals which composite computed back in <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi></math>?</p>
+    <select>
+      <option value="">— choose —</option>
+      <option value="a" data-fb="That forgets the reversal — composition order flips in the opposite category.">f then g, the same order</option>
+      <option value="b" data-fb="Correct — composition order reverses, giving g then f.">g then f, the reverse order</option>
+      <option value="c" data-fb="The composite is a genuine arrow, not an identity.">an identity arrow</option>
+    </select>
+    <span class="quiz-mark"></span><div class="quiz-fb"></div>
+  </div>
+  <div class="quiz-q" data-answer="b">
+    <p>3. A contravariant functor <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi><mo>&#x27F6;</mo><mi mathvariant="script">D</mi></math> is the same data as a covariant functor out of which category?</p>
+    <select>
+      <option value="">— choose —</option>
+      <option value="a" data-fb="That is just an ordinary covariant functor — no reversal.">the source category, unchanged</option>
+      <option value="b" data-fb="Correct — contravariant on the source is covariant on its opposite.">the opposite of the source category</option>
+      <option value="c" data-fb="It is the source that gets opped, not the target.">the opposite of the target category</option>
+    </select>
+    <span class="quiz-mark"></span><div class="quiz-fb"></div>
+  </div>
+  <div class="quiz-q" data-answer="b">
+    <p>4. The contravariant hom-functor <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi><mo>(</mo><mo>&#x2212;</mo><mo>,</mo><mi>A</mi><mo>)</mo></math> sends an arrow <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>X</mi><mover><mo>&#x27F6;</mo><mi>f</mi></mover><mi>Y</mi></math> to a function <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi><mo>(</mo><mi>Y</mi><mo>,</mo><mi>A</mi><mo>)</mo><mo>&#x27F6;</mo><mi mathvariant="script">C</mi><mo>(</mo><mi>X</mi><mo>,</mo><mi>A</mi><mo>)</mo></math>. How does it act?</p>
+    <select>
+      <option value="">— choose —</option>
+      <option value="a" data-fb="That is post-composition, which is the covariant hom-functor 𝒞(A,−).">post-composition: each map followed by f</option>
+      <option value="b" data-fb="Correct — pre-composition with f: f followed by each map, reversing the direction.">pre-composition: f followed by each map</option>
+      <option value="c" data-fb="That is a constant function, not the hom-functor's action.">every map is sent to f</option>
+    </select>
+    <span class="quiz-mark"></span><div class="quiz-fb"></div>
+  </div>
+</div>
+
+<h2>5 · Practice (from Riehl)</h2>
+<p>Two problems from Emily Riehl's <em>Category Theory in Context</em>, to put duality and the opposite category to work. Try each, then open the hint — or bring your argument to me.</p>
+<ol style="padding-left:1.3rem;">
+  <li style="margin:.6rem 0;"><b>Suprema and infima are dual.</b> Regard a poset <math xmlns="http://www.w3.org/1998/Math/MathML"><mo>(</mo><mi>P</mi><mo>,</mo><mo>&#x2264;</mo><mo>)</mo></math> as a category. Define the <em>supremum</em> of a sub-collection of objects in such a way that the <em>dual</em> statement defines the infimum; then prove the supremum is unique whenever it exists, so that the dual proof gives uniqueness of the infimum.<div class="grader" data-block="riehl-supinf" style="margin-top:.5rem;">
+  <div class="conf"><span style="font-size:.92rem;font-weight:600">Confidence?</span>
+    <label><input type="radio" name="conf-riehl-supinf" value="low"> Shaky</label>
+    <label><input type="radio" name="conf-riehl-supinf" value="med"> Fairly sure</label>
+    <label><input type="radio" name="conf-riehl-supinf" value="high"> Certain</label>
+  </div>
+  <div class="answer" contenteditable="true" spellcheck="false" data-placeholder="Define the supremum, then prove uniqueness…"></div>  <button class="grade">Grade with AI tutor</button>
+  <button class="selfgrade secondary">Self-grade (no API)</button>
+  <div class="status"></div>
+  <div class="result feedback"><h3>Tutor feedback</h3><div class="feedbackBody"></div></div>
+  <div class="result model">
+    <h3>Model answer &amp; rubric</h3>
+    <table class="rubric"><thead><tr><th>#</th><th>Criterion (what earns the point)</th><th class="pts">Pts</th></tr></thead><tbody>
+      <tr><td>①</td><td>Supremum of S = an upper bound (x ≤ s for all x ∈ S) that is least among upper bounds (s ≤ t for every upper bound t)</td><td class="pts">1</td></tr>
+      <tr><td>②</td><td>Infimum obtained by reversing ≤ (working in Pᵒᵖ) — a greatest lower bound</td><td class="pts">1</td></tr>
+      <tr><td>③</td><td>Uniqueness: two suprema s, s′ give s ≤ s′ and s′ ≤ s, so s = s′ by antisymmetry</td><td class="pts">1</td></tr>
+      <tr><td>④</td><td>Notes the dual proof (≤ reversed) yields infimum uniqueness</td><td class="pts">1</td></tr>
+      <tr class="total"><td></td><td>Total</td><td class="pts">4</td></tr>
+    </tbody></table>
+    <p style="font-size:.93rem">A supremum of S ⊆ P is an s with x ≤ s for all x ∈ S and s ≤ t for any upper bound t; reversing every ≤ (passing to Pᵒᵖ) gives the infimum. Uniqueness is forced by antisymmetry, and the identical proof read in Pᵒᵖ gives the infimum's. Source: Riehl, <em>Exercise 1.2.vii</em>.</p>
+  </div>
+</div></li>
+  <li style="margin:.6rem 0;"><b>A group is its own opposite.</b> For a group <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>G</mi></math> with one-object category <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="bold">B</mi><mi>G</mi></math>, show that <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>g</mi><mo>&#x21A6;</mo><msup><mi>g</mi><mrow><mo>&#x2212;</mo><mn>1</mn></mrow></msup></math> defines an isomorphism of categories <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="bold">B</mi><mi>G</mi><mo>&#x2245;</mo><msup><mrow><mo>(</mo><mi mathvariant="bold">B</mi><mi>G</mi><mo>)</mo></mrow><mi>op</mi></msup></math>.<div class="grader" data-block="riehl-bgop" style="margin-top:.5rem;">
+  <div class="conf"><span style="font-size:.92rem;font-weight:600">Confidence?</span>
+    <label><input type="radio" name="conf-riehl-bgop" value="low"> Shaky</label>
+    <label><input type="radio" name="conf-riehl-bgop" value="med"> Fairly sure</label>
+    <label><input type="radio" name="conf-riehl-bgop" value="high"> Certain</label>
+  </div>
+  <div class="answer" contenteditable="true" spellcheck="false" data-placeholder="Define the functor on objects and morphisms, then check the laws…"></div>  <button class="grade">Grade with AI tutor</button>
+  <button class="selfgrade secondary">Self-grade (no API)</button>
+  <div class="status"></div>
+  <div class="result feedback"><h3>Tutor feedback</h3><div class="feedbackBody"></div></div>
+  <div class="result model">
+    <h3>Model answer &amp; rubric</h3>
+    <table class="rubric"><thead><tr><th>#</th><th>Criterion</th><th class="pts">Pts</th></tr></thead><tbody>
+      <tr><td>①</td><td>The map: identity on the single object; g ↦ g⁻¹ on morphisms</td><td class="pts">1</td></tr>
+      <tr><td>②</td><td>Respects composition into the opposite: (gh)⁻¹ = h⁻¹g⁻¹ matches the reversed-order composite</td><td class="pts">1</td></tr>
+      <tr><td>③</td><td>Preserves the identity: e ↦ e⁻¹ = e</td><td class="pts">1</td></tr>
+      <tr><td>④</td><td>g ↦ g⁻¹ is a bijection on morphisms ⇒ isomorphism of categories</td><td class="pts">1</td></tr>
+      <tr class="total"><td></td><td>Total</td><td class="pts">4</td></tr>
+    </tbody></table>
+    <p style="font-size:.93rem">Identity on the object, g ↦ g⁻¹ on morphisms; since (gh)⁻¹ = h⁻¹g⁻¹ matches the order-reversed composite in (BG)ᵒᵖ and g ↦ g⁻¹ is its own inverse (a bijection), it is an isomorphism of categories. Source: adapted from Riehl, <em>Example 1.3.14(i)</em>.</p>
+  </div>
+</div></li>
+</ol>
+
+<h2 id="assess">6 · Recall — from memory</h2>
+<p>Two separate prompts, graded independently. Use <strong>Grade with AI tutor</strong> for feedback, or <strong>Self-grade (no API)</strong> to reveal the rubric and mark yourself.</p>
+
+<div class="assess grader" data-block="def-op">
+  <p><strong>(a)</strong> Without scrolling up, define the opposite category <math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mi mathvariant="script">C</mi><mi>op</mi></msup></math>: its objects, morphisms, composition, and identities.</p>
+  <div class="conf"><span style="font-size:.92rem;font-weight:600">Confidence?</span>
+    <label><input type="radio" name="conf-def-op" value="low"> Shaky</label>
+    <label><input type="radio" name="conf-def-op" value="med"> Fairly sure</label>
+    <label><input type="radio" name="conf-def-op" value="high"> Certain</label>
+  </div>
+  <div class="answer" contenteditable="true" spellcheck="false" data-placeholder="𝒞ᵒᵖ has the same objects as 𝒞, and…"></div>  <button class="grade">Grade with AI tutor</button>
+  <button class="selfgrade secondary">Self-grade (no API)</button>
+  <div class="status"></div>
+  <div class="result feedback"><h3>Tutor feedback</h3><div class="feedbackBody"></div></div>
+  <div class="result model">
+    <h3>Model answer &amp; rubric</h3>
+    <table class="rubric"><thead><tr><th>#</th><th>Criterion (naming the notion counts in full)</th><th class="pts">Pts</th></tr></thead><tbody>
+      <tr><td>①</td><td>Same objects as 𝒞</td><td class="pts">1</td></tr>
+      <tr><td>②</td><td>Reversed morphisms: 𝒞ᵒᵖ(A,B) = 𝒞(B,A) (domain/codomain swapped)</td><td class="pts">1</td></tr>
+      <tr><td>③</td><td>Reversed composition (𝒞ᵒᵖ-composite of f then g = 𝒞-composite gf)</td><td class="pts">1</td></tr>
+      <tr><td>④</td><td>Same identities</td><td class="pts">1</td></tr>
+      <tr class="total"><td></td><td>Total</td><td class="pts">4</td></tr>
+    </tbody></table>
+    <p class="credit-note">Naming a notion earns the point in full (e.g. “composition reverses”). A vague “everything flips” that names nothing earns nothing.</p>
+  </div>
+</div>
+
+<div class="assess grader" data-block="def-contra">
+  <p><strong>(b)</strong> Define a <strong>contravariant functor</strong>, and state how it relates to <math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mi mathvariant="script">C</mi><mi>op</mi></msup></math>.</p>
+  <div class="conf"><span style="font-size:.92rem;font-weight:600">Confidence?</span>
+    <label><input type="radio" name="conf-def-contra" value="low"> Shaky</label>
+    <label><input type="radio" name="conf-def-contra" value="med"> Fairly sure</label>
+    <label><input type="radio" name="conf-def-contra" value="high"> Certain</label>
+  </div>
+  <div class="answer" contenteditable="true" spellcheck="false" data-placeholder="A contravariant functor sends f : A → B to…"></div>  <button class="grade">Grade with AI tutor</button>
+  <button class="selfgrade secondary">Self-grade (no API)</button>
+  <div class="status"></div>
+  <div class="result feedback"><h3>Tutor feedback</h3><div class="feedbackBody"></div></div>
+  <div class="result model">
+    <h3>Model answer &amp; rubric</h3>
+    <table class="rubric"><thead><tr><th>#</th><th>Criterion (naming the notion counts in full)</th><th class="pts">Pts</th></tr></thead><tbody>
+      <tr><td>①</td><td>Reverses arrows: f : A → B ↦ F(B) → F(A)</td><td class="pts">1</td></tr>
+      <tr><td>②</td><td>Preserves identities</td><td class="pts">1</td></tr>
+      <tr><td>③</td><td>Reverses composition: F(fg) = F(g) F(f)</td><td class="pts">1</td></tr>
+      <tr><td>④</td><td>Relationship: the same data as a covariant functor 𝒞ᵒᵖ → 𝒟</td><td class="pts">1</td></tr>
+      <tr class="total"><td></td><td>Total</td><td class="pts">4</td></tr>
+    </tbody></table>
+    <p class="credit-note">“It's just a functor out of 𝒞ᵒᵖ” earns ④ in full and is strong evidence for the rest. Vague gestures naming nothing earn nothing.</p>
+  </div>
+</div>
+
+<p>Ask me about anything here that's unclear. Next lesson: <em>natural transformations</em> — maps between functors, and the last definition before the Yoneda lemma comes into view.</p>
+
+<div class="nav">← <a href="0002-functors.html">Lesson 2: Functors</a> &nbsp;·&nbsp; Reference: <a href="../reference/GLOSSARY.html">Glossary</a></div>
+
+<footer>
+  <p><strong>Primary source to read:</strong> Emily Riehl, <em>Category Theory in Context</em>, §1.2 (opposite category &amp; duality) and §1.3. <a href="https://emilyriehl.github.io/files/context.pdf">free PDF</a>. Also Leinster §1.2 (<a href="https://arxiv.org/abs/1612.09375">arXiv</a>); Mac Lane §II.1–2.</p>
+  <p>Lesson 3 · grading by embedded tutor (Claude) when your API key is configured; self-grading otherwise.</p>
+</footer>
+
+<script>
+async function gradeWithClaude(systemPrompt, userContent) {
+  if (!window.ANTHROPIC_API_KEY || window.ANTHROPIC_API_KEY === "PASTE-YOUR-KEY-HERE") return null;
+  try {
+    const res = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        "x-api-key": window.ANTHROPIC_API_KEY,
+        "anthropic-version": "2023-06-01",
+        "anthropic-dangerous-direct-browser-access": "true",
+      },
+      body: JSON.stringify({
+        model: "claude-opus-4-8",
+        max_tokens: 1024,
+        system: systemPrompt,
+        messages: [{ role: "user", content: userContent }],
+      }),
+    });
+    if (!res.ok) return null;
+    const data = await res.json();
+    return data.content.map((b) => (b.type === "text" ? b.text : "")).join("");
+  } catch (e) {
+    return null;
+  }
+}
+
+function typesetMath(node){ if (window.MathJax && window.MathJax.typesetPromise) { window.MathJax.typesetPromise([node]).catch(function(){}); } }
+
+/* Quick-recall dropdowns — immediate per-option feedback, no API */
+document.querySelectorAll(".quiz-q").forEach(function(q){
+  var sel = q.querySelector("select"), mark = q.querySelector(".quiz-mark"), fb = q.querySelector(".quiz-fb");
+  sel.addEventListener("change", function(){
+    if (!sel.value) { mark.textContent = ""; mark.className = "quiz-mark"; fb.className = "quiz-fb"; return; }
+    var ok = (sel.value === q.getAttribute("data-answer"));
+    var opt = sel.options[sel.selectedIndex];
+    mark.textContent = ok ? "✓" : "✗";
+    mark.className = "quiz-mark " + (ok ? "ok" : "no");
+    fb.textContent = opt.getAttribute("data-fb") || (ok ? "Correct." : "Not quite.");
+    fb.className = "quiz-fb show " + (ok ? "ok" : "no");
+  });
+});
+
+/* Per-problem grader prompts, keyed by data-block */
+var PROMPTS = {
+"def-op": `You are a strict but fair category-theory tutor grading a learner's from-memory definition of the OPPOSITE CATEGORY C^op. Rubric — one point each (max 4):
+1. SAME OBJECTS as C.
+2. REVERSED MORPHISMS: C^op(A,B) = C(B,A); an arrow A->B in C^op is an arrow B->A in C (domain/codomain swapped).
+3. REVERSED COMPOSITION: the C^op-composite of "f then g" is the C-composite "g then f" (order flips).
+4. SAME IDENTITIES.
+CONVENTION: left-to-right juxtaposition ("fg" = f then g), labeled arrows; do not penalize; right-to-left phrasing is fine; judge meaning.
+FLUENCY CREDIT: the learner is fluent — correctly NAMING a notion earns the point in full ("composition reverses" earns 3); equations optional. ANTI-VAGUENESS: a gesture naming nothing ("everything flips") earns nothing; naming the wrong thing earns nothing.
+Be strict, not sycophantic. Confidence is given; if high but score < 4, flag miscalibration. Put any math in your feedback in MathML or \\( … \\).
+Respond EXACTLY:
+SCORE: X/4
+VERDICT: PASS (4) or NEEDS WORK (<=3)
+MISSING: <items not covered, or "none">
+CALIBRATION: <confidence vs score, one sentence>
+NEXT: <one sentence>`,
+"def-contra": `You are a strict but fair category-theory tutor grading a learner's definition of a CONTRAVARIANT FUNCTOR and its relation to C^op. Rubric — one point each (max 4):
+1. REVERSES ARROWS: sends f:A->B to F(B)->F(A).
+2. PRESERVES IDENTITIES: F(id_A) = id_{F(A)}.
+3. REVERSES COMPOSITION: F(fg) = F(g) F(f).
+4. RELATIONSHIP: a contravariant functor C->D is the same data as a (covariant) functor C^op->D.
+CONVENTION: left-to-right juxtaposition ("fg" = f then g), labeled arrows; do not penalize; right-to-left fine.
+FLUENCY CREDIT: naming a notion earns the point ("it's just a functor out of C^op" earns 4 and is strong evidence for the rest); equations optional. ANTI-VAGUENESS: vague gestures naming nothing earn nothing.
+Be strict, not sycophantic. If confidence high but score < 4, flag miscalibration. Math in MathML or \\( … \\).
+Respond EXACTLY:
+SCORE: X/4
+VERDICT: PASS (4) or NEEDS WORK (<=3)
+MISSING: <...>
+CALIBRATION: <...>
+NEXT: <...>`,
+"riehl-supinf": `You are a strict but fair tutor grading a learner's solution to Riehl Exercise 1.2.vii: in a poset (P,<=) as a category, define the supremum so its dual defines the infimum, and prove uniqueness so the dual proof gives infimum uniqueness. Rubric — one point each (max 4):
+1. CORRECT SUP DEFINITION: sup of S is an upper bound (x <= s for all x in S) that is least among upper bounds (s <= t for every upper bound t).
+2. DUALITY: the infimum is obtained by reversing <= (working in P^op) — a greatest lower bound.
+3. UNIQUENESS PROOF: if s, s' are both suprema then s <= s' and s' <= s, so s = s' by antisymmetry.
+4. OBSERVES the dual proof (<= reversed) gives uniqueness of the infimum.
+Grade the mathematical argument; partial credit per item; accept valid alternative phrasings; name every gap. Be strict, not sycophantic. If confidence high but score < 4, flag miscalibration. Math in MathML or \\( … \\).
+Respond EXACTLY:
+SCORE: X/4
+VERDICT: PASS (4) or NEEDS WORK (<=3)
+MISSING: <...>
+CALIBRATION: <...>
+NEXT: <...>`,
+"riehl-bgop": `You are a strict but fair tutor grading a learner's proof that, for a group G with one-object category BG, the map g -> g^{-1} is an isomorphism of categories BG ≅ (BG)^op (adapted from Riehl Example 1.3.14(i)). Rubric — one point each (max 4):
+1. THE MAP: identity on the single object; g -> g^{-1} on morphisms.
+2. RESPECTS COMPOSITION INTO THE OPPOSITE: (gh)^{-1} = h^{-1} g^{-1}, matching the (BG)^op-composite of the images (order reversed).
+3. PRESERVES THE IDENTITY: the unit e maps to e^{-1} = e.
+4. ISO OF CATEGORIES: g -> g^{-1} is a bijection on morphisms (its own inverse) and identity on objects, hence an isomorphism of categories.
+Convention: left-to-right juxtaposition. Grade the argument; partial credit per item; accept valid alternatives; name gaps. Be strict, not sycophantic. If confidence high but score < 4, flag miscalibration. Math in MathML or \\( … \\).
+Respond EXACTLY:
+SCORE: X/4
+VERDICT: PASS (4) or NEEDS WORK (<=3)
+MISSING: <...>
+CALIBRATION: <...>
+NEXT: <...>`
+};
+
+/* Constructed-response graders — AI grade + self-grade, one per .grader block */
+document.querySelectorAll(".grader").forEach(function(block){
+  var key = block.getAttribute("data-block");
+  var answer = block.querySelector(".answer");
+  var gradeBtn = block.querySelector(".grade");
+  var selfBtn = block.querySelector(".selfgrade");
+  var statusEl = block.querySelector(".status");
+  var fb = block.querySelector(".feedback");
+  var fbBody = block.querySelector(".feedbackBody");
+  var model = block.querySelector(".model");
+  function rawOf(){ return (answer.dataset.raw !== undefined ? answer.dataset.raw : (answer.innerText || "")); }
+  if (answer) {
+    // contenteditable answer box: shows raw LaTeX while editing, renders it in place on blur.
+    answer.addEventListener("input", function(){ answer.dataset.raw = answer.innerText; });
+    answer.addEventListener("focus", function(){ if (answer.dataset.raw !== undefined) answer.textContent = answer.dataset.raw; });
+    answer.addEventListener("blur", function(){ answer.dataset.raw = answer.innerText; if (!answer.innerText.trim()) answer.innerHTML = ""; typesetMath(answer); });
+  }
+  function conf(){ var r = block.querySelector('input[type="radio"]:checked'); return r ? r.value : "(not stated)"; }
+  if (gradeBtn) gradeBtn.addEventListener("click", async function(){
+    var ans = rawOf().trim();
+    if (ans.length < 10) { statusEl.textContent = "Write your answer first — from memory."; return; }
+    gradeBtn.disabled = true; statusEl.textContent = "Grading…";
+    var userContent = "Learner's stated confidence: " + conf() + "\n\nLearner's answer:\n\"\"\"" + ans + "\"\"\"";
+    var out = await gradeWithClaude(PROMPTS[key], userContent);
+    if (out) {
+      fbBody.innerHTML = out.replace(/\n/g, "<br>");
+      fb.classList.add("show"); model.classList.add("show"); typesetMath(fbBody);
+      statusEl.textContent = "Graded by your embedded tutor. Compare with the model answer & rubric below.";
+    } else {
+      model.classList.add("show");
+      statusEl.textContent = "No API key (or the call failed) — grade yourself against the rubric below.";
+    }
+    gradeBtn.disabled = false;
+  });
+  if (selfBtn) selfBtn.addEventListener("click", function(){
+    var ans = rawOf().trim();
+    if (ans.length < 10) { statusEl.textContent = "Write your answer first — from memory."; return; }
+    fb.classList.remove("show"); model.classList.add("show");
+    statusEl.textContent = "Self-grade — no API call made. Score yourself against the rubric below.";
+  });
+});
+</script>
+</body>
+</html>

@@ -13,5 +13,8 @@
 ## Constraints
 - This is long term and by and large for fun. Any applications to the real world are a bonus so there is no particular time horizon.
 
+## Theorem toolkit
+- Build up a running, citable catalogue of useful theorems and lemmas as we go — see [reference/THEOREMS.html](reference/THEOREMS.html). Headline target: a full sketch of the **Yoneda Lemma**.
+
 ## Out of scope
 - No particular limits in scope as of yet.

@@ -5,6 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Lesson 1 · What is a Category?</title>
 <script src="../config.local.js"></script>
+<!-- MathJax: interactive tutor UI only (live LaTeX preview + rendering tutor feedback).
+     startup.typeset=false keeps it from touching the page's authored native MathML. -->
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+    startup: { typeset: false },
+    options: { enableMenu: false }
+  };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
 <style>
   :root {
     --ink: #1a1a1a;
@@ -97,6 +107,11 @@
   textarea { width: 100%; min-height: 7rem; font-family: inherit; font-size: 1rem;
              padding: .7rem; border: 1px solid var(--rule); border-radius: 5px;
              background: var(--paper); resize: vertical; }
+  .answer { width: 100%; min-height: 7rem; font-family: inherit; font-size: 1rem; line-height: 1.55;
+            padding: .7rem; border: 1px solid var(--rule); border-radius: 5px;
+            background: var(--paper); white-space: pre-wrap; overflow-wrap: break-word; overflow-y: auto; }
+  .answer:focus { outline: none; border-color: var(--accent); }
+  .answer:empty::before { content: attr(data-placeholder); color: var(--muted); pointer-events: none; }
   .conf { margin: .8rem 0; }
   .conf label { font-size: .92rem; margin-right: .8rem; cursor: pointer; }
   button { background: var(--accent); color: #fff; border: none; border-radius: 5px;
@@ -104,6 +119,28 @@
            margin-top: .6rem; }
   button:hover { background: #5e1818; }
   button:disabled { opacity: .5; cursor: wait; }
+  button.secondary { background: transparent; color: var(--accent); border: 1px solid var(--accent); margin-left: .5rem; }
+  button.secondary:hover { background: var(--accent-soft); }
+  /* Quick-recall dropdown quiz (no API) */
+  .quiz-q { padding: .6rem 0; border-bottom: 1px dashed var(--rule); }
+  .quiz-q:last-child { border-bottom: none; }
+  .quiz-q p { margin: .2rem 0 .4rem; }
+  .quiz-q select { font-family: inherit; font-size: .98rem; padding: .35rem .5rem; border: 1px solid var(--rule); border-radius: 5px; background: var(--paper); max-width: 100%; }
+  .quiz-mark { margin-left: .5rem; font-weight: 700; }
+  .quiz-mark.ok { color: #3a5a3a; }
+  .quiz-mark.no { color: var(--accent); }
+  .quiz-fb { display: none; margin-top: .45rem; font-size: .92rem; padding: .5rem .7rem; border-radius: 5px; }
+  .quiz-fb.show { display: block; }
+  .quiz-fb.ok { background: #eaf2ea; border-left: 3px solid #3a5a3a; }
+  .quiz-fb.no { background: var(--accent-soft); border-left: 3px solid var(--accent); }
+  /* Rubric tables (partial credit) */
+  table.rubric { width: 100%; border-collapse: collapse; font-size: .92rem; margin: .4rem 0 .6rem; white-space: normal; }
+  table.rubric th, table.rubric td { border: 1px solid var(--rule); padding: .35rem .55rem; text-align: left; vertical-align: top; }
+  table.rubric th { background: var(--code-bg); font-size: .76rem; text-transform: uppercase; letter-spacing: .04em; }
+  table.rubric td.pts, table.rubric th.pts { text-align: center; width: 3.2rem; white-space: nowrap; }
+  table.rubric tr.total td { font-weight: 700; background: #faf7f0; }
+  .grader + .grader { margin-top: 1.2rem; }
+  .credit-note { font-size: .88rem; color: var(--muted); margin: .2rem 0 0; }
   .result { margin-top: 1.2rem; padding: 1rem 1.2rem; border-radius: 6px; display: none; }
   .result.show { display: block; }
   .result.model { background: var(--code-bg); border: 1px solid var(--rule); }
@@ -212,42 +249,130 @@
   <li><b>It translates between fields.</b> Because a functor carries one category's structure into another's, category theory became the machinery for moving knowledge across domains — algebraic topology was its first home, and it has since become standard language in programming-language semantics (Lambek's types-as-objects, Moggi's monads), quantum theory, databases, probability, and the broad program now called <em>applied category theory</em>.<details class="cite"><summary>apply</summary><span class="cite-body">On categories in CS: Lambek (1980) showed typed programs form a cartesian closed category; Moggi imported monads into semantics. The cross-disciplinary program is surveyed under "applied category theory." <a href="https://en.wikipedia.org/wiki/Applied_category_theory">Applied category theory (overview)</a> · <a href="https://golem.ph.utexas.edu/category/">the n-Category Café</a>.</span></details></li>
 </ul>
 
-<h2 id="assess">4 · State the definition</h2>
-
+<h2>4 · Quick recall</h2>
 <div class="assess">
-  <p><strong>Without scrolling up</strong>, write the complete definition of a category — all the data and all the laws.</p>
-
-  <p style="font-size:.95rem;color:var(--muted)">Prompt: <em>"A category 𝒞 consists of…"</em> — give the objects, the morphisms (with domain/codomain), composition, identities, and the axioms those must satisfy.</p>
-
-  <textarea id="answer" placeholder="A category 𝒞 consists of…"></textarea>
-
-  <div class="conf">
-    <span style="font-size:.92rem;font-weight:600">Before you submit — how confident are you this is complete and correct?</span><br>
-    <label><input type="radio" name="conf" value="low"> Shaky</label>
-    <label><input type="radio" name="conf" value="med"> Fairly sure</label>
-    <label><input type="radio" name="conf" value="high"> Certain</label>
+  <div class="quiz-q" data-answer="a">
+    <p>1. A morphism <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>A</mi><mover><mo>&#x27F6;</mo><mi>f</mi></mover><mi>B</mi></math> always carries…</p>
+    <select>
+      <option value="">— choose —</option>
+      <option value="a" data-fb="Correct — a definite domain (A) and codomain (B). That is all a category requires of an arrow.">a definite domain and codomain</option>
+      <option value="b" data-fb="Not every morphism is invertible — that is an isomorphism, a special case.">a chosen inverse</option>
+      <option value="c" data-fb="Objects are featureless points; a category knows only arrows, not elements.">an underlying set of elements</option>
+    </select>
+    <span class="quiz-mark"></span><div class="quiz-fb"></div>
   </div>
-
-  <button id="grade">Submit for grading</button>
-  <div class="status" id="status"></div>
-
-  <div class="result feedback" id="feedback">
-    <h3>Tutor feedback</h3>
-    <div id="feedbackBody"></div>
+  <div class="quiz-q" data-answer="a">
+    <p>2. In our left-to-right convention, given <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>A</mi><mover><mo>&#x27F6;</mo><mi>f</mi></mover><mi>B</mi></math> and <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>B</mi><mover><mo>&#x27F6;</mo><mi>g</mi></mover><mi>C</mi></math>, the composite <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>f</mi><mi>g</mi></math> is an arrow…</p>
+    <select>
+      <option value="">— choose —</option>
+      <option value="a" data-fb="Correct — fg reads “f then g”, so it runs from the first domain A to the last codomain C.">from A to C</option>
+      <option value="b" data-fb="That is the right-to-left (g∘f) reading we deliberately avoid; here fg means “f then g”.">from C to A</option>
+      <option value="c" data-fb="A composite of f then g cannot stay at B — it goes from the first domain to the last codomain.">from B to B</option>
+    </select>
+    <span class="quiz-mark"></span><div class="quiz-fb"></div>
   </div>
+  <div class="quiz-q" data-answer="b">
+    <p>3. Each hom-collection <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>𝒞</mi><mo>(</mo><mi>A</mi><mo>,</mo><mi>B</mi><mo>)</mo></math> is required to be…</p>
+    <select>
+      <option value="">— choose —</option>
+      <option value="a" data-fb="Only when 𝒞 is locally small. In general a hom-collection may be a proper class.">a set, always</option>
+      <option value="b" data-fb="Correct — a collection (possibly a proper class). “Locally small” is the case where every hom is a set.">a collection, possibly a proper class</option>
+      <option value="c" data-fb="Hom-collections can be empty — there may be no arrows A → B.">nonempty</option>
+    </select>
+    <span class="quiz-mark"></span><div class="quiz-fb"></div>
+  </div>
+  <div class="quiz-q" data-answer="b">
+    <p>4. The 1945 paper that introduced categories did so only in order to make one word precise. Who wrote it, and which word?</p>
+    <select>
+      <option value="">— choose —</option>
+      <option value="a" data-fb="Grothendieck reshaped the subject later (abelian categories, 1957); he did not introduce it.">Grothendieck — to define “scheme”</option>
+      <option value="b" data-fb="Correct — Eilenberg and Mac Lane needed categories (and then functors) only in order to make “natural” precise.">Eilenberg and Mac Lane — to define “natural”</option>
+      <option value="c" data-fb="Lawvere’s categorical foundations came in the 1960s; and the 1945 target was “natural”, not “set”.">Lawvere — to define “set”</option>
+    </select>
+    <span class="quiz-mark"></span><div class="quiz-fb"></div>
+  </div>
+</div>
 
-  <div class="result model" id="model">
-    <h3>Model answer &amp; self-scoring rubric</h3>
-    <p>A <strong>category 𝒞</strong> consists of:</p>
-    <ul class="rubric">
-      <li>① a collection of <strong>objects</strong>;</li>
-      <li>② for each ordered pair of objects <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>A</mi><mo>,</mo><mi>B</mi></math>, a collection of <strong>morphisms</strong> <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>A</mi><mover><mo>&#x27F6;</mo><mi>f</mi></mover><mi>B</mi></math>, each with a domain and codomain;</li>
-      <li>③ a <strong>composition</strong> operation: composable <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>A</mi><mover><mo>&#x27F6;</mo><mi>f</mi></mover><mi>B</mi></math>, <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>B</mi><mover><mo>&#x27F6;</mo><mi>g</mi></mover><mi>C</mi></math> yield <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>A</mi><mover><mo>&#x27F6;</mo><mrow><mi>f</mi><mi>g</mi></mrow></mover><mi>C</mi></math> (left-to-right, "f then g");</li>
-      <li>④ an <strong>identity</strong> morphism <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>id</mi><mi>A</mi></msub></math> on each object;</li>
-      <li>⑤ satisfying <strong>associativity</strong> of composition, <math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo>(</mo><mi>f</mi><mi>g</mi><mo>)</mo><mi>h</mi></mrow><mo>=</mo><mrow><mi>f</mi><mo>(</mo><mi>g</mi><mi>h</mi><mo>)</mo></mrow></math>;</li>
-      <li>⑥ satisfying the <strong>unit/identity law</strong> <math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msub><mi>id</mi><mi>A</mi></msub><mi>f</mi></mrow><mo>=</mo><mi>f</mi><mo>=</mo><mrow><mi>f</mi><msub><mi>id</mi><mi>B</mi></msub></mrow></math>.</li>
-    </ul>
-    <p style="font-size:.95rem"><strong>Score:</strong> one point each for ①–⑥. Correctly <em>naming</em> a standard concept counts in full — "associative", "unit law" — you needn't write out the equation; but a vague "the usual axioms hold" that names nothing earns nothing. The unit law (⑥) and explicitly naming domain/codomain (②) are the two most commonly dropped. <strong>5–6:</strong> a pass. <strong>3–4:</strong> a law is missing — re-read §1 and try again. <strong>0–2:</strong> re-read §1.</p>
+<h2 id="assess">5 · Recall — from memory</h2>
+<p>Two separate prompts, graded independently. <strong>Grade with AI tutor</strong> for feedback, or <strong>Self-grade (no API)</strong> to reveal the rubric and mark yourself.</p>
+
+<div class="assess grader" data-block="cat-def">
+  <p><strong>(a)</strong> Without scrolling up, write the complete definition of a category — all the data and all the laws.</p>
+  <div class="conf"><span style="font-size:.92rem;font-weight:600">Confidence?</span>
+    <label><input type="radio" name="conf-cat-def" value="low"> Shaky</label>
+    <label><input type="radio" name="conf-cat-def" value="med"> Fairly sure</label>
+    <label><input type="radio" name="conf-cat-def" value="high"> Certain</label>
+  </div>
+  <div class="answer" contenteditable="true" spellcheck="false" data-placeholder="A category 𝒞 consists of…"></div>
+  <button class="grade">Grade with AI tutor</button>
+  <button class="selfgrade secondary">Self-grade (no API)</button>
+  <div class="status"></div>
+  <div class="result feedback"><h3>Tutor feedback</h3><div class="feedbackBody"></div></div>
+  <div class="result model">
+    <h3>Model answer &amp; rubric</h3>
+    <table class="rubric"><thead><tr><th>#</th><th>Criterion (naming a standard concept counts in full)</th><th class="pts">Pts</th></tr></thead><tbody>
+      <tr><td>①</td><td>A collection of objects</td><td class="pts">1</td></tr>
+      <tr><td>②</td><td>Morphisms with domain and codomain (f : A → B)</td><td class="pts">1</td></tr>
+      <tr><td>③</td><td>Composition: composable f, g give a composite (A → C)</td><td class="pts">1</td></tr>
+      <tr><td>④</td><td>An identity morphism on each object</td><td class="pts">1</td></tr>
+      <tr><td>⑤</td><td>Associativity of composition</td><td class="pts">1</td></tr>
+      <tr><td>⑥</td><td>The unit / identity law</td><td class="pts">1</td></tr>
+      <tr class="total"><td></td><td>Total</td><td class="pts">6</td></tr>
+    </tbody></table>
+    <p class="credit-note">The unit law (⑥) and explicitly naming domain/codomain (②) are the two most commonly dropped. Naming a concept (“associative”, “unit law”) earns the point; “the usual axioms hold” earns nothing.</p>
+  </div>
+</div>
+
+<div class="assess grader" data-block="foundations">
+  <p><strong>(b)</strong> Explain the size vocabulary: what is a <strong>collection</strong> (vs a set), a <strong>proper class</strong>, <strong>locally small</strong>, and <strong>small</strong>?</p>
+  <div class="conf"><span style="font-size:.92rem;font-weight:600">Confidence?</span>
+    <label><input type="radio" name="conf-foundations" value="low"> Shaky</label>
+    <label><input type="radio" name="conf-foundations" value="med"> Fairly sure</label>
+    <label><input type="radio" name="conf-foundations" value="high"> Certain</label>
+  </div>
+  <div class="answer" contenteditable="true" spellcheck="false" data-placeholder="A collection is…"></div>
+  <button class="grade">Grade with AI tutor</button>
+  <button class="selfgrade secondary">Self-grade (no API)</button>
+  <div class="status"></div>
+  <div class="result feedback"><h3>Tutor feedback</h3><div class="feedbackBody"></div></div>
+  <div class="result model">
+    <h3>Model answer &amp; rubric</h3>
+    <table class="rubric"><thead><tr><th>#</th><th>Criterion</th><th class="pts">Pts</th></tr></thead><tbody>
+      <tr><td>①</td><td>Collection: a neutral term — a set or a proper class (broader than “set”)</td><td class="pts">1</td></tr>
+      <tr><td>②</td><td>Proper class: too large to be a set (e.g. the class of all sets; Russell)</td><td class="pts">1</td></tr>
+      <tr><td>③</td><td>Locally small: every hom-collection 𝒞(A,B) is a set</td><td class="pts">1</td></tr>
+      <tr><td>④</td><td>Small: locally small and the objects also form a set</td><td class="pts">1</td></tr>
+      <tr class="total"><td></td><td>Total</td><td class="pts">4</td></tr>
+    </tbody></table>
+    <p class="credit-note">Naming the notion earns the point; a vague gesture naming nothing earns nothing.</p>
+  </div>
+</div>
+
+<h2>6 · Practice (from Riehl)</h2>
+<p>One problem from Emily Riehl's <em>Category Theory in Context</em>, §1.1 — building a category straight from the definition. Answer, then grade with the tutor or reveal the rubric.</p>
+
+<div class="assess grader" data-block="riehl-slice">
+  <p><b>The slice category.</b> For a category <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi></math> and an object <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>c</mi></math>, the slice <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>c</mi><mo>/</mo><mi mathvariant="script">C</mi></math> has as <em>objects</em> the morphisms <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>c</mi><mover><mo>&#x27F6;</mo><mi>f</mi></mover><mi>x</mi></math>, and as a <em>morphism</em> from <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>c</mi><mover><mo>&#x27F6;</mo><mi>f</mi></mover><mi>x</mi></math> to <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>c</mi><mover><mo>&#x27F6;</mo><mi>g</mi></mover><mi>y</mi></math> a map <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>x</mi><mover><mo>&#x27F6;</mo><mi>h</mi></mover><mi>y</mi></math> with <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>f</mi><mi>h</mi><mo>=</mo><mi>g</mi></math> (f then h equals g). Verify that <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>c</mi><mo>/</mo><mi mathvariant="script">C</mi></math> is a category. <em>(Riehl, Exercise 1.1.iii(i).)</em></p>
+  <div class="conf"><span style="font-size:.92rem;font-weight:600">Confidence?</span>
+    <label><input type="radio" name="conf-riehl-slice" value="low"> Shaky</label>
+    <label><input type="radio" name="conf-riehl-slice" value="med"> Fairly sure</label>
+    <label><input type="radio" name="conf-riehl-slice" value="high"> Certain</label>
+  </div>
+  <div class="answer" contenteditable="true" spellcheck="false" data-placeholder="Composition of slice-morphisms: given h : f→g and h′ : g→k…"></div>
+  <button class="grade">Grade with AI tutor</button>
+  <button class="selfgrade secondary">Self-grade (no API)</button>
+  <div class="status"></div>
+  <div class="result feedback"><h3>Tutor feedback</h3><div class="feedbackBody"></div></div>
+  <div class="result model">
+    <h3>Model answer &amp; rubric</h3>
+    <table class="rubric"><thead><tr><th>#</th><th>Criterion</th><th class="pts">Pts</th></tr></thead><tbody>
+      <tr><td>①</td><td>Composition: slice-morphisms h : f→g and h′ : g→k compose to hh′ : f→k, and the triangle still commutes (f(hh′) = k)</td><td class="pts">1</td></tr>
+      <tr><td>②</td><td>Identity on the object f : c→x is id_x (and it is a slice-morphism)</td><td class="pts">1</td></tr>
+      <tr><td>③</td><td>Associativity and unit laws inherited from 𝒞's composition of the underlying h's</td><td class="pts">1</td></tr>
+      <tr><td>④</td><td>Concludes c/𝒞 is a category</td><td class="pts">1</td></tr>
+      <tr class="total"><td></td><td>Total</td><td class="pts">4</td></tr>
+    </tbody></table>
+    <p style="font-size:.93rem">A slice-morphism is an underlying 𝒞-arrow h with fh = g; compose by composing the h's (the commuting triangles paste), the identity is id_x, and associativity/units come straight from 𝒞. Source: Riehl, Exercise 1.1.iii(i). (Riehl writes g = h∘f; in our left-to-right convention that is fh = g.)</p>
   </div>
 </div>
 
@@ -287,62 +412,107 @@ async function gradeWithClaude(systemPrompt, userContent) {
   }
 }
 
-const SYSTEM = `You are a strict but fair category-theory tutor grading a learner's from-memory definition of a category. Grade against THIS rubric only, awarding one point each (max 6):
-1. mentions a collection of OBJECTS.
-2. mentions MORPHISMS/arrows between objects, with domain and codomain (an arrow f: A->B).
-3. states COMPOSITION: composable f:A->B and g:B->C give a composite A->C.
-4. states IDENTITY morphism on each object.
-5. states ASSOCIATIVITY of composition.
-6. states the UNIT / IDENTITY LAW (identities are two-sided units for composition).
+function typesetMath(node){ if (window.MathJax && window.MathJax.typesetPromise) { window.MathJax.typesetPromise([node]).catch(function(){}); } }
 
-IMPORTANT CONVENTION: this workspace composes LEFT-TO-RIGHT by juxtaposition, writing "fg" (read "f then g") for A->f->B, B->g->C giving A->C, and declares morphisms in labeled-arrow style "A --f--> B" (LaTeX \\xrightarrow). Do NOT penalize the learner for left-to-right order, juxtaposition, or labeled-arrow notation — these are correct and required here. Right-to-left "g ∘ f" is ALSO acceptable (same content). Judge the mathematical meaning, not the symbol order or notation style.
+/* Quick-recall dropdowns — immediate per-option feedback, no API */
+document.querySelectorAll(".quiz-q").forEach(function(q){
+  var sel = q.querySelector("select"), mark = q.querySelector(".quiz-mark"), fb = q.querySelector(".quiz-fb");
+  sel.addEventListener("change", function(){
+    if (!sel.value) { mark.textContent = ""; mark.className = "quiz-mark"; fb.className = "quiz-fb"; return; }
+    var ok = (sel.value === q.getAttribute("data-answer"));
+    var opt = sel.options[sel.selectedIndex];
+    mark.textContent = ok ? "✓" : "✗";
+    mark.className = "quiz-mark " + (ok ? "ok" : "no");
+    fb.textContent = opt.getAttribute("data-fb") || (ok ? "Correct." : "Not quite.");
+    fb.className = "quiz-fb show " + (ok ? "ok" : "no");
+  });
+});
 
-Rules:
-- Judge meaning, not exact notation. Reasonable paraphrases count.
-- FLUENCY CREDIT: the learner is a fluent mathematician. Award FULL credit for correctly NAMING a standard concept — they need NOT restate or expand its formal definition. "Composition is associative" earns item 5 in full; "identities satisfy the unit law" (or "identities are two-sided units") earns item 6 in full. The equations (fg)h=f(gh) and id_A·f=f=f·id_B are OPTIONAL, not required. This applies to every item (e.g. "morphisms have domains and codomains" fully earns item 2).
-- ANTI-VAGUENESS (the limit on fluency credit): a vague gesture that names nothing specific does NOT earn credit. "The usual axioms hold", "satisfies the obvious coherence conditions", "it's a category-like structure" earn NOTHING for items 5/6 — the learner must NAME (or state) each required item individually. Naming the WRONG concept earns no credit.
-- Do NOT be sycophantic or encouraging for its own sake. Name every missing or vague item plainly.
-- The unit law (6) and explicit domain/codomain (2) are the most commonly dropped — check them especially.
-- The learner stated a pre-answer confidence. If confidence is high but the score is not 6, explicitly flag the miscalibration (a confident gap is the most important thing to fix).
-
-Respond in this exact format:
+/* Per-problem grader prompts, keyed by data-block */
+var PROMPTS = {
+"cat-def": `You are a strict but fair category-theory tutor grading a learner's from-memory definition of a CATEGORY. Rubric — one point each (max 6):
+1. a collection of OBJECTS.
+2. MORPHISMS between objects, with domain and codomain (an arrow f:A->B).
+3. COMPOSITION: composable f:A->B, g:B->C give a composite A->C.
+4. an IDENTITY morphism on each object.
+5. ASSOCIATIVITY of composition.
+6. the UNIT / IDENTITY LAW (identities are two-sided units).
+CONVENTION: left-to-right juxtaposition ("fg" = f then g), labeled arrows; do not penalize; right-to-left "g∘f" is fine.
+FLUENCY CREDIT: naming a concept earns the point in full ("associative" earns 5; "unit law" earns 6); equations optional; applies to every item. ANTI-VAGUENESS: "the usual axioms hold" naming nothing earns nothing for 5/6; naming the wrong concept earns nothing.
+The unit law (6) and explicit domain/codomain (2) are most commonly dropped — check them. Be strict, not sycophantic. If confidence high but score < 6, flag miscalibration. Math in MathML or \\( … \\).
+Respond EXACTLY:
 SCORE: X/6
-VERDICT: PASS (if 5-6) or NEEDS WORK (if <=4)
-MISSING: <bulleted list of any items 1-6 not adequately covered, or "none">
-CALIBRATION: <one sentence comparing their stated confidence to their score>
-NEXT: <one sentence on the single most useful thing to drill>`;
+VERDICT: PASS (5-6) or NEEDS WORK (<=4)
+MISSING: <items not covered, or "none">
+CALIBRATION: <confidence vs score, one sentence>
+NEXT: <one sentence>`,
+"foundations": `You are a strict but fair category-theory tutor grading a learner's explanation of the SIZE / FOUNDATIONS vocabulary. Rubric — one point each (max 4):
+1. COLLECTION: a neutral term for an aggregate that may be a set OR a proper class (broader than "set").
+2. PROPER CLASS: a collection too large to be a set (e.g. the class of all sets); the thing Russell's paradox exploits.
+3. LOCALLY SMALL: a category in which every hom-collection C(A,B) is a genuine set.
+4. SMALL: locally small AND the objects also form a set.
+CONVENTION: left-to-right juxtaposition. FLUENCY CREDIT: naming a notion earns the point; ANTI-VAGUENESS: vague gestures naming nothing earn nothing; the wrong thing earns nothing.
+Be strict, not sycophantic. If confidence high but score < 4, flag miscalibration. Math in MathML or \\( … \\).
+Respond EXACTLY:
+SCORE: X/4
+VERDICT: PASS (4) or NEEDS WORK (<=3)
+MISSING: <...>
+CALIBRATION: <...>
+NEXT: <...>`,
+"riehl-slice": `You are a strict but fair tutor grading a learner's solution to Riehl Exercise 1.1.iii(i): for a category C and an object c, verify that the slice category c/C is a category. Its objects are morphisms f : c -> x; a morphism from f : c -> x to g : c -> y is a map h : x -> y with fh = g (left-to-right: f then h equals g). Rubric — one point each (max 4):
+1. COMPOSITION of slice-morphisms defined correctly (compose the underlying h's) and the triangle still commutes.
+2. IDENTITY: the identity on the object (f:c->x) is id_x, and it satisfies the laws.
+3. ASSOCIATIVITY and UNIT laws hold because they hold for the underlying h's in C.
+4. CONCLUDES coherently that c/C is a category.
+Note our left-to-right convention (Riehl writes g = h∘f; here fh = g). Accept valid phrasings; name gaps. Be strict, not sycophantic. If confidence high but score < 4, flag miscalibration. Math in MathML or \\( … \\).
+Respond EXACTLY:
+SCORE: X/4
+VERDICT: PASS (4) or NEEDS WORK (<=3)
+MISSING: <...>
+CALIBRATION: <...>
+NEXT: <...>`
+};
 
-const btn = document.getElementById("grade");
-const statusEl = document.getElementById("status");
-const fb = document.getElementById("feedback");
-const fbBody = document.getElementById("feedbackBody");
-const modelEl = document.getElementById("model");
-
-function selectedConf() {
-  const r = document.querySelector('input[name="conf"]:checked');
-  return r ? r.value : "(not stated)";
-}
-
-btn.addEventListener("click", async () => {
-  const ans = document.getElementById("answer").value.trim();
-  if (ans.length < 10) { statusEl.textContent = "Write your definition first — from memory."; return; }
-  btn.disabled = true;
-  statusEl.textContent = "Grading…";
-
-  const userContent = `Learner's stated confidence: ${selectedConf()}\n\nLearner's answer:\n"""${ans}"""`;
-  const out = await gradeWithClaude(SYSTEM, userContent);
-
-  if (out) {
-    fbBody.innerHTML = out.replace(/\n/g, "<br>");
-    fb.classList.add("show");
-    modelEl.classList.add("show"); // always show the reference too, for comparison
-    statusEl.textContent = "Graded by your embedded tutor. Compare against the model answer below.";
-  } else {
-    // graceful degradation — retrieval already happened; reveal model answer + self-rubric
-    modelEl.classList.add("show");
-    statusEl.textContent = "No API key detected (or the call failed) — grade yourself against the rubric below. The retrieval still counts.";
+/* Constructed-response graders — AI grade + self-grade, one per .grader block */
+document.querySelectorAll(".grader").forEach(function(block){
+  var key = block.getAttribute("data-block");
+  var answer = block.querySelector(".answer");
+  var gradeBtn = block.querySelector(".grade");
+  var selfBtn = block.querySelector(".selfgrade");
+  var statusEl = block.querySelector(".status");
+  var fb = block.querySelector(".feedback");
+  var fbBody = block.querySelector(".feedbackBody");
+  var model = block.querySelector(".model");
+  function rawOf(){ return (answer.dataset.raw !== undefined ? answer.dataset.raw : (answer.innerText || "")); }
+  if (answer) {
+    // contenteditable answer box: shows raw LaTeX while editing, renders it in place on blur.
+    answer.addEventListener("input", function(){ answer.dataset.raw = answer.innerText; });
+    answer.addEventListener("focus", function(){ if (answer.dataset.raw !== undefined) answer.textContent = answer.dataset.raw; });
+    answer.addEventListener("blur", function(){ answer.dataset.raw = answer.innerText; if (!answer.innerText.trim()) answer.innerHTML = ""; typesetMath(answer); });
   }
-  btn.disabled = false;
+  function conf(){ var r = block.querySelector('input[type="radio"]:checked'); return r ? r.value : "(not stated)"; }
+  if (gradeBtn) gradeBtn.addEventListener("click", async function(){
+    var ans = rawOf().trim();
+    if (ans.length < 10) { statusEl.textContent = "Write your answer first — from memory."; return; }
+    gradeBtn.disabled = true; statusEl.textContent = "Grading…";
+    var userContent = "Learner's stated confidence: " + conf() + "\n\nLearner's answer:\n\"\"\"" + ans + "\"\"\"";
+    var out = await gradeWithClaude(PROMPTS[key], userContent);
+    if (out) {
+      fbBody.innerHTML = out.replace(/\n/g, "<br>");
+      fb.classList.add("show"); model.classList.add("show"); typesetMath(fbBody);
+      statusEl.textContent = "Graded by your embedded tutor. Compare with the model answer & rubric below.";
+    } else {
+      model.classList.add("show");
+      statusEl.textContent = "No API key (or the call failed) — grade yourself against the rubric below.";
+    }
+    gradeBtn.disabled = false;
+  });
+  if (selfBtn) selfBtn.addEventListener("click", function(){
+    var ans = rawOf().trim();
+    if (ans.length < 10) { statusEl.textContent = "Write your answer first — from memory."; return; }
+    fb.classList.remove("show"); model.classList.add("show");
+    statusEl.textContent = "Self-grade — no API call made. Score yourself against the rubric below.";
+  });
 });
 </script>
 </body>

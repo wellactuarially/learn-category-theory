@@ -5,6 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Lesson 2 · Functors</title>
 <script src="../config.local.js"></script>
+<!-- MathJax: interactive tutor UI only (live LaTeX preview + rendering tutor feedback).
+     startup.typeset=false keeps it from touching the page's authored native MathML. -->
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+    startup: { typeset: false },
+    options: { enableMenu: false }
+  };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
 <style>
   :root {
     --ink: #1a1a1a;
@@ -78,12 +88,39 @@
   textarea { width: 100%; min-height: 8rem; font-family: inherit; font-size: 1rem;
              padding: .7rem; border: 1px solid var(--rule); border-radius: 5px;
              background: var(--paper); resize: vertical; }
+  .answer { width: 100%; min-height: 7rem; font-family: inherit; font-size: 1rem; line-height: 1.55;
+            padding: .7rem; border: 1px solid var(--rule); border-radius: 5px;
+            background: var(--paper); white-space: pre-wrap; overflow-wrap: break-word; overflow-y: auto; }
+  .answer:focus { outline: none; border-color: var(--accent); }
+  .answer:empty::before { content: attr(data-placeholder); color: var(--muted); pointer-events: none; }
   .conf { margin: .8rem 0; }
   .conf label { font-size: .92rem; margin-right: .8rem; cursor: pointer; }
   button { background: var(--accent); color: #fff; border: none; border-radius: 5px;
            padding: .6rem 1.3rem; font-size: 1rem; font-family: inherit; cursor: pointer; margin-top: .6rem; }
   button:hover { background: #5e1818; }
   button:disabled { opacity: .5; cursor: wait; }
+  button.secondary { background: transparent; color: var(--accent); border: 1px solid var(--accent); margin-left: .5rem; }
+  button.secondary:hover { background: var(--accent-soft); }
+  /* Quick-recall dropdown quiz (no API) */
+  .quiz-q { padding: .6rem 0; border-bottom: 1px dashed var(--rule); }
+  .quiz-q:last-child { border-bottom: none; }
+  .quiz-q p { margin: .2rem 0 .4rem; }
+  .quiz-q select { font-family: inherit; font-size: .98rem; padding: .35rem .5rem; border: 1px solid var(--rule); border-radius: 5px; background: var(--paper); max-width: 100%; }
+  .quiz-mark { margin-left: .5rem; font-weight: 700; }
+  .quiz-mark.ok { color: #3a5a3a; }
+  .quiz-mark.no { color: var(--accent); }
+  .quiz-fb { display: none; margin-top: .45rem; font-size: .92rem; padding: .5rem .7rem; border-radius: 5px; }
+  .quiz-fb.show { display: block; }
+  .quiz-fb.ok { background: #eaf2ea; border-left: 3px solid #3a5a3a; }
+  .quiz-fb.no { background: var(--accent-soft); border-left: 3px solid var(--accent); }
+  /* Rubric tables (partial credit) */
+  table.rubric { width: 100%; border-collapse: collapse; font-size: .92rem; margin: .4rem 0 .6rem; white-space: normal; }
+  table.rubric th, table.rubric td { border: 1px solid var(--rule); padding: .35rem .55rem; text-align: left; vertical-align: top; }
+  table.rubric th { background: var(--code-bg); font-size: .76rem; text-transform: uppercase; letter-spacing: .04em; }
+  table.rubric td.pts, table.rubric th.pts { text-align: center; width: 3.2rem; white-space: nowrap; }
+  table.rubric tr.total td { font-weight: 700; background: #faf7f0; }
+  .grader + .grader { margin-top: 1.2rem; }
+  .credit-note { font-size: .88rem; color: var(--muted); margin: .2rem 0 0; }
   .result { margin-top: 1.2rem; padding: 1rem 1.2rem; border-radius: 6px; display: none; }
   .result.show { display: block; }
   .result.model { background: var(--code-bg); border: 1px solid var(--rule); }
@@ -153,6 +190,11 @@
 </math>
 <p>These hom-set maps are where the future lives: when each is injective the functor is <em>faithful</em>, when surjective <em>full</em> — the vocabulary in which the Yoneda lemma is eventually stated. We only name them here.<details class="cite"><summary>fwd</summary><span class="cite-body">Full and faithful functors: Riehl §1.5; they are central to the Yoneda lemma (Riehl §2.2). Flagged now, developed later.</span></details></p>
 
+<div class="callout">
+<span class="label">Why exactly these two laws</span>
+<p style="margin:.4rem 0 0">Functoriality is not bookkeeping for its own sake — it is precisely what forces a functor to <em>transport structure</em> without distortion. Because <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>F</mi></math> respects composition and identities, it automatically carries isomorphisms to isomorphisms<details class="cite"><summary>lemma</summary><span class="cite-body">"Functors preserve isomorphisms": Riehl, Lemma 1.3.8. The one-line proof is exactly functoriality applied to <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>f</mi><msup><mi>f</mi><mrow><mo>&#x2212;</mo><mn>1</mn></mrow></msup><mo>=</mo><mi>id</mi></math>. (It need not <em>reflect</em> them — Exercise 1.3.viii.)</span></details> — so any property phrased through arrows becomes an <strong>invariant</strong> that <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>F</mi></math> ports from one category to another. That is the whole reason <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>&#x03C0;</mi><mn>1</mn></msub></math> can prove two spaces are genuinely different: a functor turns a hard question in one world into an easier one in another, and the answer survives the trip.</p>
+</div>
+
 <h2>2 · Functors in the wild</h2>
 <p>The definition earns its keep through how much it already covers. Each example below names the object action and the morphism action — that pair is the whole content.</p>
 
@@ -169,36 +211,147 @@
 <h2>3 · Functors compose</h2>
 <p>Functors are themselves arrows, and they behave like it. Given <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi><mover><mo>&#x27F6;</mo><mi>F</mi></mover><mi mathvariant="script">D</mi></math> and <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">D</mi><mover><mo>&#x27F6;</mo><mi>G</mi></mover><mi mathvariant="script">E</mi></math>, the composite <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>F</mi><mi>G</mi></math> (do <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>F</mi></math>, then <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>G</mi></math>) is again a functor, and each category has an <strong>identity functor</strong> <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>id</mi><mi mathvariant="script">C</mi></msub></math> fixing every object and arrow. Composition of functors is associative with these as units — so <strong>small categories and functors themselves form a category</strong>, <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="bold">Cat</mi></math>.<details class="cite"><summary>cat</summary><span class="cite-body"><math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="bold">Cat</mi></math>, the category of small categories and functors: Riehl §1.3, Leinster §1.2. Restricting to <em>small</em> categories keeps it a legitimate (large) category — the size bookkeeping from Lesson 1 at work.</span></details></p>
 
-<h2 id="assess">4 · State the definition</h2>
+<h2>4 · Quick recall</h2>
 <div class="assess">
-  <p><strong>Without scrolling up</strong>, write the complete definition of a functor <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi><mover><mo>&#x27F6;</mo><mi>F</mi></mover><mi mathvariant="script">D</mi></math> — both pieces of data and both laws. Then, if you like, name one functor from a field you know and state what it does on objects and on morphisms.</p>
-
-  <div class="conf">
-    <span style="font-size:.92rem;font-weight:600">How confident are you this is complete and correct?</span><br>
-    <label><input type="radio" name="conf" value="low"> Shaky</label>
-    <label><input type="radio" name="conf" value="med"> Fairly sure</label>
-    <label><input type="radio" name="conf" value="high"> Certain</label>
+  <div class="quiz-q" data-answer="b">
+    <p>1. A (covariant) functor sends an arrow <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>A</mi><mover><mo>&#x27F6;</mo><mi>f</mi></mover><mi>B</mi></math> to an arrow of which form?</p>
+    <select>
+      <option value="">— choose —</option>
+      <option value="a" data-fb="That is contravariant. A covariant functor preserves direction.">a reversed arrow, from the image of B to the image of A</option>
+      <option value="b" data-fb="Correct — domain to domain, codomain to codomain.">a parallel arrow, from the image of A to the image of B</option>
+      <option value="c" data-fb="No — the functor lands in the target category; it carries the arrow across.">f itself, left unchanged in the source</option>
+    </select>
+    <span class="quiz-mark"></span><div class="quiz-fb"></div>
   </div>
-
-  <textarea id="answer" placeholder="A functor F : 𝒞 → 𝒟 consists of…"></textarea>
-  <button id="grade">Submit for grading</button>
-  <div class="status" id="status"></div>
-
-  <div class="result feedback" id="feedback">
-    <h3>Tutor feedback</h3>
-    <div id="feedbackBody"></div>
+  <div class="quiz-q" data-answer="b">
+    <p>2. In our left-to-right convention, a functor sends a composite <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>f</mi><mi>g</mi></math> to which composite of the images?</p>
+    <select>
+      <option value="">— choose —</option>
+      <option value="a" data-fb="That is the reversed (contravariant) law. A covariant functor preserves order.">the images in reverse: g's image, then f's</option>
+      <option value="b" data-fb="Correct — F of a composite is the composite of the images, in the same order.">the images in the same order: f's image, then g's</option>
+      <option value="c" data-fb="There is no addition here; composition is composition.">the sum of the two images</option>
+    </select>
+    <span class="quiz-mark"></span><div class="quiz-fb"></div>
   </div>
+  <div class="quiz-q" data-answer="b">
+    <p>3. A functor between one-object categories <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="bold">B</mi><mi>M</mi><mo>&#x27F6;</mo><mi mathvariant="bold">B</mi><mi>N</mi></math> is the same thing as…</p>
+    <select>
+      <option value="">— choose —</option>
+      <option value="a" data-fb="No — it is a structure-preserving map of the whole monoid, not a single element.">a single element of the target monoid</option>
+      <option value="b" data-fb="Correct — the two functor laws are exactly the two homomorphism laws.">a monoid homomorphism between them</option>
+      <option value="c" data-fb="Natural transformations are maps between functors — a later notion.">a natural transformation</option>
+    </select>
+    <span class="quiz-mark"></span><div class="quiz-fb"></div>
+  </div>
+  <div class="quiz-q" data-answer="a">
+    <p>4. The covariant hom-functor <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi><mo>(</mo><mi>A</mi><mo>,</mo><mo>&#x2212;</mo><mo>)</mo></math> sends an arrow <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>X</mi><mover><mo>&#x27F6;</mo><mi>f</mi></mover><mi>Y</mi></math> to a function <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi><mo>(</mo><mi>A</mi><mo>,</mo><mi>X</mi><mo>)</mo><mo>&#x27F6;</mo><mi mathvariant="script">C</mi><mo>(</mo><mi>A</mi><mo>,</mo><mi>Y</mi><mo>)</mo></math>. How does it act?</p>
+    <select>
+      <option value="">— choose —</option>
+      <option value="a" data-fb="Correct — post-composition: each map A → X is followed by f to land in A → Y.">post-composition: each map followed by f</option>
+      <option value="b" data-fb="That is pre-composition, which is the contravariant hom-functor 𝒞(−,A).">pre-composition: f followed by each map</option>
+      <option value="c" data-fb="That is a constant function, not the functor's action.">every map is sent to f</option>
+    </select>
+    <span class="quiz-mark"></span><div class="quiz-fb"></div>
+  </div>
+</div>
 
-  <div class="result model" id="model">
-    <h3>Model answer &amp; self-scoring rubric</h3>
-    <p>A <strong>functor</strong> <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi><mover><mo>&#x27F6;</mo><mi>F</mi></mover><mi mathvariant="script">D</mi></math> consists of:</p>
-    <ul class="rubric">
-      <li>① an <strong>object assignment</strong>: each object <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>A</mi></math> of <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi></math> gives an object <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>F</mi><mo>(</mo><mi>A</mi><mo>)</mo></math> of <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">D</mi></math>;</li>
-      <li>② a <strong>morphism assignment</strong>: each <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>A</mi><mover><mo>&#x27F6;</mo><mi>f</mi></mover><mi>B</mi></math> gives <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>F</mi><mo>(</mo><mi>A</mi><mo>)</mo><mover><mo>&#x27F6;</mo><mrow><mi>F</mi><mo>(</mo><mi>f</mi><mo>)</mo></mrow></mover><mi>F</mi><mo>(</mo><mi>B</mi><mo>)</mo></math> (respecting domain/codomain);</li>
-      <li>③ <strong>preserving composition</strong>: <math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>F</mi><mo>(</mo><mi>f</mi><mi>g</mi><mo>)</mo></mrow><mo>=</mo><mrow><mi>F</mi><mo>(</mo><mi>f</mi><mo>)</mo><mspace width="0.2em"/><mi>F</mi><mo>(</mo><mi>g</mi><mo>)</mo></mrow></math>;</li>
-      <li>④ <strong>preserving identities</strong>: <math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>F</mi><mo>(</mo><msub><mi>id</mi><mi>A</mi></msub><mo>)</mo></mrow><mo>=</mo><msub><mi>id</mi><mrow><mi>F</mi><mo>(</mo><mi>A</mi><mo>)</mo></mrow></msub></math>.</li>
-    </ul>
-    <p style="font-size:.95rem"><strong>Score:</strong> one point each for ①–④. Naming a standard notion counts in full — "preserves composition and identities" earns ③ and ④; you needn't write the equations. A vague "it preserves structure" that names neither earns nothing. <strong>4:</strong> a pass. <strong>2–3:</strong> something's missing — re-read §1 and retry. <strong>0–1:</strong> re-read §1.</p>
+<h2 id="assess">5 · Recall — from memory</h2>
+<p>Two separate prompts, graded independently. <strong>Grade with AI tutor</strong> for feedback, or <strong>Self-grade (no API)</strong> to reveal the rubric and mark yourself.</p>
+
+<div class="assess grader" data-block="def-functor">
+  <p><strong>(a)</strong> Without scrolling up, define a functor <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi><mover><mo>&#x27F6;</mo><mi>F</mi></mover><mi mathvariant="script">D</mi></math> — both pieces of data and both laws.</p>
+  <div class="conf"><span style="font-size:.92rem;font-weight:600">Confidence?</span>
+    <label><input type="radio" name="conf-def-functor" value="low"> Shaky</label>
+    <label><input type="radio" name="conf-def-functor" value="med"> Fairly sure</label>
+    <label><input type="radio" name="conf-def-functor" value="high"> Certain</label>
+  </div>
+  <div class="answer" contenteditable="true" spellcheck="false" data-placeholder="A functor F : 𝒞 → 𝒟 consists of…"></div>  <button class="grade">Grade with AI tutor</button>
+  <button class="selfgrade secondary">Self-grade (no API)</button>
+  <div class="status"></div>
+  <div class="result feedback"><h3>Tutor feedback</h3><div class="feedbackBody"></div></div>
+  <div class="result model">
+    <h3>Model answer &amp; rubric</h3>
+    <table class="rubric"><thead><tr><th>#</th><th>Criterion (naming the notion counts in full)</th><th class="pts">Pts</th></tr></thead><tbody>
+      <tr><td>①</td><td>Object assignment: each object of 𝒞 gives an object of 𝒟</td><td class="pts">1</td></tr>
+      <tr><td>②</td><td>Morphism assignment: f : A → B gives F(f) : F(A) → F(B) (respecting domain/codomain)</td><td class="pts">1</td></tr>
+      <tr><td>③</td><td>Preserves composition: F(fg) = F(f) F(g)</td><td class="pts">1</td></tr>
+      <tr><td>④</td><td>Preserves identities: F(id_A) = id_{F(A)}</td><td class="pts">1</td></tr>
+      <tr class="total"><td></td><td>Total</td><td class="pts">4</td></tr>
+    </tbody></table>
+    <p class="credit-note">“Preserves composition and identities” earns ③ and ④ in full. A vague “preserves structure” naming neither earns nothing there.</p>
+  </div>
+</div>
+
+<div class="assess grader" data-block="ex-functor">
+  <p><strong>(b)</strong> Name one functor from a field you know. Give its source and target categories, its action on objects and on morphisms, and say why it is functorial.</p>
+  <div class="conf"><span style="font-size:.92rem;font-weight:600">Confidence?</span>
+    <label><input type="radio" name="conf-ex-functor" value="low"> Shaky</label>
+    <label><input type="radio" name="conf-ex-functor" value="med"> Fairly sure</label>
+    <label><input type="radio" name="conf-ex-functor" value="high"> Certain</label>
+  </div>
+  <div class="answer" contenteditable="true" spellcheck="false" data-placeholder="e.g. the forgetful functor U : Grp → Set sends a group to…"></div>  <button class="grade">Grade with AI tutor</button>
+  <button class="selfgrade secondary">Self-grade (no API)</button>
+  <div class="status"></div>
+  <div class="result feedback"><h3>Tutor feedback</h3><div class="feedbackBody"></div></div>
+  <div class="result model">
+    <h3>What a good answer has &amp; rubric</h3>
+    <table class="rubric"><thead><tr><th>#</th><th>Criterion</th><th class="pts">Pts</th></tr></thead><tbody>
+      <tr><td>①</td><td>A genuine functor named, with correct source and target categories</td><td class="pts">1</td></tr>
+      <tr><td>②</td><td>Correct action on objects</td><td class="pts">1</td></tr>
+      <tr><td>③</td><td>Correct action on morphisms, in the right direction</td><td class="pts">1</td></tr>
+      <tr><td>④</td><td>Functorial: respects composition and identities (at least argued)</td><td class="pts">1</td></tr>
+      <tr class="total"><td></td><td>Total</td><td class="pts">4</td></tr>
+    </tbody></table>
+    <p class="credit-note">Worked examples: forgetful U : Grp → Set (object: underlying set; morphism: the homomorphism as a function); π₁ : Top∗ → Grp; the dual space (−)∗ (contravariant); a homomorphism as BM → BN.</p>
+  </div>
+</div>
+
+<h2>6 · Practice (from Riehl)</h2>
+<p>Two problems from Emily Riehl's <em>Category Theory in Context</em>, §1.3. Answer, then grade with the tutor or reveal the rubric.</p>
+
+<div class="assess grader" data-block="riehl-preorder">
+  <p><b>1. Functors between preorders.</b> Regarding preorders as categories, describe exactly what a functor between two of them is, and why. <em>(Riehl, Exercise 1.3.ii.)</em></p>
+  <div class="conf"><span style="font-size:.92rem;font-weight:600">Confidence?</span>
+    <label><input type="radio" name="conf-riehl-preorder" value="low"> Shaky</label>
+    <label><input type="radio" name="conf-riehl-preorder" value="med"> Fairly sure</label>
+    <label><input type="radio" name="conf-riehl-preorder" value="high"> Certain</label>
+  </div>
+  <div class="answer" contenteditable="true" spellcheck="false" data-placeholder="A functor between preorders is…"></div>  <button class="grade">Grade with AI tutor</button>
+  <button class="selfgrade secondary">Self-grade (no API)</button>
+  <div class="status"></div>
+  <div class="result feedback"><h3>Tutor feedback</h3><div class="feedbackBody"></div></div>
+  <div class="result model">
+    <h3>Model answer &amp; rubric</h3>
+    <table class="rubric"><thead><tr><th>#</th><th>Criterion</th><th class="pts">Pts</th></tr></thead><tbody>
+      <tr><td>①</td><td>Identifies it as a monotone (order-preserving) map: x ≤ y ⇒ F(x) ≤ F(y)</td><td class="pts">1</td></tr>
+      <tr><td>②</td><td>Explains: an arrow x → y exists iff x ≤ y, so F sends it to F(x) → F(y)</td><td class="pts">1</td></tr>
+      <tr><td>③</td><td>Notes the functor laws hold automatically (≤ one arrow between objects)</td><td class="pts">1</td></tr>
+      <tr class="total"><td></td><td>Total</td><td class="pts">3</td></tr>
+    </tbody></table>
+    <p style="font-size:.93rem">A functor between preorders is exactly a monotone map: x ≤ y ⇒ F(x) ≤ F(y). Because a preorder has at most one arrow between any two objects, the composition and identity laws hold automatically. Source: Riehl, Exercise 1.3.ii.</p>
+  </div>
+</div>
+
+<div class="assess grader" data-block="riehl-image">
+  <p><b>2. The image of a functor need not be a subcategory.</b> Find a functor <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi><mover><mo>&#x27F6;</mo><mi>F</mi></mover><mi mathvariant="script">D</mi></math> whose image (its objects and morphisms) is not a subcategory of <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">D</mi></math>. <em>(Riehl, Exercise 1.3.iii.)</em></p>
+  <div class="conf"><span style="font-size:.92rem;font-weight:600">Confidence?</span>
+    <label><input type="radio" name="conf-riehl-image" value="low"> Shaky</label>
+    <label><input type="radio" name="conf-riehl-image" value="med"> Fairly sure</label>
+    <label><input type="radio" name="conf-riehl-image" value="high"> Certain</label>
+  </div>
+  <div class="answer" contenteditable="true" spellcheck="false" data-placeholder="Take 𝒞 to be… and F to send…"></div>  <button class="grade">Grade with AI tutor</button>
+  <button class="selfgrade secondary">Self-grade (no API)</button>
+  <div class="status"></div>
+  <div class="result feedback"><h3>Tutor feedback</h3><div class="feedbackBody"></div></div>
+  <div class="result model">
+    <h3>Model answer &amp; rubric</h3>
+    <table class="rubric"><thead><tr><th>#</th><th>Criterion</th><th class="pts">Pts</th></tr></thead><tbody>
+      <tr><td>①</td><td>A concrete functor F : 𝒞 → 𝒟</td><td class="pts">1</td></tr>
+      <tr><td>②</td><td>Exhibits the failure: image not closed under composition (or a missing identity)</td><td class="pts">1</td></tr>
+      <tr><td>③</td><td>Explains why it is therefore not a subcategory</td><td class="pts">1</td></tr>
+      <tr class="total"><td></td><td>Total</td><td class="pts">3</td></tr>
+    </tbody></table>
+    <p style="font-size:.93rem">Let 𝒞 be two disjoint arrows a → b and c → d; map into the poset 0 ≤ 1 ≤ 2, sending a → b to 0 → 1 and c → d to 1 → 2 (so F(b) = F(c) = 1). Then 0 → 1 and 1 → 2 lie in the image and compose in 𝒟 to 0 → 2 — which is the image of no arrow of 𝒞. The image is not closed under composition, so it is not a subcategory. Source: Riehl, Exercise 1.3.iii.</p>
   </div>
 </div>
 
@@ -238,59 +391,114 @@ async function gradeWithClaude(systemPrompt, userContent) {
   }
 }
 
-const SYSTEM = `You are a strict but fair category-theory tutor grading a learner's from-memory definition of a FUNCTOR F : C -> D. Grade against THIS rubric only, awarding one point each (max 4):
+function typesetMath(node){ if (window.MathJax && window.MathJax.typesetPromise) { window.MathJax.typesetPromise([node]).catch(function(){}); } }
+
+/* Quick-recall dropdowns — immediate per-option feedback, no API */
+document.querySelectorAll(".quiz-q").forEach(function(q){
+  var sel = q.querySelector("select"), mark = q.querySelector(".quiz-mark"), fb = q.querySelector(".quiz-fb");
+  sel.addEventListener("change", function(){
+    if (!sel.value) { mark.textContent = ""; mark.className = "quiz-mark"; fb.className = "quiz-fb"; return; }
+    var ok = (sel.value === q.getAttribute("data-answer"));
+    var opt = sel.options[sel.selectedIndex];
+    mark.textContent = ok ? "✓" : "✗";
+    mark.className = "quiz-mark " + (ok ? "ok" : "no");
+    fb.textContent = opt.getAttribute("data-fb") || (ok ? "Correct." : "Not quite.");
+    fb.className = "quiz-fb show " + (ok ? "ok" : "no");
+  });
+});
+
+/* Per-problem grader prompts, keyed by data-block */
+var PROMPTS = {
+"def-functor": `You are a strict but fair category-theory tutor grading a learner's from-memory definition of a FUNCTOR F : C -> D. Rubric — one point each (max 4):
 1. OBJECT assignment: F sends each object of C to an object of D.
-2. MORPHISM assignment: F sends each arrow f:A->B to an arrow F(A)->F(B), respecting domain and codomain.
-3. PRESERVES COMPOSITION: F(fg) = F(f) F(g) (i.e. F of a composite is the composite of the images).
+2. MORPHISM assignment: F sends each arrow f:A->B to an arrow F(A)->F(B), respecting domain/codomain.
+3. PRESERVES COMPOSITION: F(fg) = F(f) F(g).
 4. PRESERVES IDENTITIES: F(id_A) = id_{F(A)}.
-
-CONVENTION: this workspace composes LEFT-TO-RIGHT by juxtaposition ("fg" = f then g) and declares morphisms in labeled-arrow style "A --f--> B". Do NOT penalize that. Right-to-left "F(g∘f)=F(g)∘F(f)" is equally acceptable for item 3 — same content.
-
-FLUENCY CREDIT: the learner is a fluent mathematician. Award FULL credit for correctly NAMING a standard notion; they need NOT restate or expand its definition. "F preserves composition" earns item 3 in full; "F preserves identities" earns item 4 in full; the equations are OPTIONAL. "F is structure-preserving: it respects composition and identities" earns BOTH 3 and 4.
-ANTI-VAGUENESS (the limit): a gesture that names nothing specific earns nothing. "It preserves the structure" / "respects everything" WITHOUT naming composition and identities earns NO credit for 3 or 4. Naming the wrong thing earns no credit. The learner must name (or state) each required item.
-
-OPTIONAL EXAMPLE: the learner may add a functor from another field. If present, sanity-check it in one line (correct object action + morphism action + roughly functorial?); do not count it in the /4 score, but note if it is wrong.
-
-Be strict, not sycophantic; name every missing item plainly. The learner gave a pre-answer confidence — if confidence is high but score < 4, flag the miscalibration.
-
-Respond EXACTLY in this format:
+CONVENTION: left-to-right juxtaposition ("fg" = f then g), labeled arrows; do not penalize; right-to-left "F(g∘f)=F(g)∘F(f)" is fine for item 3.
+FLUENCY CREDIT: naming a notion earns the point in full ("preserves composition and identities" earns 3 and 4); equations optional. ANTI-VAGUENESS: "preserves structure" naming neither earns nothing for 3/4; naming the wrong thing earns nothing.
+Be strict, not sycophantic. If confidence high but score < 4, flag miscalibration. Math in MathML or \\( … \\).
+Respond EXACTLY:
 SCORE: X/4
 VERDICT: PASS (4) or NEEDS WORK (<=3)
-MISSING: <items 1-4 not adequately covered, or "none">
-EXAMPLE: <one line on their example, or "none given">
-CALIBRATION: <one sentence: stated confidence vs score>
-NEXT: <one sentence on the single most useful thing to firm up>`;
+MISSING: <items not covered, or "none">
+CALIBRATION: <confidence vs score, one sentence>
+NEXT: <one sentence>`,
+"ex-functor": `You are a strict but fair category-theory tutor grading a learner's EXAMPLE of a functor (asked to name one from a field they know, give its action on objects and morphisms, and argue it is functorial). Rubric — one point each (max 4):
+1. NAMES a genuine functor with correct source and target categories (e.g. forgetful U:Grp->Set, free, π₁:Top*->Grp, a hom-functor, a group homomorphism as BM->BN).
+2. CORRECT OBJECT action.
+3. CORRECT MORPHISM action, in the right direction (covariant unless they explicitly build a contravariant one).
+4. Argues/makes clear it is FUNCTORIAL (respects composition and identities), at least plausibly.
+Judge correctness; reject non-examples (not functorial, or maps that don't respect domains/codomains). Accept any correct example. Be strict, not sycophantic; name what's wrong. If confidence high but score < 4, flag miscalibration. Math in MathML or \\( … \\).
+Respond EXACTLY:
+SCORE: X/4
+VERDICT: PASS (4) or NEEDS WORK (<=3)
+MISSING: <...>
+CALIBRATION: <...>
+NEXT: <...>`,
+"riehl-preorder": `You are a strict but fair tutor grading a learner's answer to Riehl Exercise 1.3.ii: "What is a functor between preorders, regarded as categories?" Rubric — one point each (max 3):
+1. IDENTIFIES it as a MONOTONE (order-preserving) map: x <= y implies F(x) <= F(y).
+2. EXPLAINS via the category structure: in a preorder there is an arrow x->y iff x <= y, and a functor sends that arrow to an arrow F(x)->F(y), i.e. F(x) <= F(y).
+3. NOTES the functor laws are automatic because a preorder has at most one arrow between any two objects (composition/identity conditions are vacuous).
+Accept valid phrasings. Be strict, not sycophantic; name gaps. If confidence high but score < 3, flag miscalibration. Math in MathML or \\( … \\).
+Respond EXACTLY:
+SCORE: X/3
+VERDICT: PASS (3) or NEEDS WORK (<=2)
+MISSING: <...>
+CALIBRATION: <...>
+NEXT: <...>`,
+"riehl-image": `You are a strict but fair tutor grading a learner's answer to Riehl Exercise 1.3.iii: find an example showing the image of a functor F:C->D (its objects and morphisms) need NOT be a subcategory of D. Rubric — one point each (max 3):
+1. GIVES A CONCRETE example: a specific F:C->D.
+2. EXHIBITS THE FAILURE: two morphisms in the image whose D-composite is NOT in the image (image not closed under composition), or a needed identity missing.
+3. EXPLAINS why it therefore fails to be a subcategory.
+A standard example: C is two disjoint arrows a->b and c->d; map into the poset 0<=1<=2 sending a->b to 0->1 and c->d to 1->2 (so F(b)=F(c)=1). Then 0->1 and 1->2 are in the image and composable in D, but their composite 0->2 is the image of no arrow of C. Accept any correct example. Be strict; name gaps. If confidence high but score < 3, flag miscalibration. Math in MathML or \\( … \\).
+Respond EXACTLY:
+SCORE: X/3
+VERDICT: PASS (3) or NEEDS WORK (<=2)
+MISSING: <...>
+CALIBRATION: <...>
+NEXT: <...>`
+};
 
-const btn = document.getElementById("grade");
-const statusEl = document.getElementById("status");
-const fb = document.getElementById("feedback");
-const fbBody = document.getElementById("feedbackBody");
-const modelEl = document.getElementById("model");
-
-function selectedConf() {
-  const r = document.querySelector('input[name="conf"]:checked');
-  return r ? r.value : "(not stated)";
-}
-
-btn.addEventListener("click", async () => {
-  const ans = document.getElementById("answer").value.trim();
-  if (ans.length < 10) { statusEl.textContent = "Write your definition first — from memory."; return; }
-  btn.disabled = true;
-  statusEl.textContent = "Grading…";
-
-  const userContent = `Learner's stated confidence: ${selectedConf()}\n\nLearner's answer:\n"""${ans}"""`;
-  const out = await gradeWithClaude(SYSTEM, userContent);
-
-  if (out) {
-    fbBody.innerHTML = out.replace(/\n/g, "<br>");
-    fb.classList.add("show");
-    modelEl.classList.add("show");
-    statusEl.textContent = "Graded by your embedded tutor. Compare against the model answer below.";
-  } else {
-    modelEl.classList.add("show");
-    statusEl.textContent = "No API key detected (or the call failed) — grade yourself against the rubric below.";
+/* Constructed-response graders — AI grade + self-grade, one per .grader block */
+document.querySelectorAll(".grader").forEach(function(block){
+  var key = block.getAttribute("data-block");
+  var answer = block.querySelector(".answer");
+  var gradeBtn = block.querySelector(".grade");
+  var selfBtn = block.querySelector(".selfgrade");
+  var statusEl = block.querySelector(".status");
+  var fb = block.querySelector(".feedback");
+  var fbBody = block.querySelector(".feedbackBody");
+  var model = block.querySelector(".model");
+  function rawOf(){ return (answer.dataset.raw !== undefined ? answer.dataset.raw : (answer.innerText || "")); }
+  if (answer) {
+    // contenteditable answer box: shows raw LaTeX while editing, renders it in place on blur.
+    answer.addEventListener("input", function(){ answer.dataset.raw = answer.innerText; });
+    answer.addEventListener("focus", function(){ if (answer.dataset.raw !== undefined) answer.textContent = answer.dataset.raw; });
+    answer.addEventListener("blur", function(){ answer.dataset.raw = answer.innerText; if (!answer.innerText.trim()) answer.innerHTML = ""; typesetMath(answer); });
   }
-  btn.disabled = false;
+  function conf(){ var r = block.querySelector('input[type="radio"]:checked'); return r ? r.value : "(not stated)"; }
+  if (gradeBtn) gradeBtn.addEventListener("click", async function(){
+    var ans = rawOf().trim();
+    if (ans.length < 10) { statusEl.textContent = "Write your answer first — from memory."; return; }
+    gradeBtn.disabled = true; statusEl.textContent = "Grading…";
+    var userContent = "Learner's stated confidence: " + conf() + "\n\nLearner's answer:\n\"\"\"" + ans + "\"\"\"";
+    var out = await gradeWithClaude(PROMPTS[key], userContent);
+    if (out) {
+      fbBody.innerHTML = out.replace(/\n/g, "<br>");
+      fb.classList.add("show"); model.classList.add("show"); typesetMath(fbBody);
+      statusEl.textContent = "Graded by your embedded tutor. Compare with the model answer & rubric below.";
+    } else {
+      model.classList.add("show");
+      statusEl.textContent = "No API key (or the call failed) — grade yourself against the rubric below.";
+    }
+    gradeBtn.disabled = false;
+  });
+  if (selfBtn) selfBtn.addEventListener("click", function(){
+    var ans = rawOf().trim();
+    if (ans.length < 10) { statusEl.textContent = "Write your answer first — from memory."; return; }
+    fb.classList.remove("show"); model.classList.add("show");
+    statusEl.textContent = "Self-grade — no API call made. Score yourself against the rubric below.";
+  });
 });
 </script>
 </body>

@@ -82,6 +82,7 @@ A lesson should be:
 - **Cited, inline and in-flow.** Litter it with links to the trusted sources in `RESOURCES.md`, and recommend one *primary* source (the best thing you found) to read or watch. Render every citation as an **inline expandable** — an HTML `<details>`/`<summary>` disclosure (or an equivalent click-to-toggle popover) anchored at the point of the claim, so the source detail opens *in place* and collapses again without moving the reader. **Never** collect citations into a scroll-to-bottom bibliography or jump-to footnotes: breaking the flow of reading to chase a reference is exactly what we're avoiding. The reader should be able to verify a claim and keep reading without ever losing their place.
 - **Connected.** Link via HTML anchors to related lessons and reference docs.
 - **Retrieval-terminating.** Every lesson ends in the learner producing something from memory — see Assessment Design. A lesson that only explains is unfinished.
+- **Subject-only.** A lesson contains the subject matter and its exercises — *not* a discussion of the teaching method. Keep the cognitive-science scaffolding (fluency vs storage, the testing effect, spacing, calibration, *why* retrieval is there) out of the lesson artifact; build the lesson *on* those principles without *narrating* them. The metacognitive work (naming the fluency illusion, surfacing miscalibration) still happens — but in conversation with the learner, not baked into the HTML.
 
 Each lesson should remind the learner that you — their teacher — are available for follow-up questions on anything unclear. If possible, open the lesson file for the user with a CLI command after writing it.
 
@@ -116,6 +117,8 @@ This is **toggleable**. Record the state in `NOTES.md` (e.g. `embedded-tutor: on
 - **When OFF, or when no key is configured**, lessons must **degrade gracefully**, never break: the learner writes their answer, then reveals a model answer and a self-scoring rubric and grades themselves. Self-grading is weaker than an external grader (it leans on honesty and the learner's judgment) but it is far better than no retrieval event. Every embedded-grader lesson must include this fallback path.
 
 Default the grader to `claude-opus-4-8` for reasoning-heavy judging (proof outlines, conceptual explanations); a lighter model is fine for simple matching. Note the irony to guard against: an embedded grader can itself be miscalibrated or sycophantic — instruct it to grade strictly against an explicit rubric, not to be encouraging.
+
+**Two ways to grade, always.** Every embedded-grader assessment offers *both* a **"Grade with AI tutor"** button (calls the API) and a **"Self-grade (no API)"** button that reveals the model answer and rubric with zero API calls. API grading is opt-in per attempt, never the only path — many learners are cost-conscious, and the self-graded reveal must work with or without a key. This makes the graceful-degradation path a first-class, always-present option rather than a fallback only triggered by a missing key.
 
 ## Spacing & the Review Queue
 

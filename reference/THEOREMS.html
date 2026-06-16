@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Category Theory · Theorem Toolkit</title>
+<style>
+  :root { --ink:#1a1a1a; --paper:#fdfcf9; --rule:#d9d4c7; --accent:#7a1f1f; --muted:#6b6557; --code:#f4f1ea;
+          --done:#3a5a3a; --done-bg:#eaf2ea; --todo:#8a5a12; --todo-bg:#fbf3e8; --target:#7a1f1f; --target-bg:#f3e9e9; }
+  * { box-sizing:border-box; }
+  body { background:var(--paper); color:var(--ink);
+         font-family: Palatino, "Palatino Linotype", "Book Antiqua", Georgia, serif;
+         line-height:1.5; max-width:48rem; margin:0 auto; padding:3rem 1.6rem 5rem; font-size:1.08rem; }
+  h1 { font-size:1.9rem; margin:0 0 .2rem; }
+  .sub { color:var(--muted); font-style:italic; margin-top:0; }
+  h2 { font-size:1.15rem; color:var(--accent); margin:2rem 0 .4rem; border-bottom:1px solid var(--rule); padding-bottom:.3rem; }
+  a { color:var(--accent); }
+  math { font-size:1.04em; white-space:nowrap; }
+  .thm { border:1px solid var(--rule); border-left-width:4px; border-radius:0 6px 6px 0; padding:.6rem .9rem; margin:.8rem 0; background:#fff; }
+  .thm.done { border-left-color:var(--done); }
+  .thm.todo { border-left-color:var(--todo); }
+  .thm.target { border-left-color:var(--target); }
+  .name { font-weight:700; }
+  .tag { font-size:.68rem; text-transform:uppercase; letter-spacing:.08em; font-weight:700; padding:.08em .5em; border-radius:10px; margin-left:.4rem; vertical-align:middle; }
+  .tag.done { color:var(--done); background:var(--done-bg); }
+  .tag.todo { color:var(--todo); background:var(--todo-bg); }
+  .tag.target { color:var(--target); background:var(--target-bg); }
+  .src { font-size:.85rem; color:var(--muted); margin-top:.3rem; }
+  .stmt { margin:.3rem 0 0; }
+  code { font-family:"SF Mono",Menlo,Consolas,monospace; font-size:.88em; background:var(--code); padding:.05em .3em; border-radius:3px; }
+  footer { margin-top:3rem; border-top:1px solid var(--rule); padding-top:.8rem; font-size:.85rem; color:var(--muted); }
+  @media print { body{font-size:10.5pt; max-width:none;} }
+</style>
+</head>
+<body>
+<h1>Theorem Toolkit</h1>
+<p class="sub">A running, citable catalogue of useful results — established, to prove, and the headline target. Statements use the workspace conventions (left-to-right composition, labeled arrows).</p>
+
+<h2>Established / available</h2>
+
+<div class="thm done">
+  <span class="name">Double opposite</span><span class="tag done">established</span>
+  <p class="stmt"><math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mrow><mo>(</mo><msup><mi mathvariant="script">C</mi><mi>op</mi></msup><mo>)</mo></mrow><mi>op</mi></msup><mo>=</mo><mi mathvariant="script">C</mi></math>. Reversing all arrows twice is the identity.</p>
+  <p class="src">Lesson 3; Riehl §1.2.</p>
+</div>
+
+<div class="thm done">
+  <span class="name">Contravariant = covariant on the opposite</span><span class="tag done">established</span>
+  <p class="stmt">A contravariant functor <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi><mo>&#x27F6;</mo><mi mathvariant="script">D</mi></math> is the same data as a covariant functor <math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mi mathvariant="script">C</mi><mi>op</mi></msup><mo>&#x27F6;</mo><mi mathvariant="script">D</mi></math>.</p>
+  <p class="src">Lesson 3; Riehl §1.3.</p>
+</div>
+
+<div class="thm done">
+  <span class="name">Homomorphisms are functors</span><span class="tag done">established</span>
+  <p class="stmt">A monoid/group homomorphism <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>M</mi><mo>&#x27F6;</mo><mi>N</mi></math> is exactly a functor <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="bold">B</mi><mi>M</mi><mo>&#x27F6;</mo><mi mathvariant="bold">B</mi><mi>N</mi></math> between their one-object (delooping) categories.</p>
+  <p class="src">Lesson 2; Riehl §1.3.</p>
+</div>
+
+<h2>To prove (near-term, prerequisites in hand)</h2>
+
+<div class="thm todo">
+  <span class="name">Functors preserve isomorphisms</span><span class="tag todo">to prove</span>
+  <p class="stmt">If <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>A</mi><mover><mo>&#x27F6;</mo><mi>f</mi></mover><mi>B</mi></math> is an isomorphism in <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi></math> and <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>F</mi></math> is any functor, then <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>F</mi><mo>(</mo><mi>f</mi><mo>)</mo></math> is an isomorphism (and <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>F</mi><mo>(</mo><msup><mi>f</mi><mrow><mo>&#x2212;</mo><mn>1</mn></mrow></msup><mo>)</mo><mo>=</mo><mi>F</mi><msup><mrow><mo>(</mo><mi>f</mi><mo>)</mo></mrow><mrow><mo>&#x2212;</mo><mn>1</mn></mrow></msup></math>). One line from functoriality.</p>
+  <p class="src">Riehl, Lemma 1.3.8 (functors preserve isomorphisms); cf. Exercise 1.3.viii (they need not <em>reflect</em> them).</p>
+</div>
+
+<div class="thm todo">
+  <span class="name">An inverse is unique</span><span class="tag todo">to prove</span>
+  <p class="stmt">A morphism has at most one two-sided inverse; hence "isomorphism" is unambiguous.</p>
+  <p class="src">Riehl Exercise 1.1.i(ii).</p>
+</div>
+
+<div class="thm todo">
+  <span class="name">Duality principle</span><span class="tag todo">to prove / internalize</span>
+  <p class="stmt">The dual of any theorem true of all categories is again true of all categories (apply it in <math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mi mathvariant="script">C</mi><mi>op</mi></msup></math>). One proof, two theorems.</p>
+  <p class="src">Lesson 3; Riehl §1.2; Mac Lane §II.1.</p>
+</div>
+
+<h2>Headline target</h2>
+
+<div class="thm target">
+  <span class="name">The Yoneda Lemma</span><span class="tag target">target</span>
+  <p class="stmt">For a locally small <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi></math>, object <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>A</mi></math>, and presheaf <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>F</mi><mo>:</mo><msup><mi mathvariant="script">C</mi><mi>op</mi></msup><mo>&#x27F6;</mo><mi mathvariant="bold">Set</mi></math>, natural transformations <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi><mo>(</mo><mo>&#x2212;</mo><mo>,</mo><mi>A</mi><mo>)</mo><mo>&#x21D2;</mo><mi>F</mi></math> correspond naturally and bijectively to elements of <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>F</mi><mo>(</mo><mi>A</mi><mo>)</mo></math>. <em>The</em> goal — see <a href="../MISSION.md">MISSION</a>.</p>
+  <p class="src">Riehl Ch. 2; Leinster Ch. 4. Prerequisites still to build: natural transformations, representables.</p>
+</div>
+
+<footer>
+Grows as the course proceeds. Add a result when a lesson establishes or relies on it; mark status; always cite. Conventions and sources: <a href="../NOTES.md">NOTES</a>, <a href="../RESOURCES.md">RESOURCES</a>, <a href="GLOSSARY.html">Glossary</a>.
+</footer>
+</body>
+</html>
