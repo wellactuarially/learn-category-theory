@@ -16,11 +16,13 @@ Treat the current directory as a teaching workspace. The state of the user's lea
 - `MISSION.md`: Why the user is learning this. Grounds every teaching decision. Format: [MISSION-FORMAT.md](./MISSION-FORMAT.md).
 - `RESOURCES.md`: Curated, high-trust sources to draw knowledge and wisdom from. Format: [RESOURCES-FORMAT.md](./RESOURCES-FORMAT.md).
 - `./learning-records/*.md`: What the user has demonstrably learned. Drives the zone of proximal development and feeds the review queue. Format: [LEARNING-RECORD-FORMAT.md](./LEARNING-RECORD-FORMAT.md).
-- `./lessons/*.html`: The lessons. A **lesson** is a single, self-contained HTML file that teaches one tightly-scoped thing. The primary unit of teaching.
+- `./lessons/*.html`: The lessons. A **lesson** is an HTML file that teaches one tightly-scoped thing, drawing shared styles and behavior from `./assets/`. The primary unit of teaching.
+- `./assets/lesson.css`: Shared styling for all lessons — typography, layout, citation disclosures, assessment widgets. Lessons link to this by default rather than restating it, keeping the look consistent and each lesson small.
+- `./assets/lesson.js`: Shared behavior for all lessons — citation toggles, confidence/reveal/self-grade flows, embedded-tutor calls. Lessons link to this by default rather than re-implementing it.
 - `./reference/*.html`: Compressed reference materials — cheat sheets, syntax, glossaries, pose libraries. Built for quick lookup, designed to print well. Includes `GLOSSARY.html` (format: [GLOSSARY-FORMAT.md](./GLOSSARY-FORMAT.md)).
 - `REVIEW-QUEUE.md`: The spacing engine — retrieval items scheduled for re-testing over time. This is how the workspace actually *delivers* spacing rather than just believing in it. Format: [REVIEW-QUEUE-FORMAT.md](./REVIEW-QUEUE-FORMAT.md).
 - `NOTES.md`: A scratchpad for user preferences and working notes, including the embedded-tutor toggle (below).
-- `config.local.js`: **Only when the embedded tutor is enabled.** Holds the user's Anthropic API key. Must be gitignored and never bundled with a shared lesson. See [EMBEDDED-TUTOR.md](./EMBEDDED-TUTOR.md).
+- `config.local.js`: **Only when the embedded tutor is enabled**. Holds the user's Anthropic API key. Must be gitignored and never bundled with a shared lesson; `./assets/lesson.js` reads it at runtime and must never inline the key. See [EMBEDDED-TUTOR.md](./EMBEDDED-TUTOR.md).
 
 ## Philosophy
 
@@ -73,7 +75,7 @@ For *acquiring* knowledge, difficulty is the enemy — it eats the working memor
 
 ## Lessons
 
-A lesson is the main thing you produce — the unit in which knowledge and skill reach the user. Each lesson is one self-contained HTML file in `./lessons/`, titled `0001-<dash-case-name>.html`, the number incrementing each time.
+A lesson is the main thing you produce — the unit in which knowledge and skill reach the user. Each lesson is one HTML file in `./lessons/`, drawing shared CSS and JS from `./assets/` by default, titled `0001-<dash-case-name>.html`, the number incrementing each time. A lesson may inline its own styles or scripts when it needs something the shared assets don't cover.
 
 A lesson should be:
 
