@@ -107,11 +107,12 @@
   textarea { width: 100%; min-height: 7rem; font-family: inherit; font-size: 1rem;
              padding: .7rem; border: 1px solid var(--rule); border-radius: 5px;
              background: var(--paper); resize: vertical; }
-  .answer { width: 100%; min-height: 7rem; font-family: inherit; font-size: 1rem; line-height: 1.55;
-            padding: .7rem; border: 1px solid var(--rule); border-radius: 5px;
-            background: var(--paper); white-space: pre-wrap; overflow-wrap: break-word; overflow-y: auto; }
-  .answer:focus { outline: none; border-color: var(--accent); }
-  .answer:empty::before { content: attr(data-placeholder); color: var(--muted); pointer-events: none; }
+  .answerbox { border: 1px solid var(--rule); border-radius: 5px; background: var(--paper); }
+  .answerbox:focus-within { border-color: var(--accent); }
+  .answerbox textarea { display: block; width: 100%; min-height: 6.5rem; border: none; background: transparent;
+                        padding: .7rem; font-family: inherit; font-size: 1rem; line-height: 1.55; resize: vertical; outline: none; }
+  .answer-render { padding: .55rem .7rem; border-top: 1px dashed var(--rule); line-height: 1.6; color: var(--ink); overflow-x: auto; }
+  .answer-render:empty { display: none; }
   .conf { margin: .8rem 0; }
   .conf label { font-size: .92rem; margin-right: .8rem; cursor: pointer; }
   button { background: var(--accent); color: #fff; border: none; border-radius: 5px;
@@ -303,7 +304,7 @@
     <label><input type="radio" name="conf-cat-def" value="med"> Fairly sure</label>
     <label><input type="radio" name="conf-cat-def" value="high"> Certain</label>
   </div>
-  <div class="answer" contenteditable="true" spellcheck="false" data-placeholder="A category 𝒞 consists of…"></div>
+  <div class="answerbox"><textarea class="answer" spellcheck="false" placeholder="A category 𝒞 consists of…  (wrap math in $…$ to see it render below)"></textarea><div class="answer-render" aria-hidden="true"></div></div>
   <button class="grade">Grade with AI tutor</button>
   <button class="selfgrade secondary">Self-grade (no API)</button>
   <div class="status"></div>
@@ -330,7 +331,7 @@
     <label><input type="radio" name="conf-foundations" value="med"> Fairly sure</label>
     <label><input type="radio" name="conf-foundations" value="high"> Certain</label>
   </div>
-  <div class="answer" contenteditable="true" spellcheck="false" data-placeholder="A collection is…"></div>
+  <div class="answerbox"><textarea class="answer" spellcheck="false" placeholder="A collection is…  (wrap math in $…$ to see it render below)"></textarea><div class="answer-render" aria-hidden="true"></div></div>
   <button class="grade">Grade with AI tutor</button>
   <button class="selfgrade secondary">Self-grade (no API)</button>
   <div class="status"></div>
@@ -358,7 +359,7 @@
     <label><input type="radio" name="conf-riehl-slice" value="med"> Fairly sure</label>
     <label><input type="radio" name="conf-riehl-slice" value="high"> Certain</label>
   </div>
-  <div class="answer" contenteditable="true" spellcheck="false" data-placeholder="Composition of slice-morphisms: given h : f→g and h′ : g→k…"></div>
+  <div class="answerbox"><textarea class="answer" spellcheck="false" placeholder="Composition of slice-morphisms: given h : f→g and h′ : g→k…  (wrap math in $…$)"></textarea><div class="answer-render" aria-hidden="true"></div></div>
   <button class="grade">Grade with AI tutor</button>
   <button class="selfgrade secondary">Self-grade (no API)</button>
   <div class="status"></div>
@@ -412,7 +413,18 @@ async function gradeWithClaude(systemPrompt, userContent) {
   }
 }
 
-function typesetMath(node){ if (window.MathJax && window.MathJax.typesetPromise) { window.MathJax.typesetPromise([node]).catch(function(){}); } }
+function typesetMath(node, tries){
+  if (!window.MathJax) return;
+  // MathJax loads async; until startup.promise exists, retry briefly so early keystrokes still render.
+  if (!MathJax.startup || !MathJax.startup.promise) {
+    if ((tries || 0) < 50) setTimeout(function(){ typesetMath(node, (tries || 0) + 1); }, 200);
+    return;
+  }
+  MathJax.startup.promise = MathJax.startup.promise.then(function(){
+    if (MathJax.typesetClear) { try { MathJax.typesetClear([node]); } catch (e) {} }
+    return MathJax.typesetPromise([node]);
+  }).catch(function(){});
+}
 
 /* Quick-recall dropdowns — immediate per-option feedback, no API */
 document.querySelectorAll(".quiz-q").forEach(function(q){
@@ -477,18 +489,24 @@ NEXT: <...>`
 document.querySelectorAll(".grader").forEach(function(block){
   var key = block.getAttribute("data-block");
   var answer = block.querySelector(".answer");
+  var render = block.querySelector(".answer-render");
   var gradeBtn = block.querySelector(".grade");
   var selfBtn = block.querySelector(".selfgrade");
   var statusEl = block.querySelector(".status");
   var fb = block.querySelector(".feedback");
   var fbBody = block.querySelector(".feedbackBody");
   var model = block.querySelector(".model");
-  function rawOf(){ return (answer.dataset.raw !== undefined ? answer.dataset.raw : (answer.innerText || "")); }
-  if (answer) {
-    // contenteditable answer box: shows raw LaTeX while editing, renders it in place on blur.
-    answer.addEventListener("input", function(){ answer.dataset.raw = answer.innerText; });
-    answer.addEventListener("focus", function(){ if (answer.dataset.raw !== undefined) answer.textContent = answer.dataset.raw; });
-    answer.addEventListener("blur", function(){ answer.dataset.raw = answer.innerText; if (!answer.innerText.trim()) answer.innerHTML = ""; typesetMath(answer); });
+  function rawOf(){ return answer ? answer.value : ""; }
+  if (answer && render) {
+    // Fused live preview: render the answer (prose + $…$ math) directly below the input as you type.
+    var t;
+    function renderNow(){
+      var v = answer.value;
+      if (!v.trim() || !/[$]|\\\(|\\\[/.test(v)) { render.innerHTML = ""; return; }
+      render.textContent = v;
+      typesetMath(render);
+    }
+    answer.addEventListener("input", function(){ clearTimeout(t); t = setTimeout(renderNow, 120); });
   }
   function conf(){ var r = block.querySelector('input[type="radio"]:checked'); return r ? r.value : "(not stated)"; }
   if (gradeBtn) gradeBtn.addEventListener("click", async function(){
