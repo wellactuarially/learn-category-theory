@@ -107,12 +107,13 @@
   textarea { width: 100%; min-height: 7rem; font-family: inherit; font-size: 1rem;
              padding: .7rem; border: 1px solid var(--rule); border-radius: 5px;
              background: var(--paper); resize: vertical; }
-  .answerbox { border: 1px solid var(--rule); border-radius: 5px; background: var(--paper); }
-  .answerbox:focus-within { border-color: var(--accent); }
-  .answerbox textarea { display: block; width: 100%; min-height: 6.5rem; border: none; background: transparent;
-                        padding: .7rem; font-family: inherit; font-size: 1rem; line-height: 1.55; resize: vertical; outline: none; }
-  .answer-render { padding: .55rem .7rem; border-top: 1px dashed var(--rule); line-height: 1.6; color: var(--ink); overflow-x: auto; }
-  .answer-render:empty { display: none; }
+  .answer { width: 100%; min-height: 7rem; font-family: inherit; font-size: 1rem; line-height: 1.7;
+            padding: .7rem; border: 1px solid var(--rule); border-radius: 5px;
+            background: var(--paper); white-space: pre-wrap; overflow-wrap: break-word; overflow-y: auto; }
+  .answer:focus { outline: none; border-color: var(--accent); }
+  .answer:empty::before { content: attr(data-placeholder); color: var(--muted); pointer-events: none; }
+  .math-chip { display: inline-block; cursor: pointer; padding: 0 .12em; border-radius: 3px; }
+  .math-chip:hover { background: var(--accent-soft); }
   .conf { margin: .8rem 0; }
   .conf label { font-size: .92rem; margin-right: .8rem; cursor: pointer; }
   button { background: var(--accent); color: #fff; border: none; border-radius: 5px;
@@ -304,7 +305,7 @@
     <label><input type="radio" name="conf-cat-def" value="med"> Fairly sure</label>
     <label><input type="radio" name="conf-cat-def" value="high"> Certain</label>
   </div>
-  <div class="answerbox"><textarea class="answer" spellcheck="false" placeholder="A category 𝒞 consists of…  (wrap math in $…$ to see it render below)"></textarea><div class="answer-render" aria-hidden="true"></div></div>
+  <div class="answer" contenteditable="true" spellcheck="false" data-placeholder="A category 𝒞 consists of…  (wrap math in $…$)"></div>
   <button class="grade">Grade with AI tutor</button>
   <button class="selfgrade secondary">Self-grade (no API)</button>
   <div class="status"></div>
@@ -331,7 +332,7 @@
     <label><input type="radio" name="conf-foundations" value="med"> Fairly sure</label>
     <label><input type="radio" name="conf-foundations" value="high"> Certain</label>
   </div>
-  <div class="answerbox"><textarea class="answer" spellcheck="false" placeholder="A collection is…  (wrap math in $…$ to see it render below)"></textarea><div class="answer-render" aria-hidden="true"></div></div>
+  <div class="answer" contenteditable="true" spellcheck="false" data-placeholder="A collection is…  (wrap math in $…$)"></div>
   <button class="grade">Grade with AI tutor</button>
   <button class="selfgrade secondary">Self-grade (no API)</button>
   <div class="status"></div>
@@ -359,7 +360,7 @@
     <label><input type="radio" name="conf-riehl-slice" value="med"> Fairly sure</label>
     <label><input type="radio" name="conf-riehl-slice" value="high"> Certain</label>
   </div>
-  <div class="answerbox"><textarea class="answer" spellcheck="false" placeholder="Composition of slice-morphisms: given h : f→g and h′ : g→k…  (wrap math in $…$)"></textarea><div class="answer-render" aria-hidden="true"></div></div>
+  <div class="answer" contenteditable="true" spellcheck="false" data-placeholder="Composition of slice-morphisms: given h : f→g and h′ : g→k…  (wrap math in $…$)"></div>
   <button class="grade">Grade with AI tutor</button>
   <button class="selfgrade secondary">Self-grade (no API)</button>
   <div class="status"></div>
@@ -426,6 +427,122 @@ function typesetMath(node, tries){
   }).catch(function(){});
 }
 
+/* ---- In-place "render-on-close" math for .answer contenteditable boxes ---- */
+function mjChip(tex){
+  var span = document.createElement("span");
+  span.className = "math-chip";
+  span.setAttribute("contenteditable", "false");
+  span.dataset.tex = tex;
+  span.textContent = tex;            // shows the source until MathJax fills it in (the accepted flash)
+  typesetMath(span);
+  return span;
+}
+function chipFindClose(text, caret){
+  // Did a delimiter pair just close exactly at the caret? Return the run to chip-ify, or null.
+  if (text.charAt(caret - 1) === "$"){
+    var i = text.lastIndexOf("$", caret - 2);
+    if (i >= 0){
+      var inner = text.slice(i + 1, caret - 1);
+      if (inner.length && inner.indexOf("$") === -1) return { start: i, end: caret, tex: text.slice(i, caret) };
+    }
+  }
+  if (text.charAt(caret - 1) === ")" && text.charAt(caret - 2) === "\\"){
+    var j = text.lastIndexOf("\\(", caret - 2);
+    if (j >= 0 && text.slice(j + 2, caret - 2).length) return { start: j, end: caret, tex: text.slice(j, caret) };
+  }
+  return null;
+}
+function renderOnClose(answer){
+  var sel = window.getSelection();
+  if (!sel || sel.rangeCount === 0) return;
+  var rng = sel.getRangeAt(0);
+  if (!rng.collapsed) return;
+  var node = rng.startContainer;
+  if (node.nodeType !== 3 || !answer.contains(node)) return;
+  var hit = chipFindClose(node.textContent, rng.startOffset);
+  if (!hit) return;
+  var full = node.textContent;
+  var chip = mjChip(hit.tex);
+  var frag = document.createDocumentFragment();
+  if (hit.start > 0) frag.appendChild(document.createTextNode(full.slice(0, hit.start)));
+  frag.appendChild(chip);
+  var tail = document.createTextNode(full.slice(hit.end));
+  frag.appendChild(tail);
+  node.parentNode.replaceChild(frag, node);
+  var r = document.createRange();
+  r.setStartAfter(chip); r.collapse(true);          // caret lands right after the new chip
+  sel.removeAllRanges(); sel.addRange(r);
+}
+function expandChipEl(chip){
+  // Replace a rendered chip with its editable $…$ source; caret at the end of the source.
+  var tex = chip.dataset.tex || chip.textContent;
+  var tn = document.createTextNode(tex);
+  chip.parentNode.replaceChild(tn, chip);
+  var r = document.createRange();
+  r.setStart(tn, tex.length); r.collapse(true);
+  var sel = window.getSelection();
+  sel.removeAllRanges(); sel.addRange(r);
+}
+function expandChip(e, answer){
+  // Click a rendered chip to turn it back into editable source.
+  var chip = e.target.closest ? e.target.closest(".math-chip") : null;
+  if (chip && answer.contains(chip)) expandChipEl(chip);
+}
+function backspaceExpand(e, answer){
+  // Backspacing onto a rendered chip un-renders it (to source) instead of deleting it whole.
+  if (e.key !== "Backspace") return;
+  var sel = window.getSelection();
+  if (!sel || sel.rangeCount === 0) return;
+  var rng = sel.getRangeAt(0);
+  if (!rng.collapsed) return;
+  var node = rng.startContainer, off = rng.startOffset, chip = null;
+  if (node.nodeType === 3 && off === 0){
+    var prev = node.previousSibling;
+    if (prev && prev.nodeType === 1 && prev.classList && prev.classList.contains("math-chip")) chip = prev;
+  } else if (node.nodeType === 1 && off > 0){
+    var before = node.childNodes[off - 1];
+    if (before && before.nodeType === 1 && before.classList && before.classList.contains("math-chip")) chip = before;
+  }
+  if (!chip || !answer.contains(chip)) return;
+  e.preventDefault();
+  expandChipEl(chip);          // re-renders on blur (renderAllIn) or when you re-close the delimiter
+}
+function renderAllIn(answer){
+  // Blur cleanup: chip-ify any complete pairs left in loose text (e.g. expanded-then-edited, or pasted).
+  var walker = document.createTreeWalker(answer, NodeFilter.SHOW_TEXT, {
+    acceptNode: function(n){ return (n.parentNode && n.parentNode.closest && n.parentNode.closest(".math-chip")) ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT; }
+  });
+  var texts = [], cur;
+  while ((cur = walker.nextNode())) texts.push(cur);
+  texts.forEach(function(tn){
+    var s = tn.textContent;
+    var re = /\$([^$]+)\$|\\\(([\s\S]+?)\\\)/g;
+    if (!re.test(s)) return;
+    re.lastIndex = 0;
+    var frag = document.createDocumentFragment(), last = 0, m;
+    while ((m = re.exec(s)) !== null){
+      if (m.index > last) frag.appendChild(document.createTextNode(s.slice(last, m.index)));
+      frag.appendChild(mjChip(m[0]));
+      last = re.lastIndex;
+    }
+    if (last < s.length) frag.appendChild(document.createTextNode(s.slice(last)));
+    tn.parentNode.replaceChild(frag, tn);
+  });
+}
+function serializeAnswer(node){
+  // Reconstruct the LaTeX source for grading: text verbatim, chips → their stored $…$ source.
+  var out = "";
+  node.childNodes.forEach(function(n){
+    if (n.nodeType === 3) out += n.textContent;
+    else if (n.nodeType === 1){
+      if (n.classList && n.classList.contains("math-chip")) out += (n.dataset.tex || "");
+      else if (n.tagName === "BR") out += "\n";
+      else { if (n.tagName === "DIV" || n.tagName === "P") out += "\n"; out += serializeAnswer(n); }
+    }
+  });
+  return out;
+}
+
 /* Quick-recall dropdowns — immediate per-option feedback, no API */
 document.querySelectorAll(".quiz-q").forEach(function(q){
   var sel = q.querySelector("select"), mark = q.querySelector(".quiz-mark"), fb = q.querySelector(".quiz-fb");
@@ -489,24 +606,19 @@ NEXT: <...>`
 document.querySelectorAll(".grader").forEach(function(block){
   var key = block.getAttribute("data-block");
   var answer = block.querySelector(".answer");
-  var render = block.querySelector(".answer-render");
   var gradeBtn = block.querySelector(".grade");
   var selfBtn = block.querySelector(".selfgrade");
   var statusEl = block.querySelector(".status");
   var fb = block.querySelector(".feedback");
   var fbBody = block.querySelector(".feedbackBody");
   var model = block.querySelector(".model");
-  function rawOf(){ return answer ? answer.value : ""; }
-  if (answer && render) {
-    // Fused live preview: render the answer (prose + $…$ math) directly below the input as you type.
-    var t;
-    function renderNow(){
-      var v = answer.value;
-      if (!v.trim() || !/[$]|\\\(|\\\[/.test(v)) { render.innerHTML = ""; return; }
-      render.textContent = v;
-      typesetMath(render);
-    }
-    answer.addEventListener("input", function(){ clearTimeout(t); t = setTimeout(renderNow, 120); });
+  function rawOf(){ return answer ? serializeAnswer(answer) : ""; }
+  if (answer) {
+    // In-place render-on-close: each completed $…$ becomes a rendered chip right where you typed it.
+    answer.addEventListener("input", function(){ renderOnClose(answer); });
+    answer.addEventListener("click", function(e){ expandChip(e, answer); });
+    answer.addEventListener("keydown", function(e){ backspaceExpand(e, answer); });
+    answer.addEventListener("blur", function(){ renderAllIn(answer); });
   }
   function conf(){ var r = block.querySelector('input[type="radio"]:checked'); return r ? r.value : "(not stated)"; }
   if (gradeBtn) gradeBtn.addEventListener("click", async function(){
