@@ -15,136 +15,7 @@
   };
 </script>
 <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
-<style>
-  :root {
-    --ink: #1a1a1a;
-    --paper: #fdfcf9;
-    --rule: #d9d4c7;
-    --accent: #7a1f1f;
-    --accent-soft: #f3e9e9;
-    --muted: #6b6557;
-    --code-bg: #f4f1ea;
-  }
-  * { box-sizing: border-box; }
-  html { -webkit-text-size-adjust: 100%; }
-  body {
-    background: var(--paper);
-    color: var(--ink);
-    font-family: et-book, Palatino, "Palatino Linotype", "Book Antiqua", Georgia, serif;
-    line-height: 1.62;
-    max-width: 46rem;
-    margin: 0 auto;
-    padding: 4rem 1.6rem 6rem;
-    font-size: 1.16rem;
-  }
-  h1, h2, h3 { font-weight: 600; line-height: 1.2; }
-  h1 { font-size: 2.1rem; margin: 0 0 .2rem; letter-spacing: -0.01em; }
-  .eyebrow { color: var(--accent); text-transform: uppercase; letter-spacing: .14em;
-             font-size: .74rem; font-weight: 700; }
-  h2 { font-size: 1.4rem; margin: 2.8rem 0 .6rem; padding-top: 1rem; border-top: 1px solid var(--rule); }
-  h3 { font-size: 1.1rem; margin: 1.6rem 0 .3rem; color: var(--accent); }
-  p { margin: .7rem 0; }
-  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(122,31,31,.3); }
-  a:hover { border-bottom-color: var(--accent); }
-  .subtitle { color: var(--muted); font-style: italic; margin-top: .1rem; font-size: 1.05rem; }
-  .lede { font-size: 1.05rem; }
-
-  details.cite { display: inline; }
-  details.cite > summary {
-    display: inline; cursor: pointer; color: var(--accent);
-    border-bottom: 1px dotted var(--accent); font-size: .82em;
-    vertical-align: super; line-height: 0; list-style: none; padding: 0 .1em;
-  }
-  details.cite > summary::-webkit-details-marker { display: none; }
-  details.cite[open] > summary { background: var(--accent-soft); border-radius: 3px; }
-  details.cite > .cite-body {
-    display: block; margin: .6rem 0; padding: .7rem .9rem;
-    background: var(--accent-soft); border-left: 3px solid var(--accent);
-    border-radius: 0 4px 4px 0; font-size: .92rem; line-height: 1.5; color: #2a2a2a;
-  }
-
-  .axioms { background: #fff; border: 1px solid var(--rule); border-radius: 6px;
-            padding: 1rem 1.4rem; margin: 1.2rem 0; }
-  .axioms ol { margin: .4rem 0; padding-left: 1.3rem; }
-  .axioms li { margin: .55rem 0; }
-  code { font-family: "SF Mono", "Cascadia Mono", Menlo, Consolas, monospace;
-         font-size: .9em; background: var(--code-bg); padding: .08em .35em; border-radius: 3px; }
-  math { font-size: 1.06em; white-space: nowrap; }
-  math.display { display: block; margin: .3rem 0; font-size: 1.12em; white-space: nowrap; }
-
-  .callout { background: #f0f4f0; border-left: 3px solid #4a6b4a; border-radius: 0 4px 4px 0;
-             padding: .8rem 1.1rem; margin: 1.3rem 0; font-size: .98rem; }
-  .callout .label { font-weight: 700; color: #3a5a3a; font-size: .78rem;
-                    text-transform: uppercase; letter-spacing: .08em; }
-
-  ul.examples { list-style: none; padding-left: 0; }
-  ul.examples li { padding: .55rem 0; border-bottom: 1px dashed var(--rule); }
-  ul.examples li:last-child { border-bottom: none; }
-  ul.examples b { color: var(--accent); }
-
-  .assess { background: #fff; border: 2px solid var(--accent); border-radius: 8px;
-            padding: 1.4rem 1.6rem; margin: 2.4rem 0; }
-  .assess h2 { border: none; margin-top: 0; padding-top: 0; color: var(--accent); }
-  textarea { width: 100%; min-height: 8rem; font-family: inherit; font-size: 1rem;
-             padding: .7rem; border: 1px solid var(--rule); border-radius: 5px;
-             background: var(--paper); resize: vertical; }
-  .answer { width: 100%; min-height: 7rem; font-family: inherit; font-size: 1rem; line-height: 1.7;
-            padding: .7rem; border: 1px solid var(--rule); border-radius: 5px;
-            background: var(--paper); white-space: pre-wrap; overflow-wrap: break-word; overflow-y: auto; }
-  .answer:focus { outline: none; border-color: var(--accent); }
-  .answer:empty::before { content: attr(data-placeholder); color: var(--muted); pointer-events: none; }
-  .math-chip { display: inline-block; cursor: pointer; padding: 0 .12em; border-radius: 3px; }
-  .math-chip:hover { background: var(--accent-soft); }
-  .conf { margin: .8rem 0; }
-  .conf label { font-size: .92rem; margin-right: .8rem; cursor: pointer; }
-  button { background: var(--accent); color: #fff; border: none; border-radius: 5px;
-           padding: .6rem 1.3rem; font-size: 1rem; font-family: inherit; cursor: pointer; margin-top: .6rem; }
-  button:hover { background: #5e1818; }
-  button:disabled { opacity: .5; cursor: wait; }
-  button.secondary { background: transparent; color: var(--accent); border: 1px solid var(--accent); margin-left: .5rem; }
-  button.secondary:hover { background: var(--accent-soft); }
-  /* Quick-recall dropdown quiz (no API) */
-  .quiz-q { padding: .6rem 0; border-bottom: 1px dashed var(--rule); }
-  .quiz-q:last-child { border-bottom: none; }
-  .quiz-q p { margin: .2rem 0 .4rem; }
-  .quiz-q select { font-family: inherit; font-size: .98rem; padding: .35rem .5rem; border: 1px solid var(--rule); border-radius: 5px; background: var(--paper); max-width: 100%; }
-  .quiz-mark { margin-left: .5rem; font-weight: 700; }
-  .quiz-mark.ok { color: #3a5a3a; }
-  .quiz-mark.no { color: var(--accent); }
-  .quiz-fb { display: none; margin-top: .45rem; font-size: .92rem; padding: .5rem .7rem; border-radius: 5px; }
-  .quiz-fb.show { display: block; }
-  .quiz-fb.ok { background: #eaf2ea; border-left: 3px solid #3a5a3a; }
-  .quiz-fb.no { background: var(--accent-soft); border-left: 3px solid var(--accent); }
-  /* Rubric tables (partial credit) */
-  table.rubric { width: 100%; border-collapse: collapse; font-size: .92rem; margin: .4rem 0 .6rem; white-space: normal; }
-  table.rubric th, table.rubric td { border: 1px solid var(--rule); padding: .35rem .55rem; text-align: left; vertical-align: top; }
-  table.rubric th { background: var(--code-bg); font-size: .76rem; text-transform: uppercase; letter-spacing: .04em; }
-  table.rubric td.pts, table.rubric th.pts { text-align: center; width: 3.2rem; white-space: nowrap; }
-  table.rubric tr.total td { font-weight: 700; background: #faf7f0; }
-  .grader + .grader { margin-top: 1.2rem; }
-  .credit-note { font-size: .88rem; color: var(--muted); margin: .2rem 0 0; }
-  .result { margin-top: 1.2rem; padding: 1rem 1.2rem; border-radius: 6px; display: none; }
-  .result.show { display: block; }
-  .result.model { background: var(--code-bg); border: 1px solid var(--rule); }
-  .result.feedback { background: var(--accent-soft); border: 1px solid var(--accent); }
-  .result h3 { margin-top: 0; }
-  .status { font-size: .88rem; color: var(--muted); font-style: italic; margin-top: .5rem; }
-  .rubric { font-size: .95rem; }
-  .rubric li { margin: .35rem 0; }
-
-  footer { margin-top: 3.5rem; border-top: 1px solid var(--rule); padding-top: 1rem;
-           font-size: .9rem; color: var(--muted); }
-  footer a { color: var(--muted); }
-  .nav { font-size: .9rem; margin-top: 1.5rem; }
-
-  @media print {
-    body { font-size: 11pt; max-width: none; }
-    .assess, button { break-inside: avoid; }
-    details.cite > .cite-body { display: block !important; }
-    details.cite > summary { vertical-align: baseline; }
-    button { display: none; }
-  }
-</style>
+<link rel="stylesheet" href="lesson.css" />
 </head>
 <body>
 
@@ -274,10 +145,10 @@
   <div class="result model">
     <h3>Model answer &amp; rubric</h3>
     <table class="rubric"><thead><tr><th>#</th><th>Criterion (naming the notion counts in full)</th><th class="pts">Pts</th></tr></thead><tbody>
-      <tr><td>①</td><td>Object assignment: each object of 𝒞 gives an object of 𝒟</td><td class="pts">1</td></tr>
-      <tr><td>②</td><td>Morphism assignment: f : A → B gives F(f) : F(A) → F(B) (respecting domain/codomain)</td><td class="pts">1</td></tr>
-      <tr><td>③</td><td>Preserves composition: F(fg) = F(f) F(g)</td><td class="pts">1</td></tr>
-      <tr><td>④</td><td>Preserves identities: F(id_A) = id_{F(A)}</td><td class="pts">1</td></tr>
+      <tr><td>①</td><td>Object assignment: each object of <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi></math> gives an object of <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">D</mi></math></td><td class="pts">1</td></tr>
+      <tr><td>②</td><td>Morphism assignment: <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>A</mi><mover><mo>&#x27F6;</mo><mi>f</mi></mover><mi>B</mi></math> gives <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>F</mi><mo>(</mo><mi>f</mi><mo>)</mo><mo>:</mo><mi>F</mi><mo>(</mo><mi>A</mi><mo>)</mo><mo>&#x27F6;</mo><mi>F</mi><mo>(</mo><mi>B</mi><mo>)</mo></math> (respecting domain/codomain)</td><td class="pts">1</td></tr>
+      <tr><td>③</td><td>Preserves composition: <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>F</mi><mo>(</mo><mi>f</mi><mi>g</mi><mo>)</mo><mo>=</mo><mi>F</mi><mo>(</mo><mi>f</mi><mo>)</mo><mspace width="0.2em"/><mi>F</mi><mo>(</mo><mi>g</mi><mo>)</mo></math></td><td class="pts">1</td></tr>
+      <tr><td>④</td><td>Preserves identities: <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>F</mi><mo>(</mo><msub><mi>id</mi><mi>A</mi></msub><mo>)</mo><mo>=</mo><msub><mi>id</mi><mrow><mi>F</mi><mo>(</mo><mi>A</mi><mo>)</mo></mrow></msub></math></td><td class="pts">1</td></tr>
       <tr class="total"><td></td><td>Total</td><td class="pts">4</td></tr>
     </tbody></table>
     <p class="credit-note">“Preserves composition and identities” earns ③ and ④ in full. A vague “preserves structure” naming neither earns nothing there.</p>
@@ -304,7 +175,7 @@
       <tr><td>④</td><td>Functorial: respects composition and identities (at least argued)</td><td class="pts">1</td></tr>
       <tr class="total"><td></td><td>Total</td><td class="pts">4</td></tr>
     </tbody></table>
-    <p class="credit-note">Worked examples: forgetful U : Grp → Set (object: underlying set; morphism: the homomorphism as a function); π₁ : Top∗ → Grp; the dual space (−)∗ (contravariant); a homomorphism as BM → BN.</p>
+    <p class="credit-note">Worked examples: forgetful <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="bold">Grp</mi><mover><mo>&#x27F6;</mo><mi>U</mi></mover><mi mathvariant="bold">Set</mi></math> (object: underlying set; morphism: the homomorphism as a function); <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>&#x3C0;</mi><mn>1</mn></msub><mo>:</mo><msub><mi mathvariant="bold">Top</mi><mo>&#x2217;</mo></msub><mo>&#x27F6;</mo><mi mathvariant="bold">Grp</mi></math>; the dual space <math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mrow><mo>(</mo><mo>&#x2212;</mo><mo>)</mo></mrow><mo>&#x2217;</mo></msup></math> (contravariant); a homomorphism as <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="bold">B</mi><mi>M</mi><mo>&#x27F6;</mo><mi mathvariant="bold">B</mi><mi>N</mi></math>.</p>
   </div>
 </div>
 
@@ -325,12 +196,12 @@
   <div class="result model">
     <h3>Model answer &amp; rubric</h3>
     <table class="rubric"><thead><tr><th>#</th><th>Criterion</th><th class="pts">Pts</th></tr></thead><tbody>
-      <tr><td>①</td><td>Identifies it as a monotone (order-preserving) map: x ≤ y ⇒ F(x) ≤ F(y)</td><td class="pts">1</td></tr>
-      <tr><td>②</td><td>Explains: an arrow x → y exists iff x ≤ y, so F sends it to F(x) → F(y)</td><td class="pts">1</td></tr>
-      <tr><td>③</td><td>Notes the functor laws hold automatically (≤ one arrow between objects)</td><td class="pts">1</td></tr>
+      <tr><td>①</td><td>Identifies it as a monotone (order-preserving) map: <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>x</mi><mo>&#x2264;</mo><mi>y</mi><mo>&#x21D2;</mo><mi>F</mi><mo>(</mo><mi>x</mi><mo>)</mo><mo>&#x2264;</mo><mi>F</mi><mo>(</mo><mi>y</mi><mo>)</mo></math></td><td class="pts">1</td></tr>
+      <tr><td>②</td><td>Explains: an arrow <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>x</mi><mo>&#x27F6;</mo><mi>y</mi></math> exists iff <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>x</mi><mo>&#x2264;</mo><mi>y</mi></math>, so <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>F</mi></math> sends it to <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>F</mi><mo>(</mo><mi>x</mi><mo>)</mo><mo>&#x27F6;</mo><mi>F</mi><mo>(</mo><mi>y</mi><mo>)</mo></math></td><td class="pts">1</td></tr>
+      <tr><td>③</td><td>Notes the functor laws hold automatically (at most one arrow between objects)</td><td class="pts">1</td></tr>
       <tr class="total"><td></td><td>Total</td><td class="pts">3</td></tr>
     </tbody></table>
-    <p style="font-size:.93rem">A functor between preorders is exactly a monotone map: x ≤ y ⇒ F(x) ≤ F(y). Because a preorder has at most one arrow between any two objects, the composition and identity laws hold automatically. Source: Riehl, Exercise 1.3.ii.</p>
+    <p style="font-size:.93rem">A functor between preorders is exactly a monotone map: <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>x</mi><mo>&#x2264;</mo><mi>y</mi><mo>&#x21D2;</mo><mi>F</mi><mo>(</mo><mi>x</mi><mo>)</mo><mo>&#x2264;</mo><mi>F</mi><mo>(</mo><mi>y</mi><mo>)</mo></math>. Because a preorder has at most one arrow between any two objects, the composition and identity laws hold automatically. Source: Riehl, Exercise 1.3.ii.</p>
   </div>
 </div>
 
@@ -348,12 +219,12 @@
   <div class="result model">
     <h3>Model answer &amp; rubric</h3>
     <table class="rubric"><thead><tr><th>#</th><th>Criterion</th><th class="pts">Pts</th></tr></thead><tbody>
-      <tr><td>①</td><td>A concrete functor F : 𝒞 → 𝒟</td><td class="pts">1</td></tr>
+      <tr><td>①</td><td>A concrete functor <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi><mover><mo>&#x27F6;</mo><mi>F</mi></mover><mi mathvariant="script">D</mi></math></td><td class="pts">1</td></tr>
       <tr><td>②</td><td>Exhibits the failure: image not closed under composition (or a missing identity)</td><td class="pts">1</td></tr>
       <tr><td>③</td><td>Explains why it is therefore not a subcategory</td><td class="pts">1</td></tr>
       <tr class="total"><td></td><td>Total</td><td class="pts">3</td></tr>
     </tbody></table>
-    <p style="font-size:.93rem">Let 𝒞 be two disjoint arrows a → b and c → d; map into the poset 0 ≤ 1 ≤ 2, sending a → b to 0 → 1 and c → d to 1 → 2 (so F(b) = F(c) = 1). Then 0 → 1 and 1 → 2 lie in the image and compose in 𝒟 to 0 → 2 — which is the image of no arrow of 𝒞. The image is not closed under composition, so it is not a subcategory. Source: Riehl, Exercise 1.3.iii.</p>
+    <p style="font-size:.93rem">Let <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi></math> be two disjoint arrows <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>a</mi><mo>&#x27F6;</mo><mi>b</mi></math> and <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>c</mi><mo>&#x27F6;</mo><mi>d</mi></math>; map into the poset <math xmlns="http://www.w3.org/1998/Math/MathML"><mn>0</mn><mo>&#x2264;</mo><mn>1</mn><mo>&#x2264;</mo><mn>2</mn></math>, sending <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>a</mi><mo>&#x27F6;</mo><mi>b</mi></math> to <math xmlns="http://www.w3.org/1998/Math/MathML"><mn>0</mn><mo>&#x27F6;</mo><mn>1</mn></math> and <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>c</mi><mo>&#x27F6;</mo><mi>d</mi></math> to <math xmlns="http://www.w3.org/1998/Math/MathML"><mn>1</mn><mo>&#x27F6;</mo><mn>2</mn></math> (so <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>F</mi><mo>(</mo><mi>b</mi><mo>)</mo><mo>=</mo><mi>F</mi><mo>(</mo><mi>c</mi><mo>)</mo><mo>=</mo><mn>1</mn></math>). Then <math xmlns="http://www.w3.org/1998/Math/MathML"><mn>0</mn><mo>&#x27F6;</mo><mn>1</mn></math> and <math xmlns="http://www.w3.org/1998/Math/MathML"><mn>1</mn><mo>&#x27F6;</mo><mn>2</mn></math> lie in the image and compose in <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">D</mi></math> to <math xmlns="http://www.w3.org/1998/Math/MathML"><mn>0</mn><mo>&#x27F6;</mo><mn>2</mn></math> — which is the image of no arrow of <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi></math>. The image is not closed under composition, so it is not a subcategory. Source: Riehl, Exercise 1.3.iii.</p>
   </div>
 </div>
 
@@ -367,175 +238,6 @@
 </footer>
 
 <script>
-async function gradeWithClaude(systemPrompt, userContent) {
-  if (!window.ANTHROPIC_API_KEY || window.ANTHROPIC_API_KEY === "PASTE-YOUR-KEY-HERE") return null;
-  try {
-    const res = await fetch("https://api.anthropic.com/v1/messages", {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-        "x-api-key": window.ANTHROPIC_API_KEY,
-        "anthropic-version": "2023-06-01",
-        "anthropic-dangerous-direct-browser-access": "true",
-      },
-      body: JSON.stringify({
-        model: "claude-opus-4-8",
-        max_tokens: 1024,
-        system: systemPrompt,
-        messages: [{ role: "user", content: userContent }],
-      }),
-    });
-    if (!res.ok) return null;
-    const data = await res.json();
-    return data.content.map((b) => (b.type === "text" ? b.text : "")).join("");
-  } catch (e) {
-    return null;
-  }
-}
-
-function typesetMath(node, tries){
-  if (!window.MathJax) return;
-  // MathJax loads async; until startup.promise exists, retry briefly so early keystrokes still render.
-  if (!MathJax.startup || !MathJax.startup.promise) {
-    if ((tries || 0) < 50) setTimeout(function(){ typesetMath(node, (tries || 0) + 1); }, 200);
-    return;
-  }
-  MathJax.startup.promise = MathJax.startup.promise.then(function(){
-    if (MathJax.typesetClear) { try { MathJax.typesetClear([node]); } catch (e) {} }
-    return MathJax.typesetPromise([node]);
-  }).catch(function(){});
-}
-
-/* ---- In-place "render-on-close" math for .answer contenteditable boxes ---- */
-function mjChip(tex){
-  var span = document.createElement("span");
-  span.className = "math-chip";
-  span.setAttribute("contenteditable", "false");
-  span.dataset.tex = tex;
-  span.textContent = tex;            // shows the source until MathJax fills it in (the accepted flash)
-  typesetMath(span);
-  return span;
-}
-function chipFindClose(text, caret){
-  // Did a delimiter pair just close exactly at the caret? Return the run to chip-ify, or null.
-  if (text.charAt(caret - 1) === "$"){
-    var i = text.lastIndexOf("$", caret - 2);
-    if (i >= 0){
-      var inner = text.slice(i + 1, caret - 1);
-      if (inner.length && inner.indexOf("$") === -1) return { start: i, end: caret, tex: text.slice(i, caret) };
-    }
-  }
-  if (text.charAt(caret - 1) === ")" && text.charAt(caret - 2) === "\\"){
-    var j = text.lastIndexOf("\\(", caret - 2);
-    if (j >= 0 && text.slice(j + 2, caret - 2).length) return { start: j, end: caret, tex: text.slice(j, caret) };
-  }
-  return null;
-}
-function renderOnClose(answer){
-  var sel = window.getSelection();
-  if (!sel || sel.rangeCount === 0) return;
-  var rng = sel.getRangeAt(0);
-  if (!rng.collapsed) return;
-  var node = rng.startContainer;
-  if (node.nodeType !== 3 || !answer.contains(node)) return;
-  var hit = chipFindClose(node.textContent, rng.startOffset);
-  if (!hit) return;
-  var full = node.textContent;
-  var chip = mjChip(hit.tex);
-  var frag = document.createDocumentFragment();
-  if (hit.start > 0) frag.appendChild(document.createTextNode(full.slice(0, hit.start)));
-  frag.appendChild(chip);
-  var tail = document.createTextNode(full.slice(hit.end));
-  frag.appendChild(tail);
-  node.parentNode.replaceChild(frag, node);
-  var r = document.createRange();
-  r.setStartAfter(chip); r.collapse(true);          // caret lands right after the new chip
-  sel.removeAllRanges(); sel.addRange(r);
-}
-function expandChipEl(chip){
-  // Replace a rendered chip with its editable $…$ source; caret at the end of the source.
-  var tex = chip.dataset.tex || chip.textContent;
-  var tn = document.createTextNode(tex);
-  chip.parentNode.replaceChild(tn, chip);
-  var r = document.createRange();
-  r.setStart(tn, tex.length); r.collapse(true);
-  var sel = window.getSelection();
-  sel.removeAllRanges(); sel.addRange(r);
-}
-function expandChip(e, answer){
-  // Click a rendered chip to turn it back into editable source.
-  var chip = e.target.closest ? e.target.closest(".math-chip") : null;
-  if (chip && answer.contains(chip)) expandChipEl(chip);
-}
-function backspaceExpand(e, answer){
-  // Backspacing onto a rendered chip un-renders it (to source) instead of deleting it whole.
-  if (e.key !== "Backspace") return;
-  var sel = window.getSelection();
-  if (!sel || sel.rangeCount === 0) return;
-  var rng = sel.getRangeAt(0);
-  if (!rng.collapsed) return;
-  var node = rng.startContainer, off = rng.startOffset, chip = null;
-  if (node.nodeType === 3 && off === 0){
-    var prev = node.previousSibling;
-    if (prev && prev.nodeType === 1 && prev.classList && prev.classList.contains("math-chip")) chip = prev;
-  } else if (node.nodeType === 1 && off > 0){
-    var before = node.childNodes[off - 1];
-    if (before && before.nodeType === 1 && before.classList && before.classList.contains("math-chip")) chip = before;
-  }
-  if (!chip || !answer.contains(chip)) return;
-  e.preventDefault();
-  expandChipEl(chip);          // re-renders on blur (renderAllIn) or when you re-close the delimiter
-}
-function renderAllIn(answer){
-  // Blur cleanup: chip-ify any complete pairs left in loose text (e.g. expanded-then-edited, or pasted).
-  var walker = document.createTreeWalker(answer, NodeFilter.SHOW_TEXT, {
-    acceptNode: function(n){ return (n.parentNode && n.parentNode.closest && n.parentNode.closest(".math-chip")) ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT; }
-  });
-  var texts = [], cur;
-  while ((cur = walker.nextNode())) texts.push(cur);
-  texts.forEach(function(tn){
-    var s = tn.textContent;
-    var re = /\$([^$]+)\$|\\\(([\s\S]+?)\\\)/g;
-    if (!re.test(s)) return;
-    re.lastIndex = 0;
-    var frag = document.createDocumentFragment(), last = 0, m;
-    while ((m = re.exec(s)) !== null){
-      if (m.index > last) frag.appendChild(document.createTextNode(s.slice(last, m.index)));
-      frag.appendChild(mjChip(m[0]));
-      last = re.lastIndex;
-    }
-    if (last < s.length) frag.appendChild(document.createTextNode(s.slice(last)));
-    tn.parentNode.replaceChild(frag, tn);
-  });
-}
-function serializeAnswer(node){
-  // Reconstruct the LaTeX source for grading: text verbatim, chips → their stored $…$ source.
-  var out = "";
-  node.childNodes.forEach(function(n){
-    if (n.nodeType === 3) out += n.textContent;
-    else if (n.nodeType === 1){
-      if (n.classList && n.classList.contains("math-chip")) out += (n.dataset.tex || "");
-      else if (n.tagName === "BR") out += "\n";
-      else { if (n.tagName === "DIV" || n.tagName === "P") out += "\n"; out += serializeAnswer(n); }
-    }
-  });
-  return out;
-}
-
-/* Quick-recall dropdowns — immediate per-option feedback, no API */
-document.querySelectorAll(".quiz-q").forEach(function(q){
-  var sel = q.querySelector("select"), mark = q.querySelector(".quiz-mark"), fb = q.querySelector(".quiz-fb");
-  sel.addEventListener("change", function(){
-    if (!sel.value) { mark.textContent = ""; mark.className = "quiz-mark"; fb.className = "quiz-fb"; return; }
-    var ok = (sel.value === q.getAttribute("data-answer"));
-    var opt = sel.options[sel.selectedIndex];
-    mark.textContent = ok ? "✓" : "✗";
-    mark.className = "quiz-mark " + (ok ? "ok" : "no");
-    fb.textContent = opt.getAttribute("data-fb") || (ok ? "Correct." : "Not quite.");
-    fb.className = "quiz-fb show " + (ok ? "ok" : "no");
-  });
-});
-
 /* Per-problem grader prompts, keyed by data-block */
 var PROMPTS = {
 "def-functor": `You are a strict but fair category-theory tutor grading a learner's from-memory definition of a FUNCTOR F : C -> D. Rubric — one point each (max 4):
@@ -587,49 +289,7 @@ MISSING: <...>
 CALIBRATION: <...>
 NEXT: <...>`
 };
-
-/* Constructed-response graders — AI grade + self-grade, one per .grader block */
-document.querySelectorAll(".grader").forEach(function(block){
-  var key = block.getAttribute("data-block");
-  var answer = block.querySelector(".answer");
-  var gradeBtn = block.querySelector(".grade");
-  var selfBtn = block.querySelector(".selfgrade");
-  var statusEl = block.querySelector(".status");
-  var fb = block.querySelector(".feedback");
-  var fbBody = block.querySelector(".feedbackBody");
-  var model = block.querySelector(".model");
-  function rawOf(){ return answer ? serializeAnswer(answer) : ""; }
-  if (answer) {
-    // In-place render-on-close: each completed $…$ becomes a rendered chip right where you typed it.
-    answer.addEventListener("input", function(){ renderOnClose(answer); });
-    answer.addEventListener("click", function(e){ expandChip(e, answer); });
-    answer.addEventListener("keydown", function(e){ backspaceExpand(e, answer); });
-    answer.addEventListener("blur", function(){ renderAllIn(answer); });
-  }
-  function conf(){ var r = block.querySelector('input[type="radio"]:checked'); return r ? r.value : "(not stated)"; }
-  if (gradeBtn) gradeBtn.addEventListener("click", async function(){
-    var ans = rawOf().trim();
-    if (ans.length < 10) { statusEl.textContent = "Write your answer first — from memory."; return; }
-    gradeBtn.disabled = true; statusEl.textContent = "Grading…";
-    var userContent = "Learner's stated confidence: " + conf() + "\n\nLearner's answer:\n\"\"\"" + ans + "\"\"\"";
-    var out = await gradeWithClaude(PROMPTS[key], userContent);
-    if (out) {
-      fbBody.innerHTML = out.replace(/\n/g, "<br>");
-      fb.classList.add("show"); model.classList.add("show"); typesetMath(fbBody);
-      statusEl.textContent = "Graded by your embedded tutor. Compare with the model answer & rubric below.";
-    } else {
-      model.classList.add("show");
-      statusEl.textContent = "No API key (or the call failed) — grade yourself against the rubric below.";
-    }
-    gradeBtn.disabled = false;
-  });
-  if (selfBtn) selfBtn.addEventListener("click", function(){
-    var ans = rawOf().trim();
-    if (ans.length < 10) { statusEl.textContent = "Write your answer first — from memory."; return; }
-    fb.classList.remove("show"); model.classList.add("show");
-    statusEl.textContent = "Self-grade — no API call made. Score yourself against the rubric below.";
-  });
-});
 </script>
+<script src="lesson.js"></script>
 </body>
 </html>

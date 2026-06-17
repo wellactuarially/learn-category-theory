@@ -1,0 +1,153 @@
+  :root {
+    --ink: #1a1a1a;
+    --paper: #fdfcf9;
+    --rule: #d9d4c7;
+    --accent: #7a1f1f;
+    --accent-soft: #f3e9e9;
+    --muted: #6b6557;
+    --code-bg: #f4f1ea;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: et-book, Palatino, "Palatino Linotype", "Book Antiqua", Georgia, serif;
+    line-height: 1.62;
+    max-width: 46rem;
+    margin: 0 auto;
+    padding: 4rem 1.6rem 6rem;
+    font-size: 1.16rem;
+  }
+  h1, h2, h3 { font-weight: 600; line-height: 1.2; }
+  h1 { font-size: 2.1rem; margin: 0 0 .2rem; letter-spacing: -0.01em; }
+  .eyebrow { color: var(--accent); text-transform: uppercase; letter-spacing: .14em;
+             font-size: .74rem; font-weight: 700; }
+  h2 { font-size: 1.4rem; margin: 2.8rem 0 .6rem; padding-top: 1rem; border-top: 1px solid var(--rule); }
+  h3 { font-size: 1.1rem; margin: 1.6rem 0 .3rem; color: var(--accent); }
+  p { margin: .7rem 0; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(122,31,31,.3); }
+  a:hover { border-bottom-color: var(--accent); }
+  .subtitle { color: var(--muted); font-style: italic; margin-top: .1rem; font-size: 1.05rem; }
+  .lede { font-size: 1.05rem; }
+
+  /* Citations: inline expandable */
+  details.cite {
+    display: inline;
+  }
+  details.cite > summary {
+    display: inline;
+    cursor: pointer;
+    color: var(--accent);
+    border-bottom: 1px dotted var(--accent);
+    font-size: .82em;
+    vertical-align: super;
+    line-height: 0;
+    list-style: none;
+    padding: 0 .1em;
+  }
+  details.cite > summary::-webkit-details-marker { display: none; }
+  details.cite[open] > summary { background: var(--accent-soft); border-radius: 3px; }
+  details.cite > .cite-body {
+    display: block;
+    margin: .6rem 0;
+    padding: .7rem .9rem;
+    background: var(--accent-soft);
+    border-left: 3px solid var(--accent);
+    border-radius: 0 4px 4px 0;
+    font-size: .92rem;
+    line-height: 1.5;
+    color: #2a2a2a;
+  }
+
+  .axioms { background: #fff; border: 1px solid var(--rule); border-radius: 6px;
+            padding: 1rem 1.4rem; margin: 1.2rem 0; }
+  .axioms ol { margin: .4rem 0; padding-left: 1.3rem; }
+  .axioms li { margin: .55rem 0; }
+  code, .mono { font-family: "SF Mono", "Cascadia Mono", Menlo, Consolas, monospace;
+                font-size: .9em; background: var(--code-bg); padding: .08em .35em; border-radius: 3px; }
+  .arrow { font-family: "SF Mono", Menlo, monospace; }
+  math { font-size: 1.06em; white-space: nowrap; }
+  math.display { display: block; margin: .2rem 0; font-size: 1.12em; white-space: nowrap; }
+
+  .callout { background: #f0f4f0; border-left: 3px solid #4a6b4a; border-radius: 0 4px 4px 0;
+             padding: .8rem 1.1rem; margin: 1.3rem 0; font-size: .98rem; }
+  .callout .label { font-weight: 700; color: #3a5a3a; font-size: .78rem;
+                    text-transform: uppercase; letter-spacing: .08em; }
+  .illusion { background: #fbf3e8; border-left: 3px solid #b5791f; }
+  .illusion .label { color: #8a5a12; }
+
+  ul.examples { list-style: none; padding-left: 0; }
+  ul.examples li { padding: .5rem 0; border-bottom: 1px dashed var(--rule); }
+  ul.examples li:last-child { border-bottom: none; }
+  ul.examples b { color: var(--accent); }
+
+  /* Assessment */
+  .assess { background: #fff; border: 2px solid var(--accent); border-radius: 8px;
+            padding: 1.4rem 1.6rem; margin: 2.4rem 0; }
+  .assess h2 { border: none; margin-top: 0; padding-top: 0; color: var(--accent); }
+  textarea { width: 100%; min-height: 7rem; font-family: inherit; font-size: 1rem;
+             padding: .7rem; border: 1px solid var(--rule); border-radius: 5px;
+             background: var(--paper); resize: vertical; }
+  .answer { width: 100%; min-height: 7rem; font-family: inherit; font-size: 1rem; line-height: 1.7;
+            padding: .7rem; border: 1px solid var(--rule); border-radius: 5px;
+            background: var(--paper); white-space: pre-wrap; overflow-wrap: break-word; overflow-y: auto; }
+  .answer:focus { outline: none; border-color: var(--accent); }
+  .answer:empty::before { content: attr(data-placeholder); color: var(--muted); pointer-events: none; }
+  .math-chip { display: inline-block; cursor: pointer; padding: 0 .12em; border-radius: 3px; }
+  .math-chip:hover { background: var(--accent-soft); }
+  .answer-wrap { display: flex; flex-direction: column; align-items: flex-end; }
+  .answer-wrap .answer { align-self: stretch; }
+  .copy-btn { margin: .35rem 0 0; font-size: .72rem; padding: .2rem .55rem; line-height: 1.3;
+              background: var(--paper); color: var(--muted); border: 1px solid var(--rule); border-radius: 4px; cursor: pointer; }
+  .copy-btn:hover { background: #fff; color: var(--accent); border-color: var(--accent); }
+  .conf { margin: .8rem 0; }
+  .conf label { font-size: .92rem; margin-right: .8rem; cursor: pointer; }
+  button { background: var(--accent); color: #fff; border: none; border-radius: 5px;
+           padding: .6rem 1.3rem; font-size: 1rem; font-family: inherit; cursor: pointer;
+           margin-top: .6rem; }
+  button:hover { background: #5e1818; }
+  button:disabled { opacity: .5; cursor: wait; }
+  button.secondary { background: transparent; color: var(--accent); border: 1px solid var(--accent); margin-left: .5rem; }
+  button.secondary:hover { background: var(--accent-soft); }
+  /* Quick-recall dropdown quiz (no API) */
+  .quiz-q { padding: .6rem 0; border-bottom: 1px dashed var(--rule); }
+  .quiz-q:last-child { border-bottom: none; }
+  .quiz-q p { margin: .2rem 0 .4rem; }
+  .quiz-q select { font-family: inherit; font-size: .98rem; padding: .35rem .5rem; border: 1px solid var(--rule); border-radius: 5px; background: var(--paper); max-width: 100%; }
+  .quiz-mark { margin-left: .5rem; font-weight: 700; }
+  .quiz-mark.ok { color: #3a5a3a; }
+  .quiz-mark.no { color: var(--accent); }
+  .quiz-fb { display: none; margin-top: .45rem; font-size: .92rem; padding: .5rem .7rem; border-radius: 5px; }
+  .quiz-fb.show { display: block; }
+  .quiz-fb.ok { background: #eaf2ea; border-left: 3px solid #3a5a3a; }
+  .quiz-fb.no { background: var(--accent-soft); border-left: 3px solid var(--accent); }
+  /* Rubric tables (partial credit) */
+  table.rubric { width: 100%; border-collapse: collapse; font-size: .92rem; margin: .4rem 0 .6rem; white-space: normal; }
+  table.rubric th, table.rubric td { border: 1px solid var(--rule); padding: .35rem .55rem; text-align: left; vertical-align: top; }
+  table.rubric th { background: var(--code-bg); font-size: .76rem; text-transform: uppercase; letter-spacing: .04em; }
+  table.rubric td.pts, table.rubric th.pts { text-align: center; width: 3.2rem; white-space: nowrap; }
+  table.rubric tr.total td { font-weight: 700; background: #faf7f0; }
+  .grader + .grader { margin-top: 1.2rem; }
+  .credit-note { font-size: .88rem; color: var(--muted); margin: .2rem 0 0; }
+  .result { margin-top: 1.2rem; padding: 1rem 1.2rem; border-radius: 6px; display: none; }
+  .result.show { display: block; }
+  .result.model { background: var(--code-bg); border: 1px solid var(--rule); }
+  .result.feedback { background: var(--accent-soft); border: 1px solid var(--accent); }
+  .result h3 { margin-top: 0; }
+  .status { font-size: .88rem; color: var(--muted); font-style: italic; margin-top: .5rem; }
+  .rubric { font-size: .95rem; }
+  .rubric li { margin: .35rem 0; }
+
+  footer { margin-top: 3.5rem; border-top: 1px solid var(--rule); padding-top: 1rem;
+           font-size: .9rem; color: var(--muted); }
+  footer a { color: var(--muted); }
+  .nav { font-size: .9rem; margin-top: 1.5rem; }
+
+  @media print {
+    body { font-size: 11pt; max-width: none; }
+    .assess, button { break-inside: avoid; }
+    details.cite > .cite-body { display: block !important; }
+    details.cite > summary { vertical-align: baseline; }
+    button { display: none; }
+  }
