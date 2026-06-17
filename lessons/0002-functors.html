@@ -5,12 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Lesson 2 · Functors</title>
 <script src="../config.local.js"></script>
-<!-- MathJax: interactive tutor UI only (live LaTeX preview + rendering tutor feedback).
-     startup.typeset=false keeps it from touching the page's authored native MathML. -->
+<!-- MathJax 3 renders all authored math (written as LaTeX, $…$ / \[…\]) and the tutor's feedback. -->
 <script>
   window.MathJax = {
     tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
-    startup: { typeset: false },
+    startup: { typeset: true },
     options: { enableMenu: false }
   };
 </script>
@@ -27,67 +26,61 @@
 
 <h2>1 · The definition</h2>
 
-<p>Let <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi></math> and <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">D</mi></math> be categories. A <strong>functor</strong> <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi><mover><mo>&#x27F6;</mo><mi>F</mi></mover><mi mathvariant="script">D</mi></math> consists of two assignments,<details class="cite"><summary>def</summary><span class="cite-body">Riehl, <em>Category Theory in Context</em>, Def. 1.3.1; Leinster, <em>Basic Category Theory</em>, §1.2; Mac Lane, <em>CWM</em>, §I.3. <a href="https://emilyriehl.github.io/files/context.pdf">Riehl PDF</a> · <a href="https://arxiv.org/abs/1612.09375">Leinster</a> · <a href="https://ncatlab.org/nlab/show/functor">nLab: functor</a>.</span></details> subject to two laws.</p>
+<p>Let $\mathcal{C}$ and $\mathcal{D}$ be categories. A <strong>functor</strong> $\mathcal{C} \xrightarrow{F} \mathcal{D}$ consists of two assignments,<details class="cite"><summary>def</summary><span class="cite-body">Riehl, <em>Category Theory in Context</em>, Def. 1.3.1; Leinster, <em>Basic Category Theory</em>, §1.2; Mac Lane, <em>CWM</em>, §I.3. <a href="https://emilyriehl.github.io/files/context.pdf">Riehl PDF</a> · <a href="https://arxiv.org/abs/1612.09375">Leinster</a> · <a href="https://ncatlab.org/nlab/show/functor">nLab: functor</a>.</span></details> subject to two laws.</p>
 
 <p>The data:</p>
 <ul class="examples">
-  <li><b>On objects</b> — to each object <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>A</mi></math> of <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi></math>, an object <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>F</mi><mo>(</mo><mi>A</mi><mo>)</mo></math> of <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">D</mi></math>.</li>
-  <li><b>On morphisms</b> — to each arrow <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>A</mi><mover><mo>&#x27F6;</mo><mi>f</mi></mover><mi>B</mi></math> of <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi></math>, an arrow <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>F</mi><mo>(</mo><mi>A</mi><mo>)</mo><mover><mo>&#x27F6;</mo><mrow><mi>F</mi><mo>(</mo><mi>f</mi><mo>)</mo></mrow></mover><mi>F</mi><mo>(</mo><mi>B</mi><mo>)</mo></math> of <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">D</mi></math>. (So <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>F</mi></math> sends domain to domain and codomain to codomain.)</li>
+  <li><b>On objects</b> — to each object $A$ of $\mathcal{C}$, an object $F ( A )$ of $\mathcal{D}$.</li>
+  <li><b>On morphisms</b> — to each arrow $A \xrightarrow{f} B$ of $\mathcal{C}$, an arrow $F ( A ) \xrightarrow{F ( f )} F ( B )$ of $\mathcal{D}$. (So $F$ sends domain to domain and codomain to codomain.)</li>
 </ul>
 
 <p>The laws (<strong>functoriality</strong>):</p>
 <div class="axioms">
 <ol>
-  <li><strong>Preserves composition.</strong> For composable <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>A</mi><mover><mo>&#x27F6;</mo><mi>f</mi></mover><mi>B</mi></math>, <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>B</mi><mover><mo>&#x27F6;</mo><mi>g</mi></mover><mi>C</mi></math>,
-    <math xmlns="http://www.w3.org/1998/Math/MathML" class="display">
-      <mrow><mi>F</mi><mo>(</mo><mi>f</mi><mi>g</mi><mo>)</mo></mrow><mo>=</mo><mrow><mi>F</mi><mo>(</mo><mi>f</mi><mo>)</mo><mspace width="0.2em"/><mi>F</mi><mo>(</mo><mi>g</mi><mo>)</mo></mrow>
-    </math></li>
-  <li><strong>Preserves identities.</strong> For each object <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>A</mi></math>,
-    <math xmlns="http://www.w3.org/1998/Math/MathML" class="display">
-      <mrow><mi>F</mi><mo>(</mo><msub><mi>id</mi><mi>A</mi></msub><mo>)</mo></mrow><mo>=</mo><msub><mi>id</mi><mrow><mi>F</mi><mo>(</mo><mi>A</mi><mo>)</mo></mrow></msub>
-    </math></li>
+  <li><strong>Preserves composition.</strong> For composable $A \xrightarrow{f} B$, $B \xrightarrow{g} C$,
+    \[ F ( f g ) = F ( f ) \, F ( g ) \]</li>
+  <li><strong>Preserves identities.</strong> For each object $A$,
+    \[ F ( {\mathrm{id}}_{A} ) = {\mathrm{id}}_{F ( A )} \]</li>
 </ol>
 </div>
 
-<p>A functor as just defined is <strong>covariant</strong>: it keeps the direction of every arrow. (A functor that systematically <em>reverses</em> arrows is <strong>contravariant</strong> — equivalently a covariant functor out of the opposite category; we take that up next lesson.)<details class="cite"><summary>co/contra</summary><span class="cite-body">"Covariant" is the default; "functor" unqualified means covariant. Contravariance and the opposite category <math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mi mathvariant="script">C</mi><mi>op</mi></msup></math> are treated in Riehl §1.2–1.3 and Leinster §1.2.</span></details></p>
+<p>A functor as just defined is <strong>covariant</strong>: it keeps the direction of every arrow. (A functor that systematically <em>reverses</em> arrows is <strong>contravariant</strong> — equivalently a covariant functor out of the opposite category; we take that up next lesson.)<details class="cite"><summary>co/contra</summary><span class="cite-body">"Covariant" is the default; "functor" unqualified means covariant. Contravariance and the opposite category ${\mathcal{C}}^{\mathrm{op}}$ are treated in Riehl §1.2–1.3 and Leinster §1.2.</span></details></p>
 
 <div class="callout">
 <span class="label">Convention reminder</span>
-<p style="margin:.4rem 0 0">In our left-to-right notation the composition law reads <math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>F</mi><mo>(</mo><mi>f</mi><mi>g</mi><mo>)</mo></mrow><mo>=</mo><mrow><mi>F</mi><mo>(</mo><mi>f</mi><mo>)</mo><mspace width="0.2em"/><mi>F</mi><mo>(</mo><mi>g</mi><mo>)</mo></mrow></math> — order preserved. Most sources, composing right-to-left, write the same law as <math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>F</mi><mo>(</mo><mi>g</mi><mo>∘</mo><mi>f</mi><mo>)</mo></mrow><mo>=</mo><mrow><mi>F</mi><mo>(</mo><mi>g</mi><mo>)</mo><mo>∘</mo><mi>F</mi><mo>(</mo><mi>f</mi><mo>)</mo></mrow></math>. Reverse to translate.</p>
+<p style="margin:.4rem 0 0">In our left-to-right notation the composition law reads $F ( f g ) = F ( f ) \, F ( g )$ — order preserved. Most sources, composing right-to-left, write the same law as $F ( g \circ f ) = F ( g ) \circ F ( f )$. Reverse to translate.</p>
 </div>
 
 <h3>The induced map on hom-sets</h3>
-<p>Packaging the morphism assignment by source and target: for each pair <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>A</mi><mo>,</mo><mi>B</mi></math>, a functor gives a function</p>
-<math xmlns="http://www.w3.org/1998/Math/MathML" class="display">
-  <mrow><msub><mi>F</mi><mrow><mi>A</mi><mo>,</mo><mi>B</mi></mrow></msub><mo>:</mo><mi mathvariant="script">C</mi><mo>(</mo><mi>A</mi><mo>,</mo><mi>B</mi><mo>)</mo><mo>&#x27F6;</mo><mi mathvariant="script">D</mi><mo>(</mo><mi>F</mi><mo>(</mo><mi>A</mi><mo>)</mo><mo>,</mo><mi>F</mi><mo>(</mo><mi>B</mi><mo>)</mo><mo>)</mo></mrow><mo>,</mo><mspace width="0.6em"/><mrow><mi>f</mi><mo>&#x21A6;</mo><mi>F</mi><mo>(</mo><mi>f</mi><mo>)</mo></mrow>
-</math>
+<p>Packaging the morphism assignment by source and target: for each pair $A , B$, a functor gives a function</p>
+\[ F_{A , B} : \mathcal{C} ( A , B ) \longrightarrow \mathcal{D} ( F ( A ) , F ( B ) ) , \, f \mapsto F ( f ) \]
 <p>These hom-set maps are where the future lives: when each is injective the functor is <em>faithful</em>, when surjective <em>full</em> — the vocabulary in which the Yoneda lemma is eventually stated. We only name them here.<details class="cite"><summary>fwd</summary><span class="cite-body">Full and faithful functors: Riehl §1.5; they are central to the Yoneda lemma (Riehl §2.2). Flagged now, developed later.</span></details></p>
 
 <div class="callout">
 <span class="label">Why exactly these two laws</span>
-<p style="margin:.4rem 0 0">Functoriality is not bookkeeping for its own sake — it is precisely what forces a functor to <em>transport structure</em> without distortion. Because <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>F</mi></math> respects composition and identities, it automatically carries isomorphisms to isomorphisms<details class="cite"><summary>lemma</summary><span class="cite-body">"Functors preserve isomorphisms": Riehl, Lemma 1.3.8. The one-line proof is exactly functoriality applied to <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>f</mi><msup><mi>f</mi><mrow><mo>&#x2212;</mo><mn>1</mn></mrow></msup><mo>=</mo><mi>id</mi></math>. (It need not <em>reflect</em> them — Exercise 1.3.viii.)</span></details> — so any property phrased through arrows becomes an <strong>invariant</strong> that <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>F</mi></math> ports from one category to another. That is the whole reason <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>&#x03C0;</mi><mn>1</mn></msub></math> can prove two spaces are genuinely different: a functor turns a hard question in one world into an easier one in another, and the answer survives the trip.</p>
+<p style="margin:.4rem 0 0">Functoriality is not bookkeeping for its own sake — it is precisely what forces a functor to <em>transport structure</em> without distortion. Because $F$ respects composition and identities, it automatically carries isomorphisms to isomorphisms<details class="cite"><summary>lemma</summary><span class="cite-body">"Functors preserve isomorphisms": Riehl, Lemma 1.3.8. The one-line proof is exactly functoriality applied to $f f^{- 1} = \mathrm{id}$. (It need not <em>reflect</em> them — Exercise 1.3.viii.)</span></details> — so any property phrased through arrows becomes an <strong>invariant</strong> that $F$ ports from one category to another. That is the whole reason ${\pi}_{1}$ can prove two spaces are genuinely different: a functor turns a hard question in one world into an easier one in another, and the answer survives the trip.</p>
 </div>
 
 <h2>2 · Functors in the wild</h2>
 <p>The definition earns its keep through how much it already covers. Each example below names the object action and the morphism action — that pair is the whole content.</p>
 
 <ul class="examples">
-  <li><b>Forgetful functors.</b> <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="bold">Grp</mi><mover><mo>&#x27F6;</mo><mi>U</mi></mover><mi mathvariant="bold">Set</mi></math> sends a group to its underlying set and a homomorphism to itself-as-a-function — it <em>forgets</em> structure. Likewise <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="bold">Top</mi><mo>&#x27F6;</mo><mi mathvariant="bold">Set</mi></math>, <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="bold">Vect</mi><mo>&#x27F6;</mo><mi mathvariant="bold">Set</mi></math>. Its partner, the <b>free</b> functor <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="bold">Set</mi><mover><mo>&#x27F6;</mo><mi>F</mi></mover><mi mathvariant="bold">Grp</mi></math> (free group on a set), points ahead to adjunctions.<details class="cite"><summary>ex</summary><span class="cite-body">Forgetful and free functors: Leinster §1.2 and Riehl §1.3. The free ⊣ forgetful pairing is the prototypical adjunction (Leinster Ch. 2).</span></details></li>
+  <li><b>Forgetful functors.</b> $\mathbf{Grp} \xrightarrow{U} \mathbf{Set}$ sends a group to its underlying set and a homomorphism to itself-as-a-function — it <em>forgets</em> structure. Likewise $\mathbf{Top} \longrightarrow \mathbf{Set}$, $\mathbf{Vect} \longrightarrow \mathbf{Set}$. Its partner, the <b>free</b> functor $\mathbf{Set} \xrightarrow{F} \mathbf{Grp}$ (free group on a set), points ahead to adjunctions.<details class="cite"><summary>ex</summary><span class="cite-body">Forgetful and free functors: Leinster §1.2 and Riehl §1.3. The free ⊣ forgetful pairing is the prototypical adjunction (Leinster Ch. 2).</span></details></li>
 
-  <li><b>The fundamental group.</b> <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi mathvariant="bold">Top</mi><mo>&#x2217;</mo></msub><mover><mo>&#x27F6;</mo><msub><mi>&#x03C0;</mi><mn>1</mn></msub></mover><mi mathvariant="bold">Grp</mi></math> sends a pointed space to its fundamental group and a based continuous map to the induced homomorphism. Functoriality (<math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msub><mi>&#x03C0;</mi><mn>1</mn></msub><mo>(</mo><mi>f</mi><mi>g</mi><mo>)</mo></mrow><mo>=</mo><mrow><msub><mi>&#x03C0;</mi><mn>1</mn></msub><mo>(</mo><mi>f</mi><mo>)</mo><mspace width="0.2em"/><msub><mi>&#x03C0;</mi><mn>1</mn></msub><mo>(</mo><mi>g</mi><mo>)</mo></mrow></math>) is exactly what makes it a tool: homeomorphic spaces get isomorphic groups, so a group difference proves a topological difference. This is the kind of example category theory was invented for.</li>
+  <li><b>The fundamental group.</b> ${\mathbf{Top}}_{*} \xrightarrow{{\pi}_{1}} \mathbf{Grp}$ sends a pointed space to its fundamental group and a based continuous map to the induced homomorphism. Functoriality (${\pi}_{1} ( f g ) = {\pi}_{1} ( f ) \, {\pi}_{1} ( g )$) is exactly what makes it a tool: homeomorphic spaces get isomorphic groups, so a group difference proves a topological difference. This is the kind of example category theory was invented for.</li>
 
-  <li><b>A homomorphism <em>is</em> a functor.</b> Recall a monoid (or group) <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>M</mi></math> is a one-object category <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="bold">B</mi><mi>M</mi></math>: its arrows are the elements, composition is the operation, the identity is the unit. A functor <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="bold">B</mi><mi>M</mi><mo>&#x27F6;</mo><mi mathvariant="bold">B</mi><mi>N</mi></math> sends the one object to the one object and each element <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>m</mi></math> to <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>F</mi><mo>(</mo><mi>m</mi><mo>)</mo></math> with <math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>F</mi><mo>(</mo><mi>m</mi><mi>n</mi><mo>)</mo></mrow><mo>=</mo><mrow><mi>F</mi><mo>(</mo><mi>m</mi><mo>)</mo><mspace width="0.2em"/><mi>F</mi><mo>(</mo><mi>n</mi><mo>)</mo></mrow></math> — precisely a monoid homomorphism. The two functor laws collapse to the two homomorphism laws.<details class="cite"><summary>delooping</summary><span class="cite-body">The one-object category of a monoid is its <em>delooping</em> <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="bold">B</mi><mi>M</mi></math>; functors <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="bold">B</mi><mi>M</mi><mo>&#x2192;</mo><mi mathvariant="bold">B</mi><mi>N</mi></math> = monoid homomorphisms. Riehl Ex. 1.3.x; <a href="https://ncatlab.org/nlab/show/delooping">nLab: delooping</a>. (Functors <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="bold">B</mi><mi>G</mi><mo>&#x2192;</mo><mi mathvariant="bold">Set</mi></math> are exactly <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>G</mi></math>-sets — a preview of representable functors.)</span></details></li>
+  <li><b>A homomorphism <em>is</em> a functor.</b> Recall a monoid (or group) $M$ is a one-object category $\mathbf{B} M$: its arrows are the elements, composition is the operation, the identity is the unit. A functor $\mathbf{B} M \longrightarrow \mathbf{B} N$ sends the one object to the one object and each element $m$ to $F ( m )$ with $F ( m n ) = F ( m ) \, F ( n )$ — precisely a monoid homomorphism. The two functor laws collapse to the two homomorphism laws.<details class="cite"><summary>delooping</summary><span class="cite-body">The one-object category of a monoid is its <em>delooping</em> $\mathbf{B} M$; functors $\mathbf{B} M \to \mathbf{B} N$ = monoid homomorphisms. Riehl Ex. 1.3.x; <a href="https://ncatlab.org/nlab/show/delooping">nLab: delooping</a>. (Functors $\mathbf{B} G \to \mathbf{Set}$ are exactly $G$-sets — a preview of representable functors.)</span></details></li>
 
-  <li><b>The hom-functor <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi><mo>(</mo><mi>A</mi><mo>,</mo><mo>&#x2212;</mo><mo>)</mo></math>.</b> Fix an object <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>A</mi></math> in a locally small <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi></math>. Then <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi><mo>(</mo><mi>A</mi><mo>,</mo><mo>&#x2212;</mo><mo>)</mo><mo>:</mo><mi mathvariant="script">C</mi><mo>&#x27F6;</mo><mi mathvariant="bold">Set</mi></math> sends an object <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>X</mi></math> to the set <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi><mo>(</mo><mi>A</mi><mo>,</mo><mi>X</mi><mo>)</mo></math>, and an arrow <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>X</mi><mover><mo>&#x27F6;</mo><mi>f</mi></mover><mi>Y</mi></math> to the function "post-compose with <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>f</mi></math>", <math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>h</mi><mo>&#x21A6;</mo><mi>h</mi><mi>f</mi></mrow></math>. This single family of functors is the engine of the <strong>Yoneda lemma</strong> — your stated destination — so it is worth recognizing now.<details class="cite"><summary>yoneda</summary><span class="cite-body">Representable functors <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi><mo>(</mo><mi>A</mi><mo>,</mo><mo>−</mo><mo>)</mo></math> and the Yoneda lemma: Riehl §2; Leinster Ch. 4. We will build to this deliberately.</span></details></li>
+  <li><b>The hom-functor $\mathcal{C} ( A , - )$.</b> Fix an object $A$ in a locally small $\mathcal{C}$. Then $\mathcal{C} ( A , - ) : \mathcal{C} \longrightarrow \mathbf{Set}$ sends an object $X$ to the set $\mathcal{C} ( A , X )$, and an arrow $X \xrightarrow{f} Y$ to the function "post-compose with $f$", $h \mapsto h f$. This single family of functors is the engine of the <strong>Yoneda lemma</strong> — your stated destination — so it is worth recognizing now.<details class="cite"><summary>yoneda</summary><span class="cite-body">Representable functors $\mathcal{C} ( A , - )$ and the Yoneda lemma: Riehl §2; Leinster Ch. 4. We will build to this deliberately.</span></details></li>
 </ul>
 
 <h2>3 · Functors compose</h2>
-<p>Functors are themselves arrows, and they behave like it. Given <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi><mover><mo>&#x27F6;</mo><mi>F</mi></mover><mi mathvariant="script">D</mi></math> and <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">D</mi><mover><mo>&#x27F6;</mo><mi>G</mi></mover><mi mathvariant="script">E</mi></math>, the composite <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>F</mi><mi>G</mi></math> (do <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>F</mi></math>, then <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>G</mi></math>) is again a functor, and each category has an <strong>identity functor</strong> <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>id</mi><mi mathvariant="script">C</mi></msub></math> fixing every object and arrow. Composition of functors is associative with these as units — so <strong>small categories and functors themselves form a category</strong>, <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="bold">Cat</mi></math>.<details class="cite"><summary>cat</summary><span class="cite-body"><math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="bold">Cat</mi></math>, the category of small categories and functors: Riehl §1.3, Leinster §1.2. Restricting to <em>small</em> categories keeps it a legitimate (large) category — the size bookkeeping from Lesson 1 at work.</span></details></p>
+<p>Functors are themselves arrows, and they behave like it. Given $\mathcal{C} \xrightarrow{F} \mathcal{D}$ and $\mathcal{D} \xrightarrow{G} \mathcal{E}$, the composite $F G$ (do $F$, then $G$) is again a functor, and each category has an <strong>identity functor</strong> ${\mathrm{id}}_{\mathcal{C}}$ fixing every object and arrow. Composition of functors is associative with these as units — so <strong>small categories and functors themselves form a category</strong>, $\mathbf{Cat}$.<details class="cite"><summary>cat</summary><span class="cite-body">$\mathbf{Cat}$, the category of small categories and functors: Riehl §1.3, Leinster §1.2. Restricting to <em>small</em> categories keeps it a legitimate (large) category — the size bookkeeping from Lesson 1 at work.</span></details></p>
 
 <h2>4 · Quick recall</h2>
 <div class="assess">
   <div class="quiz-q" data-answer="b">
-    <p>1. A (covariant) functor sends an arrow <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>A</mi><mover><mo>&#x27F6;</mo><mi>f</mi></mover><mi>B</mi></math> to an arrow of which form?</p>
+    <p>1. A (covariant) functor sends an arrow $A \xrightarrow{f} B$ to an arrow of which form?</p>
     <select>
       <option value="">— choose —</option>
       <option value="a" data-fb="That is contravariant. A covariant functor preserves direction.">a reversed arrow, from the image of B to the image of A</option>
@@ -97,7 +90,7 @@
     <span class="quiz-mark"></span><div class="quiz-fb"></div>
   </div>
   <div class="quiz-q" data-answer="b">
-    <p>2. In our left-to-right convention, a functor sends a composite <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>f</mi><mi>g</mi></math> to which composite of the images?</p>
+    <p>2. In our left-to-right convention, a functor sends a composite $f g$ to which composite of the images?</p>
     <select>
       <option value="">— choose —</option>
       <option value="a" data-fb="That is the reversed (contravariant) law. A covariant functor preserves order.">the images in reverse: g's image, then f's</option>
@@ -107,7 +100,7 @@
     <span class="quiz-mark"></span><div class="quiz-fb"></div>
   </div>
   <div class="quiz-q" data-answer="b">
-    <p>3. A functor between one-object categories <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="bold">B</mi><mi>M</mi><mo>&#x27F6;</mo><mi mathvariant="bold">B</mi><mi>N</mi></math> is the same thing as…</p>
+    <p>3. A functor between one-object categories $\mathbf{B} M \longrightarrow \mathbf{B} N$ is the same thing as…</p>
     <select>
       <option value="">— choose —</option>
       <option value="a" data-fb="No — it is a structure-preserving map of the whole monoid, not a single element.">a single element of the target monoid</option>
@@ -117,7 +110,7 @@
     <span class="quiz-mark"></span><div class="quiz-fb"></div>
   </div>
   <div class="quiz-q" data-answer="a">
-    <p>4. The covariant hom-functor <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi><mo>(</mo><mi>A</mi><mo>,</mo><mo>&#x2212;</mo><mo>)</mo></math> sends an arrow <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>X</mi><mover><mo>&#x27F6;</mo><mi>f</mi></mover><mi>Y</mi></math> to a function <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi><mo>(</mo><mi>A</mi><mo>,</mo><mi>X</mi><mo>)</mo><mo>&#x27F6;</mo><mi mathvariant="script">C</mi><mo>(</mo><mi>A</mi><mo>,</mo><mi>Y</mi><mo>)</mo></math>. How does it act?</p>
+    <p>4. The covariant hom-functor $\mathcal{C} ( A , - )$ sends an arrow $X \xrightarrow{f} Y$ to a function $\mathcal{C} ( A , X ) \longrightarrow \mathcal{C} ( A , Y )$. How does it act?</p>
     <select>
       <option value="">— choose —</option>
       <option value="a" data-fb="Correct — post-composition: each map A → X is followed by f to land in A → Y.">post-composition: each map followed by f</option>
@@ -132,7 +125,7 @@
 <p>Two separate prompts, graded independently. <strong>Grade with AI tutor</strong> for feedback, or <strong>Self-grade (no API)</strong> to reveal the rubric and mark yourself.</p>
 
 <div class="assess grader" data-block="def-functor">
-  <p><strong>(a)</strong> Without scrolling up, define a functor <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi><mover><mo>&#x27F6;</mo><mi>F</mi></mover><mi mathvariant="script">D</mi></math> — both pieces of data and both laws.</p>
+  <p><strong>(a)</strong> Without scrolling up, define a functor $\mathcal{C} \xrightarrow{F} \mathcal{D}$ — both pieces of data and both laws.</p>
   <div class="conf"><span style="font-size:.92rem;font-weight:600">Confidence?</span>
     <label><input type="radio" name="conf-def-functor" value="low"> Shaky</label>
     <label><input type="radio" name="conf-def-functor" value="med"> Fairly sure</label>
@@ -145,10 +138,10 @@
   <div class="result model">
     <h3>Model answer &amp; rubric</h3>
     <table class="rubric"><thead><tr><th>#</th><th>Criterion (naming the notion counts in full)</th><th class="pts">Pts</th></tr></thead><tbody>
-      <tr><td>①</td><td>Object assignment: each object of <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi></math> gives an object of <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">D</mi></math></td><td class="pts">1</td></tr>
-      <tr><td>②</td><td>Morphism assignment: <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>A</mi><mover><mo>&#x27F6;</mo><mi>f</mi></mover><mi>B</mi></math> gives <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>F</mi><mo>(</mo><mi>f</mi><mo>)</mo><mo>:</mo><mi>F</mi><mo>(</mo><mi>A</mi><mo>)</mo><mo>&#x27F6;</mo><mi>F</mi><mo>(</mo><mi>B</mi><mo>)</mo></math> (respecting domain/codomain)</td><td class="pts">1</td></tr>
-      <tr><td>③</td><td>Preserves composition: <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>F</mi><mo>(</mo><mi>f</mi><mi>g</mi><mo>)</mo><mo>=</mo><mi>F</mi><mo>(</mo><mi>f</mi><mo>)</mo><mspace width="0.2em"/><mi>F</mi><mo>(</mo><mi>g</mi><mo>)</mo></math></td><td class="pts">1</td></tr>
-      <tr><td>④</td><td>Preserves identities: <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>F</mi><mo>(</mo><msub><mi>id</mi><mi>A</mi></msub><mo>)</mo><mo>=</mo><msub><mi>id</mi><mrow><mi>F</mi><mo>(</mo><mi>A</mi><mo>)</mo></mrow></msub></math></td><td class="pts">1</td></tr>
+      <tr><td>①</td><td>Object assignment: each object of $\mathcal{C}$ gives an object of $\mathcal{D}$</td><td class="pts">1</td></tr>
+      <tr><td>②</td><td>Morphism assignment: $A \xrightarrow{f} B$ gives $F ( f ) : F ( A ) \longrightarrow F ( B )$ (respecting domain/codomain)</td><td class="pts">1</td></tr>
+      <tr><td>③</td><td>Preserves composition: $F ( f g ) = F ( f ) \, F ( g )$</td><td class="pts">1</td></tr>
+      <tr><td>④</td><td>Preserves identities: $F ( {\mathrm{id}}_{A} ) = {\mathrm{id}}_{F ( A )}$</td><td class="pts">1</td></tr>
       <tr class="total"><td></td><td>Total</td><td class="pts">4</td></tr>
     </tbody></table>
     <p class="credit-note">“Preserves composition and identities” earns ③ and ④ in full. A vague “preserves structure” naming neither earns nothing there.</p>
@@ -175,7 +168,7 @@
       <tr><td>④</td><td>Functorial: respects composition and identities (at least argued)</td><td class="pts">1</td></tr>
       <tr class="total"><td></td><td>Total</td><td class="pts">4</td></tr>
     </tbody></table>
-    <p class="credit-note">Worked examples: forgetful <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="bold">Grp</mi><mover><mo>&#x27F6;</mo><mi>U</mi></mover><mi mathvariant="bold">Set</mi></math> (object: underlying set; morphism: the homomorphism as a function); <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>&#x3C0;</mi><mn>1</mn></msub><mo>:</mo><msub><mi mathvariant="bold">Top</mi><mo>&#x2217;</mo></msub><mo>&#x27F6;</mo><mi mathvariant="bold">Grp</mi></math>; the dual space <math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mrow><mo>(</mo><mo>&#x2212;</mo><mo>)</mo></mrow><mo>&#x2217;</mo></msup></math> (contravariant); a homomorphism as <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="bold">B</mi><mi>M</mi><mo>&#x27F6;</mo><mi mathvariant="bold">B</mi><mi>N</mi></math>.</p>
+    <p class="credit-note">Worked examples: forgetful $\mathbf{Grp} \xrightarrow{U} \mathbf{Set}$ (object: underlying set; morphism: the homomorphism as a function); ${\pi}_{1} : {\mathbf{Top}}_{*} \longrightarrow \mathbf{Grp}$; the dual space ${( - )}^{*}$ (contravariant); a homomorphism as $\mathbf{B} M \longrightarrow \mathbf{B} N$.</p>
   </div>
 </div>
 
@@ -196,17 +189,17 @@
   <div class="result model">
     <h3>Model answer &amp; rubric</h3>
     <table class="rubric"><thead><tr><th>#</th><th>Criterion</th><th class="pts">Pts</th></tr></thead><tbody>
-      <tr><td>①</td><td>Identifies it as a monotone (order-preserving) map: <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>x</mi><mo>&#x2264;</mo><mi>y</mi><mo>&#x21D2;</mo><mi>F</mi><mo>(</mo><mi>x</mi><mo>)</mo><mo>&#x2264;</mo><mi>F</mi><mo>(</mo><mi>y</mi><mo>)</mo></math></td><td class="pts">1</td></tr>
-      <tr><td>②</td><td>Explains: an arrow <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>x</mi><mo>&#x27F6;</mo><mi>y</mi></math> exists iff <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>x</mi><mo>&#x2264;</mo><mi>y</mi></math>, so <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>F</mi></math> sends it to <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>F</mi><mo>(</mo><mi>x</mi><mo>)</mo><mo>&#x27F6;</mo><mi>F</mi><mo>(</mo><mi>y</mi><mo>)</mo></math></td><td class="pts">1</td></tr>
+      <tr><td>①</td><td>Identifies it as a monotone (order-preserving) map: $x \le y \Rightarrow F ( x ) \le F ( y )$</td><td class="pts">1</td></tr>
+      <tr><td>②</td><td>Explains: an arrow $x \longrightarrow y$ exists iff $x \le y$, so $F$ sends it to $F ( x ) \longrightarrow F ( y )$</td><td class="pts">1</td></tr>
       <tr><td>③</td><td>Notes the functor laws hold automatically (at most one arrow between objects)</td><td class="pts">1</td></tr>
       <tr class="total"><td></td><td>Total</td><td class="pts">3</td></tr>
     </tbody></table>
-    <p style="font-size:.93rem">A functor between preorders is exactly a monotone map: <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>x</mi><mo>&#x2264;</mo><mi>y</mi><mo>&#x21D2;</mo><mi>F</mi><mo>(</mo><mi>x</mi><mo>)</mo><mo>&#x2264;</mo><mi>F</mi><mo>(</mo><mi>y</mi><mo>)</mo></math>. Because a preorder has at most one arrow between any two objects, the composition and identity laws hold automatically. Source: Riehl, Exercise 1.3.ii.</p>
+    <p style="font-size:.93rem">A functor between preorders is exactly a monotone map: $x \le y \Rightarrow F ( x ) \le F ( y )$. Because a preorder has at most one arrow between any two objects, the composition and identity laws hold automatically. Source: Riehl, Exercise 1.3.ii.</p>
   </div>
 </div>
 
 <div class="assess grader" data-block="riehl-image">
-  <p><b>2. The image of a functor need not be a subcategory.</b> Find a functor <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi><mover><mo>&#x27F6;</mo><mi>F</mi></mover><mi mathvariant="script">D</mi></math> whose image (its objects and morphisms) is not a subcategory of <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">D</mi></math>. <em>(Riehl, Exercise 1.3.iii.)</em></p>
+  <p><b>2. The image of a functor need not be a subcategory.</b> Find a functor $\mathcal{C} \xrightarrow{F} \mathcal{D}$ whose image (its objects and morphisms) is not a subcategory of $\mathcal{D}$. <em>(Riehl, Exercise 1.3.iii.)</em></p>
   <div class="conf"><span style="font-size:.92rem;font-weight:600">Confidence?</span>
     <label><input type="radio" name="conf-riehl-image" value="low"> Shaky</label>
     <label><input type="radio" name="conf-riehl-image" value="med"> Fairly sure</label>
@@ -219,12 +212,12 @@
   <div class="result model">
     <h3>Model answer &amp; rubric</h3>
     <table class="rubric"><thead><tr><th>#</th><th>Criterion</th><th class="pts">Pts</th></tr></thead><tbody>
-      <tr><td>①</td><td>A concrete functor <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi><mover><mo>&#x27F6;</mo><mi>F</mi></mover><mi mathvariant="script">D</mi></math></td><td class="pts">1</td></tr>
+      <tr><td>①</td><td>A concrete functor $\mathcal{C} \xrightarrow{F} \mathcal{D}$</td><td class="pts">1</td></tr>
       <tr><td>②</td><td>Exhibits the failure: image not closed under composition (or a missing identity)</td><td class="pts">1</td></tr>
       <tr><td>③</td><td>Explains why it is therefore not a subcategory</td><td class="pts">1</td></tr>
       <tr class="total"><td></td><td>Total</td><td class="pts">3</td></tr>
     </tbody></table>
-    <p style="font-size:.93rem">Let <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi></math> be two disjoint arrows <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>a</mi><mo>&#x27F6;</mo><mi>b</mi></math> and <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>c</mi><mo>&#x27F6;</mo><mi>d</mi></math>; map into the poset <math xmlns="http://www.w3.org/1998/Math/MathML"><mn>0</mn><mo>&#x2264;</mo><mn>1</mn><mo>&#x2264;</mo><mn>2</mn></math>, sending <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>a</mi><mo>&#x27F6;</mo><mi>b</mi></math> to <math xmlns="http://www.w3.org/1998/Math/MathML"><mn>0</mn><mo>&#x27F6;</mo><mn>1</mn></math> and <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>c</mi><mo>&#x27F6;</mo><mi>d</mi></math> to <math xmlns="http://www.w3.org/1998/Math/MathML"><mn>1</mn><mo>&#x27F6;</mo><mn>2</mn></math> (so <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>F</mi><mo>(</mo><mi>b</mi><mo>)</mo><mo>=</mo><mi>F</mi><mo>(</mo><mi>c</mi><mo>)</mo><mo>=</mo><mn>1</mn></math>). Then <math xmlns="http://www.w3.org/1998/Math/MathML"><mn>0</mn><mo>&#x27F6;</mo><mn>1</mn></math> and <math xmlns="http://www.w3.org/1998/Math/MathML"><mn>1</mn><mo>&#x27F6;</mo><mn>2</mn></math> lie in the image and compose in <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">D</mi></math> to <math xmlns="http://www.w3.org/1998/Math/MathML"><mn>0</mn><mo>&#x27F6;</mo><mn>2</mn></math> — which is the image of no arrow of <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi></math>. The image is not closed under composition, so it is not a subcategory. Source: Riehl, Exercise 1.3.iii.</p>
+    <p style="font-size:.93rem">Let $\mathcal{C}$ be two disjoint arrows $a \longrightarrow b$ and $c \longrightarrow d$; map into the poset $0 \le 1 \le 2$, sending $a \longrightarrow b$ to $0 \longrightarrow 1$ and $c \longrightarrow d$ to $1 \longrightarrow 2$ (so $F ( b ) = F ( c ) = 1$). Then $0 \longrightarrow 1$ and $1 \longrightarrow 2$ lie in the image and compose in $\mathcal{D}$ to $0 \longrightarrow 2$ — which is the image of no arrow of $\mathcal{C}$. The image is not closed under composition, so it is not a subcategory. Source: Riehl, Exercise 1.3.iii.</p>
   </div>
 </div>
 

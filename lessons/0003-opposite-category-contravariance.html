@@ -5,12 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Lesson 3 · The Opposite Category &amp; Contravariance</title>
 <script src="../config.local.js"></script>
-<!-- MathJax: interactive tutor UI only (live LaTeX preview + rendering tutor feedback).
-     startup.typeset=false keeps it from touching the page's authored native MathML. -->
+<!-- MathJax 3 renders all authored math (written as LaTeX, $…$ / \[…\]) and the tutor's feedback. -->
 <script>
   window.MathJax = {
     tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
-    startup: { typeset: false },
+    startup: { typeset: true },
     options: { enableMenu: false }
   };
 </script>
@@ -26,61 +25,59 @@
 <p class="lede">Some constructions naturally run <em>against</em> the arrows: the dual of a vector space, the preimage of a subset, the functions <em>into</em> a fixed object. Category theory captures all of them with one move — reverse every arrow — packaged as the <strong>opposite category</strong>. The functors that respect this reversal are <strong>contravariant</strong>, and one of them, the contravariant hom-functor, is the object the Yoneda lemma is about.</p>
 
 <h2>1 · The opposite category</h2>
-<p>Given a category <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi></math>, its <strong>opposite</strong> <math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mi mathvariant="script">C</mi><mi>op</mi></msup></math> is the category with:<details class="cite"><summary>def</summary><span class="cite-body">Riehl, <em>Category Theory in Context</em>, §1.2 (the opposite category and duality); Leinster, <em>Basic Category Theory</em>, §1.2; <a href="https://ncatlab.org/nlab/show/opposite+category">nLab: opposite category</a>.</span></details></p>
+<p>Given a category $\mathcal{C}$, its <strong>opposite</strong> ${\mathcal{C}}^{\mathrm{op}}$ is the category with:<details class="cite"><summary>def</summary><span class="cite-body">Riehl, <em>Category Theory in Context</em>, §1.2 (the opposite category and duality); Leinster, <em>Basic Category Theory</em>, §1.2; <a href="https://ncatlab.org/nlab/show/opposite+category">nLab: opposite category</a>.</span></details></p>
 <ul class="examples">
-  <li><b>The same objects</b> as <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi></math>.</li>
-  <li><b>Reversed morphisms</b>: <math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mi mathvariant="script">C</mi><mi>op</mi></msup><mo>(</mo><mi>A</mi><mo>,</mo><mi>B</mi><mo>)</mo><mo>=</mo><mi mathvariant="script">C</mi><mo>(</mo><mi>B</mi><mo>,</mo><mi>A</mi><mo>)</mo></math>. An arrow <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>A</mi><mover><mo>&#x27F6;</mo><mi>f</mi></mover><mi>B</mi></math> in <math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mi mathvariant="script">C</mi><mi>op</mi></msup></math> is exactly an arrow <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>B</mi><mover><mo>&#x27F6;</mo><mi>f</mi></mover><mi>A</mi></math> in <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi></math>.</li>
+  <li><b>The same objects</b> as $\mathcal{C}$.</li>
+  <li><b>Reversed morphisms</b>: ${\mathcal{C}}^{\mathrm{op}} ( A , B ) = \mathcal{C} ( B , A )$. An arrow $A \xrightarrow{f} B$ in ${\mathcal{C}}^{\mathrm{op}}$ is exactly an arrow $B \xrightarrow{f} A$ in $\mathcal{C}$.</li>
   <li><b>The same identities</b>, and <b>reversed composition</b> (next).</li>
 </ul>
 
 <div class="callout">
 <span class="label">The one subtle point — composition reverses</span>
-<p style="margin:.4rem 0 0">Take arrows <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>A</mi><mover><mo>&#x27F6;</mo><mi>f</mi></mover><mi>B</mi></math> and <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>B</mi><mover><mo>&#x27F6;</mo><mi>g</mi></mover><mi>C</mi></math> in <math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mi mathvariant="script">C</mi><mi>op</mi></msup></math> — i.e. <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>B</mi><mover><mo>&#x27F6;</mo><mi>f</mi></mover><mi>A</mi></math> and <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>C</mi><mover><mo>&#x27F6;</mo><mi>g</mi></mover><mi>B</mi></math> in <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi></math>. Their <math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mi mathvariant="script">C</mi><mi>op</mi></msup></math>-composite "<math xmlns="http://www.w3.org/1998/Math/MathML"><mi>f</mi></math> then <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>g</mi></math>" is an arrow <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>A</mi><mo>&#x27F6;</mo><mi>C</mi></math> in <math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mi mathvariant="script">C</mi><mi>op</mi></msup></math>, i.e. an arrow <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>C</mi><mo>&#x27F6;</mo><mi>A</mi></math> in <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi></math> — and the only such arrow at hand is the <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi></math>-composite <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>g</mi><mi>f</mi></math> (in <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi></math>: <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>C</mi><mover><mo>&#x27F6;</mo><mi>g</mi></mover><mi>B</mi><mover><mo>&#x27F6;</mo><mi>f</mi></mover><mi>A</mi></math>). So the composite of <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>f</mi></math> then <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>g</mi></math> in <math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mi mathvariant="script">C</mi><mi>op</mi></msup></math> is the composite of <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>g</mi></math> then <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>f</mi></math> in <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi></math>: order flips.</p>
+<p style="margin:.4rem 0 0">Take arrows $A \xrightarrow{f} B$ and $B \xrightarrow{g} C$ in ${\mathcal{C}}^{\mathrm{op}}$ — i.e. $B \xrightarrow{f} A$ and $C \xrightarrow{g} B$ in $\mathcal{C}$. Their ${\mathcal{C}}^{\mathrm{op}}$-composite "$f$ then $g$" is an arrow $A \longrightarrow C$ in ${\mathcal{C}}^{\mathrm{op}}$, i.e. an arrow $C \longrightarrow A$ in $\mathcal{C}$ — and the only such arrow at hand is the $\mathcal{C}$-composite $g f$ (in $\mathcal{C}$: $C \xrightarrow{g} B \xrightarrow{f} A$). So the composite of $f$ then $g$ in ${\mathcal{C}}^{\mathrm{op}}$ is the composite of $g$ then $f$ in $\mathcal{C}$: order flips.</p>
 </div>
 
-<p>Reversing twice does nothing: <math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mrow><mo>(</mo><msup><mi mathvariant="script">C</mi><mi>op</mi></msup><mo>)</mo></mrow><mi>op</mi></msup><mo>=</mo><mi mathvariant="script">C</mi></math>. A clean concrete case: a poset is a category with at most one arrow <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>x</mi><mo>&#x27F6;</mo><mi>y</mi></math> whenever <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>x</mi><mo>&#x2264;</mo><mi>y</mi></math>; its opposite is the same set with the order reversed, <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>x</mi><mo>&#x2265;</mo><mi>y</mi></math>.<details class="cite"><summary>poset</summary><span class="cite-body">Posets as categories and their opposites: Riehl §1.1–1.2; Leinster §1.1. A useful sanity-check that "reverse all arrows" is a real, familiar operation.</span></details></p>
+<p>Reversing twice does nothing: ${( {\mathcal{C}}^{\mathrm{op}} )}^{\mathrm{op}} = \mathcal{C}$. A clean concrete case: a poset is a category with at most one arrow $x \longrightarrow y$ whenever $x \le y$; its opposite is the same set with the order reversed, $x \ge y$.<details class="cite"><summary>poset</summary><span class="cite-body">Posets as categories and their opposites: Riehl §1.1–1.2; Leinster §1.1. A useful sanity-check that "reverse all arrows" is a real, familiar operation.</span></details></p>
 
 <h2>2 · Contravariant functors</h2>
-<p>A <strong>contravariant functor</strong> <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>F</mi></math> from <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi></math> to <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">D</mi></math> assigns objects to objects and <em>reverses</em> arrows:<details class="cite"><summary>def</summary><span class="cite-body">Riehl §1.3 (functoriality, covariant vs contravariant); Leinster §1.2; <a href="https://ncatlab.org/nlab/show/contravariant+functor">nLab: contravariant functor</a>. The standard move is to <em>define</em> contravariance as covariance on the opposite category.</span></details></p>
+<p>A <strong>contravariant functor</strong> $F$ from $\mathcal{C}$ to $\mathcal{D}$ assigns objects to objects and <em>reverses</em> arrows:<details class="cite"><summary>def</summary><span class="cite-body">Riehl §1.3 (functoriality, covariant vs contravariant); Leinster §1.2; <a href="https://ncatlab.org/nlab/show/contravariant+functor">nLab: contravariant functor</a>. The standard move is to <em>define</em> contravariance as covariance on the opposite category.</span></details></p>
 <div class="axioms">
 <ol>
-  <li><b>On morphisms</b> it flips direction: an arrow <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>A</mi><mover><mo>&#x27F6;</mo><mi>f</mi></mover><mi>B</mi></math> is sent to <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>F</mi><mo>(</mo><mi>B</mi><mo>)</mo><mover><mo>&#x27F6;</mo><mrow><mi>F</mi><mo>(</mo><mi>f</mi><mo>)</mo></mrow></mover><mi>F</mi><mo>(</mo><mi>A</mi><mo>)</mo></math>.</li>
+  <li><b>On morphisms</b> it flips direction: an arrow $A \xrightarrow{f} B$ is sent to $F ( B ) \xrightarrow{F ( f )} F ( A )$.</li>
   <li><b>Reverses composition</b>:
-    <math xmlns="http://www.w3.org/1998/Math/MathML" class="display">
-      <mrow><mi>F</mi><mo>(</mo><mi>f</mi><mi>g</mi><mo>)</mo></mrow><mo>=</mo><mrow><mi>F</mi><mo>(</mo><mi>g</mi><mo>)</mo><mspace width="0.2em"/><mi>F</mi><mo>(</mo><mi>f</mi><mo>)</mo></mrow>
-    </math></li>
-  <li><b>Preserves identities</b>: <math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>F</mi><mo>(</mo><msub><mi>id</mi><mi>A</mi></msub><mo>)</mo></mrow><mo>=</mo><msub><mi>id</mi><mrow><mi>F</mi><mo>(</mo><mi>A</mi><mo>)</mo></mrow></msub></math>.</li>
+    \[ F ( f g ) = F ( g ) \, F ( f ) \]</li>
+  <li><b>Preserves identities</b>: $F ( {\mathrm{id}}_{A} ) = {\mathrm{id}}_{F ( A )}$.</li>
 </ol>
 </div>
 
 <div class="callout">
 <span class="label">The definition that earns its keep</span>
-<p style="margin:.4rem 0 0">A contravariant functor <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi><mo>&#x27F6;</mo><mi mathvariant="script">D</mi></math> is <em>exactly the same data</em> as a covariant functor <math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mi mathvariant="script">C</mi><mi>op</mi></msup><mo>&#x27F6;</mo><mi mathvariant="script">D</mi></math>. So "contravariant" introduces no new axioms — it is the Lesson 2 definition applied to <math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mi mathvariant="script">C</mi><mi>op</mi></msup></math>, where the order-reversal of composition does the work automatically. This is why <math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mi mathvariant="script">C</mi><mi>op</mi></msup></math> is worth the bookkeeping. (Unqualified, "functor" still means covariant.)</p>
+<p style="margin:.4rem 0 0">A contravariant functor $\mathcal{C} \longrightarrow \mathcal{D}$ is <em>exactly the same data</em> as a covariant functor ${\mathcal{C}}^{\mathrm{op}} \longrightarrow \mathcal{D}$. So "contravariant" introduces no new axioms — it is the Lesson 2 definition applied to ${\mathcal{C}}^{\mathrm{op}}$, where the order-reversal of composition does the work automatically. This is why ${\mathcal{C}}^{\mathrm{op}}$ is worth the bookkeeping. (Unqualified, "functor" still means covariant.)</p>
 </div>
 
 <h2>3 · Contravariance in the wild</h2>
 <ul class="examples">
-  <li><b>The dual vector space.</b> <math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mrow><mo>(</mo><mo>&#x2212;</mo><mo>)</mo></mrow><mo>&#x2217;</mo></msup><mo>:</mo><mi mathvariant="bold">Vect</mi><mo>&#x27F6;</mo><mi mathvariant="bold">Vect</mi></math> sends <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>V</mi></math> to its dual <math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mi>V</mi><mo>&#x2217;</mo></msup></math> and a linear map <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>V</mi><mover><mo>&#x27F6;</mo><mi>f</mi></mover><mi>W</mi></math> to its transpose <math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mi>W</mi><mo>&#x2217;</mo></msup><mover><mo>&#x27F6;</mo><msup><mi>f</mi><mo>&#x2217;</mo></msup></mover><msup><mi>V</mi><mo>&#x2217;</mo></msup></math> (precompose a functional with <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>f</mi></math>). Direction flips. Doing it twice, the double dual <math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mrow><mo>(</mo><mo>&#x2212;</mo><mo>)</mo></mrow><mrow><mo>&#x2217;</mo><mo>&#x2217;</mo></mrow></msup></math>, is covariant — and the map <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>V</mi><mo>&#x27F6;</mo><msup><mi>V</mi><mrow><mo>&#x2217;</mo><mo>&#x2217;</mo></mrow></msup></math> is the canonical example of a <em>natural transformation</em> (next lesson).<details class="cite"><summary>dual</summary><span class="cite-body">The dual-space functor and the natural map to the double dual are the motivating example of naturality in Eilenberg–Mac Lane (1945) and in Riehl §1.4–1.5. We return to it when we define natural transformations.</span></details></li>
+  <li><b>The dual vector space.</b> ${( - )}^{*} : \mathbf{Vect} \longrightarrow \mathbf{Vect}$ sends $V$ to its dual $V^{*}$ and a linear map $V \xrightarrow{f} W$ to its transpose $W^{*} \xrightarrow{f^{*}} V^{*}$ (precompose a functional with $f$). Direction flips. Doing it twice, the double dual ${( - )}^{* *}$, is covariant — and the map $V \longrightarrow V^{* *}$ is the canonical example of a <em>natural transformation</em> (next lesson).<details class="cite"><summary>dual</summary><span class="cite-body">The dual-space functor and the natural map to the double dual are the motivating example of naturality in Eilenberg–Mac Lane (1945) and in Riehl §1.4–1.5. We return to it when we define natural transformations.</span></details></li>
 
-  <li><b>The contravariant powerset.</b> <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>P</mi><mo>:</mo><msup><mi mathvariant="bold">Set</mi><mi>op</mi></msup><mo>&#x27F6;</mo><mi mathvariant="bold">Set</mi></math> sends a set to its powerset and a function <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>X</mi><mover><mo>&#x27F6;</mo><mi>f</mi></mover><mi>Y</mi></math> to the <em>preimage</em> map <math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mi>f</mi><mrow><mo>&#x2212;</mo><mn>1</mn></mrow></msup><mo>:</mo><mi>P</mi><mo>(</mo><mi>Y</mi><mo>)</mo><mo>&#x27F6;</mo><mi>P</mi><mo>(</mo><mi>X</mi><mo>)</mo></math>. Preimage runs backwards — contravariance again.<details class="cite"><summary>pow</summary><span class="cite-body">Covariant (image/direct) and contravariant (preimage) powerset functors: Riehl Example 1.3.x. A clean pair showing the same objects can carry both a covariant and a contravariant functor.</span></details></li>
+  <li><b>The contravariant powerset.</b> $P : {\mathbf{Set}}^{\mathrm{op}} \longrightarrow \mathbf{Set}$ sends a set to its powerset and a function $X \xrightarrow{f} Y$ to the <em>preimage</em> map $f^{- 1} : P ( Y ) \longrightarrow P ( X )$. Preimage runs backwards — contravariance again.<details class="cite"><summary>pow</summary><span class="cite-body">Covariant (image/direct) and contravariant (preimage) powerset functors: Riehl Example 1.3.x. A clean pair showing the same objects can carry both a covariant and a contravariant functor.</span></details></li>
 
-  <li><b>The contravariant hom-functor.</b> Fix <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>A</mi></math> in a locally small <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi></math>. Then <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi><mo>(</mo><mo>&#x2212;</mo><mo>,</mo><mi>A</mi><mo>)</mo><mo>:</mo><msup><mi mathvariant="script">C</mi><mi>op</mi></msup><mo>&#x27F6;</mo><mi mathvariant="bold">Set</mi></math> sends an object <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>X</mi></math> to the set <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi><mo>(</mo><mi>X</mi><mo>,</mo><mi>A</mi><mo>)</mo></math> and an arrow <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>X</mi><mover><mo>&#x27F6;</mo><mi>f</mi></mover><mi>Y</mi></math> to "<strong>pre</strong>-compose with <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>f</mi></math>", <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>h</mi><mo>&#x21A6;</mo><mi>f</mi><mi>h</mi></math> — a function <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi><mo>(</mo><mi>Y</mi><mo>,</mo><mi>A</mi><mo>)</mo><mo>&#x27F6;</mo><mi mathvariant="script">C</mi><mo>(</mo><mi>X</mi><mo>,</mo><mi>A</mi><mo>)</mo></math>. Compare the <em>co</em>variant <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi><mo>(</mo><mi>A</mi><mo>,</mo><mo>&#x2212;</mo><mo>)</mo></math> of Lesson 2 (post-compose). A functor <math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mi mathvariant="script">C</mi><mi>op</mi></msup><mo>&#x27F6;</mo><mi mathvariant="bold">Set</mi></math> is called a <strong>presheaf</strong>, and the Yoneda lemma is the statement that controls these.<details class="cite"><summary>yoneda</summary><span class="cite-body">Presheaves <math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mi mathvariant="script">C</mi><mi>op</mi></msup><mo>→</mo><mi mathvariant="bold">Set</mi></math>, the representable <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi><mo>(</mo><mo>−</mo><mo>,</mo><mi>A</mi><mo>)</mo></math>, and the Yoneda lemma: Riehl Ch. 2; Leinster Ch. 4. This functor is the protagonist of your mission's destination.</span></details></li>
+  <li><b>The contravariant hom-functor.</b> Fix $A$ in a locally small $\mathcal{C}$. Then $\mathcal{C} ( - , A ) : {\mathcal{C}}^{\mathrm{op}} \longrightarrow \mathbf{Set}$ sends an object $X$ to the set $\mathcal{C} ( X , A )$ and an arrow $X \xrightarrow{f} Y$ to "<strong>pre</strong>-compose with $f$", $h \mapsto f h$ — a function $\mathcal{C} ( Y , A ) \longrightarrow \mathcal{C} ( X , A )$. Compare the <em>co</em>variant $\mathcal{C} ( A , - )$ of Lesson 2 (post-compose). A functor ${\mathcal{C}}^{\mathrm{op}} \longrightarrow \mathbf{Set}$ is called a <strong>presheaf</strong>, and the Yoneda lemma is the statement that controls these.<details class="cite"><summary>yoneda</summary><span class="cite-body">Presheaves ${\mathcal{C}}^{\mathrm{op}} \to \mathbf{Set}$, the representable $\mathcal{C} ( - , A )$, and the Yoneda lemma: Riehl Ch. 2; Leinster Ch. 4. This functor is the protagonist of your mission's destination.</span></details></li>
 </ul>
 
 <h3>Why presheaves? — a set varying over a category</h3>
-<p>That last functor deserves more than its billing as "the thing in the lemma," and its idea is older than category theory's interest in it. In the 1940s <strong>Jean Leray</strong>, working as a prisoner of war, introduced <strong>sheaves</strong> to organize locally-defined data on a space. The <em>pre</em>sheaf part is the bookkeeping of <em>restriction</em>: to each open set <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>U</mi></math> of a space <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>X</mi></math> assign a set — say the continuous functions on <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>U</mi></math> — and to an inclusion <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>U</mi><mo>&#x2286;</mo><mi>V</mi></math> assign the <em>restriction</em> <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>F</mi><mo>(</mo><mi>V</mi><mo>)</mo><mo>&#x27F6;</mo><mi>F</mi><mo>(</mo><mi>U</mi><mo>)</mo></math>. The data runs <em>backwards</em> along inclusions. Since the opens form a poset category <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>O</mi><mo>(</mo><mi>X</mi><mo>)</mo></math>, this is exactly a functor <math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mrow><mi>O</mi><mo>(</mo><mi>X</mi><mo>)</mo></mrow><mi>op</mi></msup><mo>&#x27F6;</mo><mi mathvariant="bold">Set</mi></math> — a presheaf, contravariance built in.<details class="cite"><summary>hist</summary><span class="cite-body">Sheaves/presheaves originate with Jean Leray (1940s); the categorical formulation and the presheaf category are developed by Grothendieck and others. <a href="https://ncatlab.org/nlab/show/presheaf">nLab: presheaf</a>; history at <a href="https://ncatlab.org/nlab/show/sheaf">nLab: sheaf</a>.</span></details></p>
-<p>Grothendieck made the move that matters for us: replace <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>O</mi><mo>(</mo><mi>X</mi><mo>)</mo></math> by <em>any</em> category. A presheaf <math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mi mathvariant="script">C</mi><mi>op</mi></msup><mo>&#x27F6;</mo><mi mathvariant="bold">Set</mi></math> is then a <em>generalized, "variable" set indexed by</em> <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi></math> — and an object <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>A</mi></math> of <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi></math> appears as one of them, via the representable <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi><mo>(</mo><mo>&#x2212;</mo><mo>,</mo><mi>A</mi><mo>)</mo></math>, whose elements over <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>X</mi></math> are the ways of <em>probing</em> <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>A</mi></math> by maps <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>X</mi><mo>&#x27F6;</mo><mi>A</mi></math>. (This is the "functor of points" that organizes modern algebraic geometry.)</p>
-<p>The payoff is structural: the presheaf category <math xmlns="http://www.w3.org/1998/Math/MathML"><mo>[</mo><msup><mi mathvariant="script">C</mi><mi>op</mi></msup><mo>,</mo><mi mathvariant="bold">Set</mi><mo>]</mo></math> is a rich completion of <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi></math> — it has all colimits — into which <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi></math> embeds by <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>A</mi><mo>&#x21A6;</mo><mi mathvariant="script">C</mi><mo>(</mo><mo>&#x2212;</mo><mo>,</mo><mi>A</mi><mo>)</mo></math>. The Yoneda lemma is the precise statement that this embedding loses nothing — an object is faithfully described by the maps into it. That is the reason to meet presheaves now, not only at the lemma.</p>
+<p>That last functor deserves more than its billing as "the thing in the lemma," and its idea is older than category theory's interest in it. In the 1940s <strong>Jean Leray</strong>, working as a prisoner of war, introduced <strong>sheaves</strong> to organize locally-defined data on a space. The <em>pre</em>sheaf part is the bookkeeping of <em>restriction</em>: to each open set $U$ of a space $X$ assign a set — say the continuous functions on $U$ — and to an inclusion $U \subseteq V$ assign the <em>restriction</em> $F ( V ) \longrightarrow F ( U )$. The data runs <em>backwards</em> along inclusions. Since the opens form a poset category $O ( X )$, this is exactly a functor ${O ( X )}^{\mathrm{op}} \longrightarrow \mathbf{Set}$ — a presheaf, contravariance built in.<details class="cite"><summary>hist</summary><span class="cite-body">Sheaves/presheaves originate with Jean Leray (1940s); the categorical formulation and the presheaf category are developed by Grothendieck and others. <a href="https://ncatlab.org/nlab/show/presheaf">nLab: presheaf</a>; history at <a href="https://ncatlab.org/nlab/show/sheaf">nLab: sheaf</a>.</span></details></p>
+<p>Grothendieck made the move that matters for us: replace $O ( X )$ by <em>any</em> category. A presheaf ${\mathcal{C}}^{\mathrm{op}} \longrightarrow \mathbf{Set}$ is then a <em>generalized, "variable" set indexed by</em> $\mathcal{C}$ — and an object $A$ of $\mathcal{C}$ appears as one of them, via the representable $\mathcal{C} ( - , A )$, whose elements over $X$ are the ways of <em>probing</em> $A$ by maps $X \longrightarrow A$. (This is the "functor of points" that organizes modern algebraic geometry.)</p>
+<p>The payoff is structural: the presheaf category $[ {\mathcal{C}}^{\mathrm{op}} , \mathbf{Set} ]$ is a rich completion of $\mathcal{C}$ — it has all colimits — into which $\mathcal{C}$ embeds by $A \mapsto \mathcal{C} ( - , A )$. The Yoneda lemma is the precise statement that this embedding loses nothing — an object is faithfully described by the maps into it. That is the reason to meet presheaves now, not only at the lemma.</p>
 
 <div class="callout">
 <span class="label">Why it matters — duality</span>
-<p style="margin:.4rem 0 0">Reversing every arrow sends each categorical notion to its <strong>dual</strong>: a construction in <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi></math> is the dual construction in <math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mi mathvariant="script">C</mi><mi>op</mi></msup></math>. Because every category has an opposite and <math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mrow><mo>(</mo><msup><mi mathvariant="script">C</mi><mi>op</mi></msup><mo>)</mo></mrow><mi>op</mi></msup><mo>=</mo><mi mathvariant="script">C</mi></math>, any theorem proved for <em>all</em> categories instantly yields a second, dual theorem for free. We cash this in later: limits dualize to colimits, terminal objects to initial ones.<details class="cite"><summary>dual</summary><span class="cite-body">The duality principle: Riehl §1.2; Mac Lane §II.1. One proof, two theorems — a recurring economy in the subject.</span></details></p>
+<p style="margin:.4rem 0 0">Reversing every arrow sends each categorical notion to its <strong>dual</strong>: a construction in $\mathcal{C}$ is the dual construction in ${\mathcal{C}}^{\mathrm{op}}$. Because every category has an opposite and ${( {\mathcal{C}}^{\mathrm{op}} )}^{\mathrm{op}} = \mathcal{C}$, any theorem proved for <em>all</em> categories instantly yields a second, dual theorem for free. We cash this in later: limits dualize to colimits, terminal objects to initial ones.<details class="cite"><summary>dual</summary><span class="cite-body">The duality principle: Riehl §1.2; Mac Lane §II.1. One proof, two theorems — a recurring economy in the subject.</span></details></p>
 </div>
 
 <h2>4 · Quick recall</h2>
 <div class="assess">
   <div class="quiz-q" data-answer="b">
-    <p>1. In <math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mi mathvariant="script">C</mi><mi>op</mi></msup></math>, an arrow <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>A</mi><mo>&#x27F6;</mo><mi>B</mi></math> is literally the same data as which arrow of <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi></math>?</p>
+    <p>1. In ${\mathcal{C}}^{\mathrm{op}}$, an arrow $A \longrightarrow B$ is literally the same data as which arrow of $\mathcal{C}$?</p>
     <select>
       <option value="">— choose —</option>
       <option value="a" data-fb="That keeps the direction; the opposite category reverses every arrow.">the same arrow, from A to B</option>
@@ -90,7 +87,7 @@
     <span class="quiz-mark"></span><div class="quiz-fb"></div>
   </div>
   <div class="quiz-q" data-answer="b">
-    <p>2. For composable arrows <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>f</mi></math>, <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>g</mi></math> in <math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mi mathvariant="script">C</mi><mi>op</mi></msup></math>, the opposite-composite “<math xmlns="http://www.w3.org/1998/Math/MathML"><mi>f</mi></math> then <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>g</mi></math>” equals which composite computed back in <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi></math>?</p>
+    <p>2. For composable arrows $f$, $g$ in ${\mathcal{C}}^{\mathrm{op}}$, the opposite-composite “$f$ then $g$” equals which composite computed back in $\mathcal{C}$?</p>
     <select>
       <option value="">— choose —</option>
       <option value="a" data-fb="That forgets the reversal — composition order flips in the opposite category.">f then g, the same order</option>
@@ -100,7 +97,7 @@
     <span class="quiz-mark"></span><div class="quiz-fb"></div>
   </div>
   <div class="quiz-q" data-answer="b">
-    <p>3. A contravariant functor <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi><mo>&#x27F6;</mo><mi mathvariant="script">D</mi></math> is the same data as a covariant functor out of which category?</p>
+    <p>3. A contravariant functor $\mathcal{C} \longrightarrow \mathcal{D}$ is the same data as a covariant functor out of which category?</p>
     <select>
       <option value="">— choose —</option>
       <option value="a" data-fb="That is just an ordinary covariant functor — no reversal.">the source category, unchanged</option>
@@ -110,7 +107,7 @@
     <span class="quiz-mark"></span><div class="quiz-fb"></div>
   </div>
   <div class="quiz-q" data-answer="b">
-    <p>4. The contravariant hom-functor <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi><mo>(</mo><mo>&#x2212;</mo><mo>,</mo><mi>A</mi><mo>)</mo></math> sends an arrow <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>X</mi><mover><mo>&#x27F6;</mo><mi>f</mi></mover><mi>Y</mi></math> to a function <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi><mo>(</mo><mi>Y</mi><mo>,</mo><mi>A</mi><mo>)</mo><mo>&#x27F6;</mo><mi mathvariant="script">C</mi><mo>(</mo><mi>X</mi><mo>,</mo><mi>A</mi><mo>)</mo></math>. How does it act?</p>
+    <p>4. The contravariant hom-functor $\mathcal{C} ( - , A )$ sends an arrow $X \xrightarrow{f} Y$ to a function $\mathcal{C} ( Y , A ) \longrightarrow \mathcal{C} ( X , A )$. How does it act?</p>
     <select>
       <option value="">— choose —</option>
       <option value="a" data-fb="That is post-composition, which is the covariant hom-functor 𝒞(A,−).">post-composition: each map followed by f</option>
@@ -124,7 +121,7 @@
 <h2>5 · Practice (from Riehl)</h2>
 <p>Two problems from Emily Riehl's <em>Category Theory in Context</em>, to put duality and the opposite category to work. Try each, then open the hint — or bring your argument to me.</p>
 <ol style="padding-left:1.3rem;">
-  <li style="margin:.6rem 0;"><b>Suprema and infima are dual.</b> Regard a poset <math xmlns="http://www.w3.org/1998/Math/MathML"><mo>(</mo><mi>P</mi><mo>,</mo><mo>&#x2264;</mo><mo>)</mo></math> as a category. Define the <em>supremum</em> of a sub-collection of objects in such a way that the <em>dual</em> statement defines the infimum; then prove the supremum is unique whenever it exists, so that the dual proof gives uniqueness of the infimum.<div class="grader" data-block="riehl-supinf" style="margin-top:.5rem;">
+  <li style="margin:.6rem 0;"><b>Suprema and infima are dual.</b> Regard a poset $( P , \le )$ as a category. Define the <em>supremum</em> of a sub-collection of objects in such a way that the <em>dual</em> statement defines the infimum; then prove the supremum is unique whenever it exists, so that the dual proof gives uniqueness of the infimum.<div class="grader" data-block="riehl-supinf" style="margin-top:.5rem;">
   <div class="conf"><span style="font-size:.92rem;font-weight:600">Confidence?</span>
     <label><input type="radio" name="conf-riehl-supinf" value="low"> Shaky</label>
     <label><input type="radio" name="conf-riehl-supinf" value="med"> Fairly sure</label>
@@ -137,16 +134,16 @@
   <div class="result model">
     <h3>Model answer &amp; rubric</h3>
     <table class="rubric"><thead><tr><th>#</th><th>Criterion (what earns the point)</th><th class="pts">Pts</th></tr></thead><tbody>
-      <tr><td>①</td><td>Supremum of <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>S</mi></math> = an upper bound (<math xmlns="http://www.w3.org/1998/Math/MathML"><mi>x</mi><mo>&#x2264;</mo><mi>s</mi></math> for all <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>x</mi><mo>&#x2208;</mo><mi>S</mi></math>) that is least among upper bounds (<math xmlns="http://www.w3.org/1998/Math/MathML"><mi>s</mi><mo>&#x2264;</mo><mi>t</mi></math> for every upper bound <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>t</mi></math>)</td><td class="pts">1</td></tr>
-      <tr><td>②</td><td>Infimum obtained by reversing <math xmlns="http://www.w3.org/1998/Math/MathML"><mo>&#x2264;</mo></math> (working in <math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mi>P</mi><mi>op</mi></msup></math>) — a greatest lower bound</td><td class="pts">1</td></tr>
-      <tr><td>③</td><td>Uniqueness: two suprema <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>s</mi><mo>,</mo><msup><mi>s</mi><mo>&#x2032;</mo></msup></math> give <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>s</mi><mo>&#x2264;</mo><msup><mi>s</mi><mo>&#x2032;</mo></msup></math> and <math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mi>s</mi><mo>&#x2032;</mo></msup><mo>&#x2264;</mo><mi>s</mi></math>, so <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>s</mi><mo>=</mo><msup><mi>s</mi><mo>&#x2032;</mo></msup></math> by antisymmetry</td><td class="pts">1</td></tr>
-      <tr><td>④</td><td>Notes the dual proof (<math xmlns="http://www.w3.org/1998/Math/MathML"><mo>&#x2264;</mo></math> reversed) yields infimum uniqueness</td><td class="pts">1</td></tr>
+      <tr><td>①</td><td>Supremum of $S$ = an upper bound ($x \le s$ for all $x \in S$) that is least among upper bounds ($s \le t$ for every upper bound $t$)</td><td class="pts">1</td></tr>
+      <tr><td>②</td><td>Infimum obtained by reversing $\le$ (working in $P^{\mathrm{op}}$) — a greatest lower bound</td><td class="pts">1</td></tr>
+      <tr><td>③</td><td>Uniqueness: two suprema $s , s^{\prime}$ give $s \le s^{\prime}$ and $s^{\prime} \le s$, so $s = s^{\prime}$ by antisymmetry</td><td class="pts">1</td></tr>
+      <tr><td>④</td><td>Notes the dual proof ($\le$ reversed) yields infimum uniqueness</td><td class="pts">1</td></tr>
       <tr class="total"><td></td><td>Total</td><td class="pts">4</td></tr>
     </tbody></table>
-    <p style="font-size:.93rem">A supremum of S ⊆ P is an s with x ≤ s for all x ∈ S and s ≤ t for any upper bound t; reversing every ≤ (passing to Pᵒᵖ) gives the infimum. Uniqueness is forced by antisymmetry, and the identical proof read in Pᵒᵖ gives the infimum's. Source: Riehl, <em>Exercise 1.2.vii</em>.</p>
+    <p style="font-size:.93rem">A supremum of $S \subseteq P$ is an $s$ with $x \le s$ for all $x \in S$ and $s \le t$ for any upper bound $t$; reversing every $\le$ (passing to $P^{\mathrm{op}}$) gives the infimum. Uniqueness is forced by antisymmetry, and the identical proof read in $P^{\mathrm{op}}$ gives the infimum's. Source: Riehl, <em>Exercise 1.2.vii</em>.</p>
   </div>
 </div></li>
-  <li style="margin:.6rem 0;"><b>A group is its own opposite.</b> For a group <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>G</mi></math> with one-object category <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="bold">B</mi><mi>G</mi></math>, show that <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>g</mi><mo>&#x21A6;</mo><msup><mi>g</mi><mrow><mo>&#x2212;</mo><mn>1</mn></mrow></msup></math> defines an isomorphism of categories <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="bold">B</mi><mi>G</mi><mo>&#x2245;</mo><msup><mrow><mo>(</mo><mi mathvariant="bold">B</mi><mi>G</mi><mo>)</mo></mrow><mi>op</mi></msup></math>.<div class="grader" data-block="riehl-bgop" style="margin-top:.5rem;">
+  <li style="margin:.6rem 0;"><b>A group is its own opposite.</b> For a group $G$ with one-object category $\mathbf{B} G$, show that $g \mapsto g^{- 1}$ defines an isomorphism of categories $\mathbf{B} G \cong {( \mathbf{B} G )}^{\mathrm{op}}$.<div class="grader" data-block="riehl-bgop" style="margin-top:.5rem;">
   <div class="conf"><span style="font-size:.92rem;font-weight:600">Confidence?</span>
     <label><input type="radio" name="conf-riehl-bgop" value="low"> Shaky</label>
     <label><input type="radio" name="conf-riehl-bgop" value="med"> Fairly sure</label>
@@ -159,13 +156,13 @@
   <div class="result model">
     <h3>Model answer &amp; rubric</h3>
     <table class="rubric"><thead><tr><th>#</th><th>Criterion</th><th class="pts">Pts</th></tr></thead><tbody>
-      <tr><td>①</td><td>The map: identity on the single object; g ↦ g⁻¹ on morphisms</td><td class="pts">1</td></tr>
-      <tr><td>②</td><td>Respects composition into the opposite: (gh)⁻¹ = h⁻¹g⁻¹ matches the reversed-order composite</td><td class="pts">1</td></tr>
-      <tr><td>③</td><td>Preserves the identity: e ↦ e⁻¹ = e</td><td class="pts">1</td></tr>
-      <tr><td>④</td><td>g ↦ g⁻¹ is a bijection on morphisms ⇒ isomorphism of categories</td><td class="pts">1</td></tr>
+      <tr><td>①</td><td>The map: identity on the single object; $g \mapsto g^{-1}$ on morphisms</td><td class="pts">1</td></tr>
+      <tr><td>②</td><td>Respects composition into the opposite: $(gh)^{-1} = h^{-1} g^{-1}$ matches the reversed-order composite</td><td class="pts">1</td></tr>
+      <tr><td>③</td><td>Preserves the identity: $e \mapsto e^{-1} = e$</td><td class="pts">1</td></tr>
+      <tr><td>④</td><td>$g \mapsto g^{-1}$ is a bijection on morphisms $\Rightarrow$ isomorphism of categories</td><td class="pts">1</td></tr>
       <tr class="total"><td></td><td>Total</td><td class="pts">4</td></tr>
     </tbody></table>
-    <p style="font-size:.93rem">Identity on the object, g ↦ g⁻¹ on morphisms; since (gh)⁻¹ = h⁻¹g⁻¹ matches the order-reversed composite in (BG)ᵒᵖ and g ↦ g⁻¹ is its own inverse (a bijection), it is an isomorphism of categories. Source: adapted from Riehl, <em>Example 1.3.14(i)</em>.</p>
+    <p style="font-size:.93rem">Identity on the object, $g \mapsto g^{-1}$ on morphisms; since $(gh)^{-1} = h^{-1} g^{-1}$ matches the order-reversed composite in $(\mathbf{B}G)^{\mathrm{op}}$ and $g \mapsto g^{-1}$ is its own inverse (a bijection), it is an isomorphism of categories. Source: adapted from Riehl, <em>Example 1.3.14(i)</em>.</p>
   </div>
 </div></li>
 </ol>
@@ -174,7 +171,7 @@
 <p>Two separate prompts, graded independently. Use <strong>Grade with AI tutor</strong> for feedback, or <strong>Self-grade (no API)</strong> to reveal the rubric and mark yourself.</p>
 
 <div class="assess grader" data-block="def-op">
-  <p><strong>(a)</strong> Without scrolling up, define the opposite category <math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mi mathvariant="script">C</mi><mi>op</mi></msup></math>: its objects, morphisms, composition, and identities.</p>
+  <p><strong>(a)</strong> Without scrolling up, define the opposite category ${\mathcal{C}}^{\mathrm{op}}$: its objects, morphisms, composition, and identities.</p>
   <div class="conf"><span style="font-size:.92rem;font-weight:600">Confidence?</span>
     <label><input type="radio" name="conf-def-op" value="low"> Shaky</label>
     <label><input type="radio" name="conf-def-op" value="med"> Fairly sure</label>
@@ -188,8 +185,8 @@
     <h3>Model answer &amp; rubric</h3>
     <table class="rubric"><thead><tr><th>#</th><th>Criterion (naming the notion counts in full)</th><th class="pts">Pts</th></tr></thead><tbody>
       <tr><td>①</td><td>Same objects as 𝒞</td><td class="pts">1</td></tr>
-      <tr><td>②</td><td>Reversed morphisms: 𝒞ᵒᵖ(A,B) = 𝒞(B,A) (domain/codomain swapped)</td><td class="pts">1</td></tr>
-      <tr><td>③</td><td>Reversed composition (𝒞ᵒᵖ-composite of f then g = 𝒞-composite gf)</td><td class="pts">1</td></tr>
+      <tr><td>②</td><td>Reversed morphisms: $\mathcal{C}^{\mathrm{op}}(A,B) = \mathcal{C}(B,A)$ (domain/codomain swapped)</td><td class="pts">1</td></tr>
+      <tr><td>③</td><td>Reversed composition ($\mathcal{C}^{\mathrm{op}}$-composite of $f$ then $g$ = $\mathcal{C}$-composite $gf$)</td><td class="pts">1</td></tr>
       <tr><td>④</td><td>Same identities</td><td class="pts">1</td></tr>
       <tr class="total"><td></td><td>Total</td><td class="pts">4</td></tr>
     </tbody></table>
@@ -198,7 +195,7 @@
 </div>
 
 <div class="assess grader" data-block="def-contra">
-  <p><strong>(b)</strong> Define a <strong>contravariant functor</strong>, and state how it relates to <math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mi mathvariant="script">C</mi><mi>op</mi></msup></math>.</p>
+  <p><strong>(b)</strong> Define a <strong>contravariant functor</strong>, and state how it relates to ${\mathcal{C}}^{\mathrm{op}}$.</p>
   <div class="conf"><span style="font-size:.92rem;font-weight:600">Confidence?</span>
     <label><input type="radio" name="conf-def-contra" value="low"> Shaky</label>
     <label><input type="radio" name="conf-def-contra" value="med"> Fairly sure</label>
@@ -211,13 +208,13 @@
   <div class="result model">
     <h3>Model answer &amp; rubric</h3>
     <table class="rubric"><thead><tr><th>#</th><th>Criterion (naming the notion counts in full)</th><th class="pts">Pts</th></tr></thead><tbody>
-      <tr><td>①</td><td>Reverses arrows: f : A → B ↦ F(B) → F(A)</td><td class="pts">1</td></tr>
+      <tr><td>①</td><td>Reverses arrows: $A \xrightarrow{f} B \;\mapsto\; F(B) \xrightarrow{F(f)} F(A)$</td><td class="pts">1</td></tr>
       <tr><td>②</td><td>Preserves identities</td><td class="pts">1</td></tr>
       <tr><td>③</td><td>Reverses composition: F(fg) = F(g) F(f)</td><td class="pts">1</td></tr>
-      <tr><td>④</td><td>Relationship: the same data as a covariant functor 𝒞ᵒᵖ → 𝒟</td><td class="pts">1</td></tr>
+      <tr><td>④</td><td>Relationship: the same data as a covariant functor $\mathcal{C}^{\mathrm{op}} \to \mathcal{D}$</td><td class="pts">1</td></tr>
       <tr class="total"><td></td><td>Total</td><td class="pts">4</td></tr>
     </tbody></table>
-    <p class="credit-note">“It's just a functor out of 𝒞ᵒᵖ” earns ④ in full and is strong evidence for the rest. Vague gestures naming nothing earn nothing.</p>
+    <p class="credit-note">“It's just a functor out of $\mathcal{C}^{\mathrm{op}}$” earns ④ in full and is strong evidence for the rest. Vague gestures naming nothing earn nothing.</p>
   </div>
 </div>
 

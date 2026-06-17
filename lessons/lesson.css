@@ -67,8 +67,8 @@
   code, .mono { font-family: "SF Mono", "Cascadia Mono", Menlo, Consolas, monospace;
                 font-size: .9em; background: var(--code-bg); padding: .08em .35em; border-radius: 3px; }
   .arrow { font-family: "SF Mono", Menlo, monospace; }
-  math { font-size: 1.06em; white-space: nowrap; }
-  math.display { display: block; margin: .2rem 0; font-size: 1.12em; white-space: nowrap; }
+  mjx-container { white-space: nowrap; }              /* don't let an inline formula break mid-expression */
+  mjx-container[display="true"] { margin: .3rem 0; }
 
   .callout { background: #f0f4f0; border-left: 3px solid #4a6b4a; border-radius: 0 4px 4px 0;
              padding: .8rem 1.1rem; margin: 1.3rem 0; font-size: .98rem; }

@@ -4,6 +4,14 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Category Theory · Theorem Toolkit</title>
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+    startup: { typeset: true },
+    options: { enableMenu: false }
+  };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
 <style>
   :root { --ink:#1a1a1a; --paper:#fdfcf9; --rule:#d9d4c7; --accent:#7a1f1f; --muted:#6b6557; --code:#f4f1ea;
           --done:#3a5a3a; --done-bg:#eaf2ea; --todo:#8a5a12; --todo-bg:#fbf3e8; --target:#7a1f1f; --target-bg:#f3e9e9; }
@@ -40,19 +48,19 @@
 
 <div class="thm done">
   <span class="name">Double opposite</span><span class="tag done">established</span>
-  <p class="stmt"><math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mrow><mo>(</mo><msup><mi mathvariant="script">C</mi><mi>op</mi></msup><mo>)</mo></mrow><mi>op</mi></msup><mo>=</mo><mi mathvariant="script">C</mi></math>. Reversing all arrows twice is the identity.</p>
+  <p class="stmt">${( {\mathcal{C}}^{\mathrm{op}} )}^{\mathrm{op}} = \mathcal{C}$. Reversing all arrows twice is the identity.</p>
   <p class="src">Lesson 3; Riehl §1.2.</p>
 </div>
 
 <div class="thm done">
   <span class="name">Contravariant = covariant on the opposite</span><span class="tag done">established</span>
-  <p class="stmt">A contravariant functor <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi><mo>&#x27F6;</mo><mi mathvariant="script">D</mi></math> is the same data as a covariant functor <math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mi mathvariant="script">C</mi><mi>op</mi></msup><mo>&#x27F6;</mo><mi mathvariant="script">D</mi></math>.</p>
+  <p class="stmt">A contravariant functor $\mathcal{C} \longrightarrow \mathcal{D}$ is the same data as a covariant functor ${\mathcal{C}}^{\mathrm{op}} \longrightarrow \mathcal{D}$.</p>
   <p class="src">Lesson 3; Riehl §1.3.</p>
 </div>
 
 <div class="thm done">
   <span class="name">Homomorphisms are functors</span><span class="tag done">established</span>
-  <p class="stmt">A monoid/group homomorphism <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>M</mi><mo>&#x27F6;</mo><mi>N</mi></math> is exactly a functor <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="bold">B</mi><mi>M</mi><mo>&#x27F6;</mo><mi mathvariant="bold">B</mi><mi>N</mi></math> between their one-object (delooping) categories.</p>
+  <p class="stmt">A monoid/group homomorphism $M \longrightarrow N$ is exactly a functor $\mathbf{B} M \longrightarrow \mathbf{B} N$ between their one-object (delooping) categories.</p>
   <p class="src">Lesson 2; Riehl §1.3.</p>
 </div>
 
@@ -60,7 +68,7 @@
 
 <div class="thm todo">
   <span class="name">Functors preserve isomorphisms</span><span class="tag todo">to prove</span>
-  <p class="stmt">If <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>A</mi><mover><mo>&#x27F6;</mo><mi>f</mi></mover><mi>B</mi></math> is an isomorphism in <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi></math> and <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>F</mi></math> is any functor, then <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>F</mi><mo>(</mo><mi>f</mi><mo>)</mo></math> is an isomorphism (and <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>F</mi><mo>(</mo><msup><mi>f</mi><mrow><mo>&#x2212;</mo><mn>1</mn></mrow></msup><mo>)</mo><mo>=</mo><mi>F</mi><msup><mrow><mo>(</mo><mi>f</mi><mo>)</mo></mrow><mrow><mo>&#x2212;</mo><mn>1</mn></mrow></msup></math>). One line from functoriality.</p>
+  <p class="stmt">If $A \xrightarrow{f} B$ is an isomorphism in $\mathcal{C}$ and $F$ is any functor, then $F ( f )$ is an isomorphism (and $F ( f^{- 1} ) = F {( f )}^{- 1}$). One line from functoriality.</p>
   <p class="src">Riehl, Lemma 1.3.8 (functors preserve isomorphisms); cf. Exercise 1.3.viii (they need not <em>reflect</em> them).</p>
 </div>
 
@@ -72,7 +80,7 @@
 
 <div class="thm todo">
   <span class="name">Duality principle</span><span class="tag todo">to prove / internalize</span>
-  <p class="stmt">The dual of any theorem true of all categories is again true of all categories (apply it in <math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mi mathvariant="script">C</mi><mi>op</mi></msup></math>). One proof, two theorems.</p>
+  <p class="stmt">The dual of any theorem true of all categories is again true of all categories (apply it in ${\mathcal{C}}^{\mathrm{op}}$). One proof, two theorems.</p>
   <p class="src">Lesson 3; Riehl §1.2; Mac Lane §II.1.</p>
 </div>
 
@@ -80,7 +88,7 @@
 
 <div class="thm target">
   <span class="name">The Yoneda Lemma</span><span class="tag target">target</span>
-  <p class="stmt">For a locally small <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi></math>, object <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>A</mi></math>, and presheaf <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>F</mi><mo>:</mo><msup><mi mathvariant="script">C</mi><mi>op</mi></msup><mo>&#x27F6;</mo><mi mathvariant="bold">Set</mi></math>, natural transformations <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi><mo>(</mo><mo>&#x2212;</mo><mo>,</mo><mi>A</mi><mo>)</mo><mo>&#x21D2;</mo><mi>F</mi></math> correspond naturally and bijectively to elements of <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>F</mi><mo>(</mo><mi>A</mi><mo>)</mo></math>. <em>The</em> goal — see <a href="../MISSION.md">MISSION</a>.</p>
+  <p class="stmt">For a locally small $\mathcal{C}$, object $A$, and presheaf $F : {\mathcal{C}}^{\mathrm{op}} \longrightarrow \mathbf{Set}$, natural transformations $\mathcal{C} ( - , A ) \Rightarrow F$ correspond naturally and bijectively to elements of $F ( A )$. <em>The</em> goal — see <a href="../MISSION.md">MISSION</a>.</p>
   <p class="src">Riehl Ch. 2; Leinster Ch. 4. Prerequisites still to build: natural transformations, representables.</p>
 </div>
 

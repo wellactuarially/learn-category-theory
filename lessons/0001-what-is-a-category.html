@@ -5,12 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Lesson 1 · What is a Category?</title>
 <script src="../config.local.js"></script>
-<!-- MathJax: interactive tutor UI only (live LaTeX preview + rendering tutor feedback).
-     startup.typeset=false keeps it from touching the page's authored native MathML. -->
+<!-- MathJax 3 renders all authored math (written as LaTeX, $…$ / \[…\]) and the tutor's feedback. -->
 <script>
   window.MathJax = {
     tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
-    startup: { typeset: false },
+    startup: { typeset: true },
     options: { enableMenu: false }
   };
 </script>
@@ -27,43 +26,33 @@
 
 <h2>1 · The definition</h2>
 
-<p>A <strong>category</strong> <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi></math> consists of two kinds of data and three laws they must obey.<details class="cite"><summary>def</summary><span class="cite-body">The formulation here follows Riehl, <em>Category Theory in Context</em>, §1.1, Def. 1.1.1, and agrees with Mac Lane, <em>Categories for the Working Mathematician</em>, §I.2. <a href="https://emilyriehl.github.io/files/context.pdf">Riehl PDF</a> · <a href="https://ncatlab.org/nlab/show/category">nLab: category</a>.</span></details> The data:</p>
+<p>A <strong>category</strong> $\mathcal{C}$ consists of two kinds of data and three laws they must obey.<details class="cite"><summary>def</summary><span class="cite-body">The formulation here follows Riehl, <em>Category Theory in Context</em>, §1.1, Def. 1.1.1, and agrees with Mac Lane, <em>Categories for the Working Mathematician</em>, §I.2. <a href="https://emilyriehl.github.io/files/context.pdf">Riehl PDF</a> · <a href="https://ncatlab.org/nlab/show/category">nLab: category</a>.</span></details> The data:</p>
 
 <ul class="examples">
-  <li><b>Objects</b> — a collection <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>ob</mi><mo>(</mo><mi mathvariant="script">C</mi><mo>)</mo></math>. Write <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>A</mi><mo>,</mo><mi>B</mi><mo>,</mo><mi>C</mi><mo>,</mo><mo>…</mo></math></li>
-  <li><b>Morphisms</b> (arrows) — for each ordered pair of objects <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>A</mi><mo>,</mo><mi>B</mi></math>, a collection <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi><mo>(</mo><mi>A</mi><mo>,</mo><mi>B</mi><mo>)</mo></math> of arrows <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>A</mi><mover><mo>&#x27F6;</mo><mi>f</mi></mover><mi>B</mi></math>. Every arrow has a definite <em>domain</em> and <em>codomain</em>.</li>
+  <li><b>Objects</b> — a collection $\mathrm{ob} ( \mathcal{C} )$. Write $A , B , C , \dots$</li>
+  <li><b>Morphisms</b> (arrows) — for each ordered pair of objects $A , B$, a collection $\mathcal{C} ( A , B )$ of arrows $A \xrightarrow{f} B$. Every arrow has a definite <em>domain</em> and <em>codomain</em>.</li>
 </ul>
 
 <div class="callout">
 <span class="label">The word "collection"</span>
 <p style="margin:.4rem 0 0">We say <strong>collection</strong> rather than "set" because the aggregates above can be too large to be sets. In a foundation like ZFC every object is a <strong>set</strong>, yet not every property carves out a set: the property "is a set" specifies the <em>class of all sets</em>, which is a <strong>proper class</strong> — a collection too large to be a set, the very thing Russell's paradox exploits. <strong>Collection</strong> is the neutral term covering both sets and proper classes.</p>
-<p style="margin:.5rem 0 0">Two standard ways make this precise: <strong>(i)</strong> NBG set theory, which admits classes as objects beside sets — a <em>proper class</em> being a class that is a member of nothing; or <strong>(ii)</strong> fix a <strong>Grothendieck universe</strong> <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">U</mi></math> — a set so large it is closed under every everyday set-forming operation (its existence is equivalent to an inaccessible cardinal) — and call a collection <strong>small</strong> exactly when it is a member of <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">U</mi></math>. Mac Lane takes route (ii).<details class="cite"><summary>found</summary><span class="cite-body">On set-theoretic foundations for category theory — sets vs proper classes, NBG, and Grothendieck universes — see <a href="https://ncatlab.org/nlab/show/category+theory+and+foundations">nLab: category theory and foundations</a>; Mac Lane, <em>Categories for the Working Mathematician</em>, §I.6 (Foundations), which fixes one universe; and Riehl §1.1. Background: <a href="https://en.wikipedia.org/wiki/Small_set_(category_theory)">Small set (category theory)</a>.</span></details></p>
+<p style="margin:.5rem 0 0">Two standard ways make this precise: <strong>(i)</strong> NBG set theory, which admits classes as objects beside sets — a <em>proper class</em> being a class that is a member of nothing; or <strong>(ii)</strong> fix a <strong>Grothendieck universe</strong> $\mathcal{U}$ — a set so large it is closed under every everyday set-forming operation (its existence is equivalent to an inaccessible cardinal) — and call a collection <strong>small</strong> exactly when it is a member of $\mathcal{U}$. Mac Lane takes route (ii).<details class="cite"><summary>found</summary><span class="cite-body">On set-theoretic foundations for category theory — sets vs proper classes, NBG, and Grothendieck universes — see <a href="https://ncatlab.org/nlab/show/category+theory+and+foundations">nLab: category theory and foundations</a>; Mac Lane, <em>Categories for the Working Mathematician</em>, §I.6 (Foundations), which fixes one universe; and Riehl §1.1. Background: <a href="https://en.wikipedia.org/wiki/Small_set_(category_theory)">Small set (category theory)</a>.</span></details></p>
 </div>
 
 <p>The laws:</p>
 
 <div class="axioms">
 <ol>
-  <li><strong>Composition.</strong> Given <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>A</mi><mover><mo>&#x27F6;</mo><mi>f</mi></mover><mi>B</mi></math> and <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>B</mi><mover><mo>&#x27F6;</mo><mi>g</mi></mover><mi>C</mi></math> — i.e. whenever the codomain of one matches the domain of the next — there is a composite <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>A</mi><mover><mo>&#x27F6;</mo><mrow><mi>f</mi><mi>g</mi></mrow></mover><mi>C</mi></math>, read "<em>f then g</em>".</li>
-  <li><strong>Identity.</strong> Every object <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>A</mi></math> carries an identity arrow <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>A</mi><mover><mo>&#x27F6;</mo><msub><mi>id</mi><mi>A</mi></msub></mover><mi>A</mi></math>.</li>
+  <li><strong>Composition.</strong> Given $A \xrightarrow{f} B$ and $B \xrightarrow{g} C$ — i.e. whenever the codomain of one matches the domain of the next — there is a composite $A \xrightarrow{f g} C$, read "<em>f then g</em>".</li>
+  <li><strong>Identity.</strong> Every object $A$ carries an identity arrow $A \xrightarrow{{\mathrm{id}}_{A}} A$.</li>
   <li><strong>The two axioms these must satisfy:</strong>
     <ul>
       <li><em>Associativity:</em>
-        <math xmlns="http://www.w3.org/1998/Math/MathML" class="display">
-          <mrow><mo>(</mo><mi>f</mi><mi>g</mi><mo>)</mo><mi>h</mi></mrow>
-          <mo>=</mo>
-          <mrow><mi>f</mi><mo>(</mo><mi>g</mi><mi>h</mi><mo>)</mo></mrow>
-        </math>
+        \[ ( f g ) h = f ( g h ) \]
         whenever the composites are defined.</li>
       <li><em>Unit (identity) law:</em>
-        <math xmlns="http://www.w3.org/1998/Math/MathML" class="display">
-          <mrow><msub><mi>id</mi><mi>A</mi></msub><mi>f</mi></mrow>
-          <mo>=</mo>
-          <mi>f</mi>
-          <mo>=</mo>
-          <mrow><mi>f</mi><msub><mi>id</mi><mi>B</mi></msub></mrow>
-        </math>
-        for every <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>A</mi><mover><mo>&#x27F6;</mo><mi>f</mi></mover><mi>B</mi></math>.</li>
+        \[ {\mathrm{id}}_{A} f = f = f {\mathrm{id}}_{B} \]
+        for every $A \xrightarrow{f} B$.</li>
     </ul>
   </li>
 </ol>
@@ -71,14 +60,14 @@
 
 <div class="callout">
 <span class="label">House convention — read this once</span>
-<p style="margin:.4rem 0 0">We compose <strong>left-to-right</strong> (the "diagrammatic" order) and write composition by <strong>juxtaposition</strong>: <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>f</mi><mi>g</mi></math> means "do <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>f</mi></math>, <em>then</em> <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>g</mi></math>", so the types line up the way you read — <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>A</mi><mover><mo>&#x27F6;</mo><mi>f</mi></mover><mi>B</mi><mover><mo>&#x27F6;</mo><mi>g</mi></mover><mi>C</mi></math>. <strong>Most sources do the opposite</strong>, writing <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>g</mi><mo>∘</mo><mi>f</mi></math> for the same arrow (function-application order). The content is identical; only the order differs. When you carry a statement over from Mac Lane, Riehl, Leinster, or nLab, <strong>reverse the order</strong>: their <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>g</mi><mo>∘</mo><mi>f</mi></math> is our <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>f</mi><mi>g</mi></math>. This is the single most common place to slip, so it's worth burning in now.</p>
+<p style="margin:.4rem 0 0">We compose <strong>left-to-right</strong> (the "diagrammatic" order) and write composition by <strong>juxtaposition</strong>: $f g$ means "do $f$, <em>then</em> $g$", so the types line up the way you read — $A \xrightarrow{f} B \xrightarrow{g} C$. <strong>Most sources do the opposite</strong>, writing $g \circ f$ for the same arrow (function-application order). The content is identical; only the order differs. When you carry a statement over from Mac Lane, Riehl, Leinster, or nLab, <strong>reverse the order</strong>: their $g \circ f$ is our $f g$. This is the single most common place to slip, so it's worth burning in now.</p>
 </div>
 
 <p>That's all. No elements, no equations between objects, no internal structure assumed — a category knows only its arrows and how they compose. The discipline of saying everything in terms of arrows is exactly what gives category theory its reach.</p>
 
 <div class="callout">
 <span class="label">A point of precision</span>
-<p style="margin:.4rem 0 0">Because each <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi><mo>(</mo><mi>A</mi><mo>,</mo><mi>B</mi><mo>)</mo></math> is a collection, it may be a proper class rather than a set. When every <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi><mo>(</mo><mi>A</mi><mo>,</mo><mi>B</mi><mo>)</mo></math> is a set, <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi></math> is <strong>locally small</strong>; when <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>ob</mi><mo>(</mo><mi mathvariant="script">C</mi><mo>)</mo></math> is a set as well, <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi></math> is <strong>small</strong>. This bookkeeping is what blocks forming "the category of all categories" naively.<details class="cite"><summary>size</summary><span class="cite-body">On smallness / local smallness and the size issues that motivate it, see Leinster, <em>Basic Category Theory</em>, §1.1, and Riehl §1.1. <a href="https://arxiv.org/abs/1612.09375">Leinster (arXiv)</a>.</span></details></p>
+<p style="margin:.4rem 0 0">Because each $\mathcal{C} ( A , B )$ is a collection, it may be a proper class rather than a set. When every $\mathcal{C} ( A , B )$ is a set, $\mathcal{C}$ is <strong>locally small</strong>; when $\mathrm{ob} ( \mathcal{C} )$ is a set as well, $\mathcal{C}$ is <strong>small</strong>. This bookkeeping is what blocks forming "the category of all categories" naively.<details class="cite"><summary>size</summary><span class="cite-body">On smallness / local smallness and the size issues that motivate it, see Leinster, <em>Basic Category Theory</em>, §1.1, and Riehl §1.1. <a href="https://arxiv.org/abs/1612.09375">Leinster (arXiv)</a>.</span></details></p>
 </div>
 
 <h3>The picture worth keeping</h3>
@@ -105,7 +94,7 @@
 <h2>4 · Quick recall</h2>
 <div class="assess">
   <div class="quiz-q" data-answer="a">
-    <p>1. A morphism <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>A</mi><mover><mo>&#x27F6;</mo><mi>f</mi></mover><mi>B</mi></math> always carries…</p>
+    <p>1. A morphism $A \xrightarrow{f} B$ always carries…</p>
     <select>
       <option value="">— choose —</option>
       <option value="a" data-fb="Correct — a definite domain (A) and codomain (B). That is all a category requires of an arrow.">a definite domain and codomain</option>
@@ -115,7 +104,7 @@
     <span class="quiz-mark"></span><div class="quiz-fb"></div>
   </div>
   <div class="quiz-q" data-answer="a">
-    <p>2. In our left-to-right convention, given <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>A</mi><mover><mo>&#x27F6;</mo><mi>f</mi></mover><mi>B</mi></math> and <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>B</mi><mover><mo>&#x27F6;</mo><mi>g</mi></mover><mi>C</mi></math>, the composite <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>f</mi><mi>g</mi></math> is an arrow…</p>
+    <p>2. In our left-to-right convention, given $A \xrightarrow{f} B$ and $B \xrightarrow{g} C$, the composite $f g$ is an arrow…</p>
     <select>
       <option value="">— choose —</option>
       <option value="a" data-fb="Correct — fg reads “f then g”, so it runs from the first domain A to the last codomain C.">from A to C</option>
@@ -125,7 +114,7 @@
     <span class="quiz-mark"></span><div class="quiz-fb"></div>
   </div>
   <div class="quiz-q" data-answer="b">
-    <p>3. Each hom-collection <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>𝒞</mi><mo>(</mo><mi>A</mi><mo>,</mo><mi>B</mi><mo>)</mo></math> is required to be…</p>
+    <p>3. Each hom-collection $\mathcal{C} ( A , B )$ is required to be…</p>
     <select>
       <option value="">— choose —</option>
       <option value="a" data-fb="Only when 𝒞 is locally small. In general a hom-collection may be a proper class.">a set, always</option>
@@ -165,8 +154,8 @@
     <h3>Model answer &amp; rubric</h3>
     <table class="rubric"><thead><tr><th>#</th><th>Criterion (naming a standard concept counts in full)</th><th class="pts">Pts</th></tr></thead><tbody>
       <tr><td>①</td><td>A collection of objects</td><td class="pts">1</td></tr>
-      <tr><td>②</td><td>Morphisms with domain and codomain (<math xmlns="http://www.w3.org/1998/Math/MathML"><mi>A</mi><mover><mo>&#x27F6;</mo><mi>f</mi></mover><mi>B</mi></math>)</td><td class="pts">1</td></tr>
-      <tr><td>③</td><td>Composition: composable <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>f</mi></math>, <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>g</mi></math> give a composite <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>A</mi><mover><mo>&#x27F6;</mo><mrow><mi>f</mi><mi>g</mi></mrow></mover><mi>C</mi></math></td><td class="pts">1</td></tr>
+      <tr><td>②</td><td>Morphisms with domain and codomain ($A \xrightarrow{f} B$)</td><td class="pts">1</td></tr>
+      <tr><td>③</td><td>Composition: composable $f$, $g$ give a composite $A \xrightarrow{f g} C$</td><td class="pts">1</td></tr>
       <tr><td>④</td><td>An identity morphism on each object</td><td class="pts">1</td></tr>
       <tr><td>⑤</td><td>Associativity of composition</td><td class="pts">1</td></tr>
       <tr><td>⑥</td><td>The unit / identity law</td><td class="pts">1</td></tr>
@@ -193,7 +182,7 @@
     <table class="rubric"><thead><tr><th>#</th><th>Criterion</th><th class="pts">Pts</th></tr></thead><tbody>
       <tr><td>①</td><td>Collection: a neutral term — a set or a proper class (broader than “set”)</td><td class="pts">1</td></tr>
       <tr><td>②</td><td>Proper class: too large to be a set (e.g. the class of all sets; Russell)</td><td class="pts">1</td></tr>
-      <tr><td>③</td><td>Locally small: every hom-collection <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi><mo>(</mo><mi>A</mi><mo>,</mo><mi>B</mi><mo>)</mo></math> is a set</td><td class="pts">1</td></tr>
+      <tr><td>③</td><td>Locally small: every hom-collection $\mathcal{C} ( A , B )$ is a set</td><td class="pts">1</td></tr>
       <tr><td>④</td><td>Small: locally small and the objects also form a set</td><td class="pts">1</td></tr>
       <tr class="total"><td></td><td>Total</td><td class="pts">4</td></tr>
     </tbody></table>
@@ -205,7 +194,7 @@
 <p>One problem from Emily Riehl's <em>Category Theory in Context</em>, §1.1 — building a category straight from the definition. Answer, then grade with the tutor or reveal the rubric.</p>
 
 <div class="assess grader" data-block="riehl-slice">
-  <p><b>The slice category.</b> For a category <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi></math> and an object <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>c</mi></math>, the slice <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>c</mi><mo>/</mo><mi mathvariant="script">C</mi></math> has as <em>objects</em> the morphisms <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>c</mi><mover><mo>&#x27F6;</mo><mi>f</mi></mover><mi>x</mi></math>, and as a <em>morphism</em> from <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>c</mi><mover><mo>&#x27F6;</mo><mi>f</mi></mover><mi>x</mi></math> to <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>c</mi><mover><mo>&#x27F6;</mo><mi>g</mi></mover><mi>y</mi></math> a map <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>x</mi><mover><mo>&#x27F6;</mo><mi>h</mi></mover><mi>y</mi></math> with <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>f</mi><mi>h</mi><mo>=</mo><mi>g</mi></math> (f then h equals g). Verify that <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>c</mi><mo>/</mo><mi mathvariant="script">C</mi></math> is a category. <em>(Riehl, Exercise 1.1.iii(i).)</em></p>
+  <p><b>The slice category.</b> For a category $\mathcal{C}$ and an object $c$, the slice $c / \mathcal{C}$ has as <em>objects</em> the morphisms $c \xrightarrow{f} x$, and as a <em>morphism</em> from $c \xrightarrow{f} x$ to $c \xrightarrow{g} y$ a map $x \xrightarrow{h} y$ with $f h = g$ (f then h equals g). Verify that $c / \mathcal{C}$ is a category. <em>(Riehl, Exercise 1.1.iii(i).)</em></p>
   <div class="conf"><span style="font-size:.92rem;font-weight:600">Confidence?</span>
     <label><input type="radio" name="conf-riehl-slice" value="low"> Shaky</label>
     <label><input type="radio" name="conf-riehl-slice" value="med"> Fairly sure</label>
@@ -219,13 +208,13 @@
   <div class="result model">
     <h3>Model answer &amp; rubric</h3>
     <table class="rubric"><thead><tr><th>#</th><th>Criterion</th><th class="pts">Pts</th></tr></thead><tbody>
-      <tr><td>①</td><td>Composition: slice-morphisms <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>h</mi><mo>:</mo><mi>f</mi><mo>&#x2192;</mo><mi>g</mi></math> and <math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mi>h</mi><mo>&#x2032;</mo></msup><mo>:</mo><mi>g</mi><mo>&#x2192;</mo><mi>k</mi></math> compose to <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>h</mi><msup><mi>h</mi><mo>&#x2032;</mo></msup><mo>:</mo><mi>f</mi><mo>&#x2192;</mo><mi>k</mi></math>, and the triangle still commutes (<math xmlns="http://www.w3.org/1998/Math/MathML"><mi>f</mi><mo>(</mo><mi>h</mi><msup><mi>h</mi><mo>&#x2032;</mo></msup><mo>)</mo><mo>=</mo><mi>k</mi></math>)</td><td class="pts">1</td></tr>
-      <tr><td>②</td><td>Identity on the object <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>f</mi><mo>:</mo><mi>c</mi><mo>&#x2192;</mo><mi>x</mi></math> is <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>id</mi><mi>x</mi></msub></math> (and it is a slice-morphism)</td><td class="pts">1</td></tr>
-      <tr><td>③</td><td>Associativity and unit laws inherited from <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi></math>'s composition of the underlying <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>h</mi></math>'s</td><td class="pts">1</td></tr>
-      <tr><td>④</td><td>Concludes <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>c</mi><mo>/</mo><mi mathvariant="script">C</mi></math> is a category</td><td class="pts">1</td></tr>
+      <tr><td>①</td><td>Composition: slice-morphisms $h : f \to g$ and $h^{\prime} : g \to k$ compose to $h h^{\prime} : f \to k$, and the triangle still commutes ($f ( h h^{\prime} ) = k$)</td><td class="pts">1</td></tr>
+      <tr><td>②</td><td>Identity on the object $f : c \to x$ is ${\mathrm{id}}_{x}$ (and it is a slice-morphism)</td><td class="pts">1</td></tr>
+      <tr><td>③</td><td>Associativity and unit laws inherited from $\mathcal{C}$'s composition of the underlying $h$'s</td><td class="pts">1</td></tr>
+      <tr><td>④</td><td>Concludes $c / \mathcal{C}$ is a category</td><td class="pts">1</td></tr>
       <tr class="total"><td></td><td>Total</td><td class="pts">4</td></tr>
     </tbody></table>
-    <p style="font-size:.93rem">A slice-morphism is an underlying <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi></math>-arrow <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>h</mi></math> with <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>f</mi><mi>h</mi><mo>=</mo><mi>g</mi></math>; compose by composing the <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>h</mi></math>'s (the commuting triangles paste), the identity is <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>id</mi><mi>x</mi></msub></math>, and associativity/units come straight from <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="script">C</mi></math>. Source: Riehl, Exercise 1.1.iii(i). (Riehl writes <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>g</mi><mo>=</mo><mi>h</mi><mo>&#x2218;</mo><mi>f</mi></math>; in our left-to-right convention that is <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>f</mi><mi>h</mi><mo>=</mo><mi>g</mi></math>.)</p>
+    <p style="font-size:.93rem">A slice-morphism is an underlying $\mathcal{C}$-arrow $h$ with $f h = g$; compose by composing the $h$'s (the commuting triangles paste), the identity is ${\mathrm{id}}_{x}$, and associativity/units come straight from $\mathcal{C}$. Source: Riehl, Exercise 1.1.iii(i). (Riehl writes $g = h \circ f$; in our left-to-right convention that is $f h = g$.)</p>
   </div>
 </div>
 
